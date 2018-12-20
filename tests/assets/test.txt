@@ -1,0 +1,7 @@
+foo:
+bar
+END
+hoge:
+fuga
+piyo
+END
