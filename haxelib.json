@@ -1,6 +1,6 @@
 {
   "name": "arp_domain",
-  "url" : "https://github.com/kaikoga/ArpDomain/",
+  "url" : "https://github.com/kaikoga/ArpDomain",
   "license": "MIT",
   "tags": ["game"],
   "description": "Asset and entity manager for ArpEngine.",
