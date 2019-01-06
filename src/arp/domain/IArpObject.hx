@@ -14,6 +14,7 @@ interface IArpObject extends IPersistable /* extends IArpObjectImpl */ {
 	var arpType(get, never):ArpType;
 	var arpTypeInfo(get, never):ArpTypeInfo;
 	var arpSlot(get, never):ArpUntypedSlot;
+	var arpHeat(get, never):ArpHeat;
 
 	function arpInit(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject;
 	function arpDispose():Void;

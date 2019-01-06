@@ -2,6 +2,7 @@ package arp.seed;
 
 import arp.domain.ArpDirectory;
 import arp.domain.ArpDomain;
+import arp.domain.ArpHeat;
 import arp.domain.ArpSlot;
 import arp.domain.ArpTypeInfo;
 import arp.domain.ArpUntypedSlot;
@@ -36,6 +37,9 @@ class SeedObject implements IArpObject {
 	private var _arpSlot:ArpSlot<SeedObject>;
 	public var arpSlot(get, never):ArpSlot<SeedObject>;
 	inline private function get_arpSlot():ArpSlot<SeedObject> return this._arpSlot;
+
+	public var arpHeat(get, never):ArpHeat;
+	inline private function get_arpHeat():ArpHeat return this._arpSlot.heat;
 
 	public function arpInit(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
 		this._arpDomain = slot.domain;

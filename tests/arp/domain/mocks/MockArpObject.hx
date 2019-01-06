@@ -38,6 +38,9 @@ class MockArpObject implements IArpObject {
 	public var arpSlot(get, never):ArpSlot<MockArpObject>;
 	private function get_arpSlot():ArpSlot<MockArpObject> return this._arpSlot;
 
+	public var arpHeat(get, never):ArpHeat;
+	private function get_arpHeat():ArpHeat return this._arpSlot.heat;
+
 	public function arpInit(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
 		this._arpDomain = slot.domain;
 		this._arpSlot = slot;

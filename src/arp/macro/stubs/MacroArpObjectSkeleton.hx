@@ -60,6 +60,9 @@ class MacroArpObjectSkeleton {
 			public var arpSlot(get, never):arp.domain.ArpUntypedSlot;
 			@:noDoc @:noCompletion private function get_arpSlot():arp.domain.ArpUntypedSlot return this._arpSlot;
 
+			public var arpHeat(get, never):arp.domain.ArpHeat;
+			@:noDoc @:noCompletion private function get_arpHeat():arp.domain.ArpHeat return this._arpSlot.heat;
+
 			public function arpInit(slot:arp.domain.ArpUntypedSlot, seed:arp.seed.ArpSeed = null):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpObjectStubs.arpInit(
 					$e{ this.buildInitBlock() },
