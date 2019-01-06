@@ -1,7 +1,7 @@
 package arp.impl;
 
 interface IArpObjectImpl {
-	function arpHeatUp():Bool;
-	function arpHeatDown():Bool;
-	function arpDispose():Void;
+	@:noDoc @:noCompletion function arpHeatUp():Bool;
+	@:noDoc @:noCompletion function arpHeatDown():Bool;
+	@:noDoc @:noCompletion function arpDispose():Void;
 }
