@@ -28,30 +28,30 @@ class EarlyPrepareMacroArpObjectCase {
 	public function testHeatUpHeatDown():Void {
 		assertFalse(domain.isPending);
 		assertEquals(0, arpObj.volatileInt);
-		assertEquals(ArpHeat.Cold, arpObj.arpSlot.heat);
+		assertEquals(ArpHeat.Cold, arpObj.arpHeat);
 
 		domain.heatLater(slot);
 		domain.rawTick.dispatch(10.0);
 		assertFalse(domain.isPending);
 		assertEquals(1, arpObj.volatileInt);
-		assertEquals(ArpHeat.Warm, arpObj.arpSlot.heat);
+		assertEquals(ArpHeat.Warm, arpObj.arpHeat);
 
 		domain.heatDown(slot);
 		assertFalse(domain.isPending);
 		assertEquals(0, arpObj.volatileInt);
-		assertEquals(ArpHeat.Cold, arpObj.arpSlot.heat);
+		assertEquals(ArpHeat.Cold, arpObj.arpHeat);
 	}
 
 	@:access(arp.macro.mocks.MockEarlyPrepareMacroArpObject)
 	public function testEarlyPrepareDispose():Void {
 		assertFalse(domain.isPending);
 		assertEquals(0, arpObj.volatileInt);
-		assertEquals(ArpHeat.Cold, arpObj.arpSlot.heat);
+		assertEquals(ArpHeat.Cold, arpObj.arpHeat);
 
 		arpObj.arpHeatUp();
 		assertFalse(domain.isPending);
 		assertEquals(1, arpObj.volatileInt);
-		assertEquals(ArpHeat.Warm, arpObj.arpSlot.heat);
+		assertEquals(ArpHeat.Warm, arpObj.arpHeat);
 
 		arpObj.arpDispose();
 		assertFalse(domain.isPending);

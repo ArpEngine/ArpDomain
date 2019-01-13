@@ -1,6 +1,7 @@
 package arp.data;
 
 import arp.domain.ArpDomain;
+import arp.domain.ArpHeat;
 import arp.domain.ArpSlot;
 import arp.domain.ArpTypeInfo;
 import arp.domain.ArpUntypedSlot;
@@ -40,6 +41,9 @@ class DataGroup implements IArpObject {
 	private var _arpSlot:ArpSlot<DataGroup>;
 	public var arpSlot(get, never):ArpSlot<DataGroup>;
 	inline private function get_arpSlot():ArpSlot<DataGroup> return this._arpSlot;
+
+	public var arpHeat(get, never):ArpHeat;
+	inline private function get_arpHeat():ArpHeat return this._arpSlot.heat;
 
 	public function arpInit(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
 		this._arpDomain = slot.domain;
