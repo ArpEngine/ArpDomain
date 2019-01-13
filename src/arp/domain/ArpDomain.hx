@@ -12,6 +12,7 @@ import arp.domain.prepare.IPrepareStatus;
 import arp.domain.prepare.PrepareQueue;
 import arp.domain.query.ArpObjectQuery;
 import arp.errors.ArpError;
+import arp.events.ArpProgressEvent;
 import arp.events.ArpSignal;
 import arp.events.IArpSignalIn;
 import arp.events.IArpSignalOut;
@@ -222,6 +223,15 @@ class ArpDomain {
 
 	public var tasksWaiting(get, never):Int;
 	inline private function get_tasksWaiting():Int return this.prepareQueue.tasksWaiting;
+
+	public var onPrepareComplete(get, never):IArpSignalOut<Int>;
+	inline private function get_onPrepareComplete():IArpSignalOut<Int> return this.prepareQueue.onProgress;
+
+	public var onPrepareError(get, never):IArpSignalOut<Dynamic>;
+	inline private function get_onPrepareError():IArpSignalOut<Dynamic> return this.prepareQueue.onError;
+
+	public var onPrepareProgress(get, never):IArpSignalOut<ArpProgressEvent>;
+	inline private function get_onPrepareProgress():IArpSignalOut<ArpProgressEvent> return this.prepareQueue.onProgress;
 
 	public function dumpEntries(typeFilter:ArpType->Bool = null):String {
 		return ArpDomainDump.printer.format(new ArpDomainDump(this, typeFilter).dumpSlotStatus());
