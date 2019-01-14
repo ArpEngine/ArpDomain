@@ -47,7 +47,7 @@ class MacroArpFieldBase {
 	private var iNativeSlot(get, never):String;
 	private function get_iNativeSlot():String return this.nativeField.name + "Slot";
 	private var i_nativeName(get, never):String;
-	private function get_i_nativeName():String return "__arp__" + this.iNativeName;
+	private function get_i_nativeName():String return MacroArpUtil.__arpGenerated(this.iNativeName);
 	private var iGet_nativeName(get, never):String;
 	private function get_iGet_nativeName():String return "get_" + this.iNativeName;
 	private var iSet_nativeName(get, never):String;
