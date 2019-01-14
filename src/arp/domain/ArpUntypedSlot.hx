@@ -46,7 +46,7 @@ class ArpUntypedSlot {
 	/* inline */ public function delReference():ArpUntypedSlot {
 		if (--this._refCount <= 0) {
 			if (this._value != null) {
-				this._value.arpDispose();
+				this._value.__arp_dispose();
 				this._value = null;
 			}
 			this._domain.freeSlot(this);
