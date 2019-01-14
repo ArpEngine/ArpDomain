@@ -55,18 +55,18 @@ class MacroArpObjectField extends MacroArpFieldBase implements IMacroArpField {
 		}
 	}
 
-	public function buildHeatLaterBlock(heatLaterBlock:Array<Expr>):Void {
+	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {
 		if (!this.arpHasBarrier) return;
-		heatLaterBlock.push(macro @:pos(this.nativePos) { this._arpDomain.heatLater(this.$iNativeSlot, $v{arpBarrierRequired}); });
+		heatLaterDepsBlock.push(macro @:pos(this.nativePos) { this._arpDomain.heatLater(this.$iNativeSlot, $v{arpBarrierRequired}); });
 	}
 
-	public function buildHeatUpBlock(heatUpBlock:Array<Expr>):Void {
+	public function buildHeatUpNowBlock(heatUpNowBlock:Array<Expr>):Void {
 		if (!this.arpHasBarrier) return;
-		heatUpBlock.push(macro @:pos(this.nativePos) { if (this.$iNativeSlot.heat != arp.domain.ArpHeat.Warm) return false; });
+		heatUpNowBlock.push(macro @:pos(this.nativePos) { if (this.$iNativeSlot.heat != arp.domain.ArpHeat.Warm) return false; });
 	}
 
-	public function buildHeatDownBlock(heatDownBlock:Array<Expr>):Void {
-		heatDownBlock.push(macro @:pos(this.nativePos) { null; });
+	public function buildHeatDownNowBlock(heatDownNowBlock:Array<Expr>):Void {
+		heatDownNowBlock.push(macro @:pos(this.nativePos) { null; });
 	}
 
 	public function buildDisposeBlock(disposeBlock:Array<Expr>):Void {

@@ -52,23 +52,23 @@ class MacroArpObjectStubs {
 		}
 	}
 
-	macro public static function arpHeatLater(heatLaterBlock:Expr):Expr {
+	macro public static function arpHeatLaterDeps(heatLaterDepsBlock:Expr):Expr {
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 #if arp_debug
 			if (this._arpSlot == null) throw new arp.errors.ArpError("ArpObject is not initialized");
 #end
-			$e{ heatLaterBlock }
+			$e{ heatLaterDepsBlock }
 		}
 	}
 
-	macro public static function arpHeatUp(heatUpBlock:Expr, hasImpl:Bool):Expr {
+	macro public static function arpHeatUpNow(heatUpNowBlock:Expr, hasImpl:Bool):Expr {
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 #if arp_debug
 			if (this._arpSlot == null) throw new arp.errors.ArpError("ArpObject is not initialized");
 #end
-			$e{ heatUpBlock }
+			$e{ heatUpNowBlock }
 			var isSync:Bool = true;
 			if (!this.arpSelfHeatUp()) isSync = false;
 			$e{
@@ -91,7 +91,7 @@ class MacroArpObjectStubs {
 		}
 	}
 
-	macro public static function arpHeatDown(heatDownBlock:Expr, hasImpl:Bool):Expr {
+	macro public static function arpHeatDownNow(heatDownNowBlock:Expr, hasImpl:Bool):Expr {
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 #if arp_debug
@@ -106,7 +106,7 @@ class MacroArpObjectStubs {
 				}
 			}
 			if (!this.arpSelfHeatDown()) isSync = false;
-			// $e{ heatDownBlock }
+			$e{ heatDownNowBlock }
 			return isSync;
 		}
 	}

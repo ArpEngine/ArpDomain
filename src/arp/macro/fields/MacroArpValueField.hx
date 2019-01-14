@@ -47,20 +47,16 @@ class MacroArpValueField extends MacroArpFieldBase implements IMacroArpField {
 		}
 	}
 
-	public function buildHeatLaterBlock(heatLaterBlock:Array<Expr>):Void {
-		heatLaterBlock.push(macro @:pos(this.nativePos) { null; });
+	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {
 	}
 
-	public function buildHeatUpBlock(heatUpBlock:Array<Expr>):Void {
-		heatUpBlock.push(macro @:pos(this.nativePos) { null; });
+	public function buildHeatUpNowBlock(heatUpNowBlock:Array<Expr>):Void {
 	}
 
-	public function buildHeatDownBlock(heatDownBlock:Array<Expr>):Void {
-		heatDownBlock.push(macro @:pos(this.nativePos) { null; });
+	public function buildHeatDownNowBlock(heatDownNowBlock:Array<Expr>):Void {
 	}
 
 	public function buildDisposeBlock(disposeBlock:Array<Expr>):Void {
-		disposeBlock.push(macro @:pos(this.nativePos) { null; });
 	}
 
 	public function buildConsumeSeedElementBlock(cases:MacroArpSwitchBlock):Void {
