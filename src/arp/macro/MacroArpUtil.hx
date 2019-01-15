@@ -13,6 +13,9 @@ class MacroArpUtil {
 	inline public static var IArpObject = "arp.domain.IArpObject";
 	inline public static var IArpObjectImpl = "arp.impl.IArpObjectImpl";
 
+	inline public static function __arpReserved(value:String):String return '__arp_$value';
+	inline public static function __arpGenerated(value:String):String return '__arp__$value';
+
 	public static function error(message:String, pos:Position):Void {
 		Context.error(message, pos);
 #if arp_macro_debug

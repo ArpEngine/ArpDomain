@@ -33,7 +33,7 @@ class ArpObjectFactory<T:IArpObject> {
 
 	public function arpInit(slot:ArpSlot<T>, seed:ArpSeed):T {
 		var arpObject:T = alloc(seed);
-		if (arpObject.arpInit(slot, seed) == null) return null;
+		if (arpObject.__arp_init(slot, seed) == null) return null;
 		return arpObject;
 	}
 }

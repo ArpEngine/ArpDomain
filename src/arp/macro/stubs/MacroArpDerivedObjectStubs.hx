@@ -31,37 +31,37 @@ class MacroArpDerivedObjectStubs {
 
 		return macro @:mergeBlock {
 			$e{ initBlock }
-			return super.arpInit(slot, seed);
+			return super.__arp_init(slot, seed);
 		}
 	}
 
-	macro public static function arpHeatLater(heatLaterBlock:Expr):Expr {
+	macro public static function arpHeatLaterDeps(heatLaterDepsBlock:Expr):Expr {
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
-			super.arpHeatLater();
-			$e{ heatLaterBlock }
+			super.__arp_heatLaterDeps();
+			$e{ heatLaterDepsBlock }
 		}
 	}
 
-	macro public static function arpHeatUp(heatUpBlock:Expr):Expr {
+	macro public static function arpHeatUpNow(heatUpNowBlock:Expr):Expr {
 		return macro @:mergeBlock {
-			$e{ heatUpBlock }
-			return super.arpHeatUp();
+			$e{ heatUpNowBlock }
+			return super.__arp_heatUpNow();
 		}
 	}
 
-	macro public static function arpHeatDown(heatDownBlock:Expr):Expr {
+	macro public static function arpHeatDownNow(heatDownNowBlock:Expr):Expr {
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
-			// $e{ heatDownBlock }
-			return super.arpHeatDown();
+			$e{ heatDownNowBlock }
+			return super.__arp_heatDownNow();
 		}
 	}
 
 	macro public static function arpDispose(disposeBlock:Expr):Expr {
 		return macro @:mergeBlock {
 			$e{ disposeBlock }
-			super.arpDispose();
+			super.__arp_dispose();
 		}
 	}
 

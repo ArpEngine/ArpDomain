@@ -187,7 +187,7 @@ class ArpDomain {
 	private function addObject<T:IArpObject>(arpObj:T, sid:ArpSid = null):T {
 		var slot:ArpSlot<T> = (sid != null) ? this.getOrCreateSlot(sid) : this.allocSlot(sid);
 		slot.value = arpObj;
-		arpObj.arpInit(slot);
+		arpObj.__arp_init(slot);
 		return arpObj;
 	}
 
@@ -208,7 +208,7 @@ class ArpDomain {
 	}
 
 	public function heatDown(slot:ArpUntypedSlot):Void {
-		slot.value.arpHeatDown();
+		slot.value.__arp_heatDownNow();
 		slot.heat = ArpHeat.Cold;
 	}
 
@@ -225,7 +225,7 @@ class ArpDomain {
 	inline private function get_tasksWaiting():Int return this.prepareQueue.tasksWaiting;
 
 	public var onPrepareComplete(get, never):IArpSignalOut<Int>;
-	inline private function get_onPrepareComplete():IArpSignalOut<Int> return this.prepareQueue.onProgress;
+	inline private function get_onPrepareComplete():IArpSignalOut<Int> return this.prepareQueue.onComplete;
 
 	public var onPrepareError(get, never):IArpSignalOut<Dynamic>;
 	inline private function get_onPrepareError():IArpSignalOut<Dynamic> return this.prepareQueue.onError;

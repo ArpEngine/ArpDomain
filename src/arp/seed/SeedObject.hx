@@ -41,7 +41,7 @@ class SeedObject implements IArpObject {
 	public var arpHeat(get, never):ArpHeat;
 	inline private function get_arpHeat():ArpHeat return this._arpSlot.heat;
 
-	public function arpInit(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
+	public function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
 		this._arpDomain = slot.domain;
 		this._arpSlot = slot;
 		if (seed != null) {
@@ -50,18 +50,18 @@ class SeedObject implements IArpObject {
 		return this;
 	}
 
-	public function arpHeatLater():Void {
+	public function __arp_heatLaterDeps():Void {
 	}
 
-	public function arpHeatUp():Bool {
+	public function __arp_heatUpNow():Bool {
 		return true;
 	}
 
-	public function arpHeatDown():Bool {
+	public function __arp_heatDownNow():Bool {
 		return true;
 	}
 
-	public function arpDispose():Void {
+	public function __arp_dispose():Void {
 		this._arpSlot = null;
 		this._arpDomain = null;
 	}

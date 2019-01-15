@@ -44,12 +44,12 @@ class PrepareTask implements IPrepareTask {
 
 		if (!this.preparePropagated) {
 			// trigger dependency prepare
-			this._slot.value.arpHeatLater();
+			this._slot.value.__arp_heatLaterDeps();
 			this.preparePropagated = true;
 		}
 
 		// try to heat up myself
-		if (!this._slot.value.arpHeatUp()) {
+		if (!this._slot.value.__arp_heatUpNow()) {
 			this.domain.log("arp_debug_prepare", 'PrepareTask.run(): waiting depending prepares: ${this._slot}');
 			return TaskStatus.Stalled;
 		}

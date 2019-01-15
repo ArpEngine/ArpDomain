@@ -20,20 +20,16 @@ class MacroArpValueStdMapField extends MacroArpValueCollectionFieldBase implemen
 		super(fieldDef, type, concreteDs);
 	}
 
-	public function buildHeatLaterBlock(heatLaterBlock:Array<Expr>):Void {
-		heatLaterBlock.push(macro @:pos(this.nativePos) { null; });
+	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {
 	}
 
-	public function buildHeatUpBlock(heatUpBlock:Array<Expr>):Void {
-		heatUpBlock.push(macro @:pos(this.nativePos) { null; });
+	public function buildHeatUpNowBlock(heatUpNowBlock:Array<Expr>):Void {
 	}
 
-	public function buildHeatDownBlock(heatDownBlock:Array<Expr>):Void {
-		heatDownBlock.push(macro @:pos(this.nativePos) { null; });
+	public function buildHeatDownNowBlock(heatDownNowBlock:Array<Expr>):Void {
 	}
 
 	public function buildDisposeBlock(initBlock:Array<Expr>):Void {
-		initBlock.push(macro @:pos(this.nativePos) { null; } );
 	}
 
 	public function buildConsumeSeedElementBlock(cases:MacroArpSwitchBlock):Void {

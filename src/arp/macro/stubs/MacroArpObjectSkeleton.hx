@@ -30,9 +30,9 @@ class MacroArpObjectSkeleton {
 	}
 
 	private function buildInitBlock():Expr return buildBlock("buildInitBlock");
-	private function buildHeatLaterBlock():Expr return buildBlock("buildHeatLaterBlock");
-	private function buildHeatUpBlock():Expr return buildBlock("buildHeatUpBlock");
-	private function buildHeatDownBlock():Expr return buildBlock("buildHeatDownBlock");
+	private function buildHeatLaterDepsBlock():Expr return buildBlock("buildHeatLaterDepsBlock");
+	private function buildHeatUpNowBlock():Expr return buildBlock("buildHeatUpNowBlock");
+	private function buildHeatDownNowBlock():Expr return buildBlock("buildHeatDownNowBlock");
 	private function buildDisposeBlock():Expr return buildBlock("buildDisposeBlock");
 	private function buildReadSelfBlock():Expr return buildBlock("buildReadSelfBlock", true);
 	private function buildWriteSelfBlock():Expr return buildBlock("buildWriteSelfBlock", true);
@@ -64,7 +64,7 @@ class MacroArpObjectSkeleton {
 			@:noDoc @:noCompletion private function get_arpHeat():arp.domain.ArpHeat return this._arpSlot.heat;
 
 			@:noDoc @:noCompletion
-			public function arpInit(slot:arp.domain.ArpUntypedSlot, seed:arp.seed.ArpSeed = null):arp.domain.IArpObject {
+			public function __arp_init(slot:arp.domain.ArpUntypedSlot, seed:arp.seed.ArpSeed = null):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpObjectStubs.arpInit(
 					$e{ this.buildInitBlock() },
 					$v{ this.classDef.hasImpl }
@@ -72,30 +72,30 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:noDoc @:noCompletion
-			public function arpHeatLater():Void {
-				arp.macro.stubs.MacroArpObjectStubs.arpHeatLater(
-					$e{ this.buildHeatLaterBlock() }
+			public function __arp_heatLaterDeps():Void {
+				arp.macro.stubs.MacroArpObjectStubs.arpHeatLaterDeps(
+					$e{ this.buildHeatLaterDepsBlock() }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			public function arpHeatUp():Bool {
-				arp.macro.stubs.MacroArpObjectStubs.arpHeatUp(
-					$e{ this.buildHeatUpBlock() },
+			public function __arp_heatUpNow():Bool {
+				arp.macro.stubs.MacroArpObjectStubs.arpHeatUpNow(
+					$e{ this.buildHeatUpNowBlock() },
 					$v{ this.classDef.hasImpl }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			public function arpHeatDown():Bool {
-				arp.macro.stubs.MacroArpObjectStubs.arpHeatDown(
-					$e{ this.buildHeatDownBlock() },
+			public function __arp_heatDownNow():Bool {
+				arp.macro.stubs.MacroArpObjectStubs.arpHeatDownNow(
+					$e{ this.buildHeatDownNowBlock() },
 					$v{ this.classDef.hasImpl }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			public function arpDispose():Void {
+			public function __arp_dispose():Void {
 				arp.macro.stubs.MacroArpObjectStubs.arpDispose(
 					$e{ this.buildDisposeBlock() },
 					$v{ this.classDef.hasImpl }
@@ -143,35 +143,35 @@ class MacroArpObjectSkeleton {
 			@:noDoc @:noCompletion override private function get_arpType():arp.domain.core.ArpType return _arpTypeInfo.arpType;
 
 			@:noDoc @:noCompletion
-			override public function arpInit(slot:arp.domain.ArpUntypedSlot, seed:arp.seed.ArpSeed = null):arp.domain.IArpObject {
+			override public function __arp_init(slot:arp.domain.ArpUntypedSlot, seed:arp.seed.ArpSeed = null):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpInit(
 					$e{ this.buildInitBlock() }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			override public function arpHeatLater():Void {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatLater(
-					$e{ this.buildHeatLaterBlock() }
+			override public function __arp_heatLaterDeps():Void {
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatLaterDeps(
+					$e{ this.buildHeatLaterDepsBlock() }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			override public function arpHeatUp():Bool {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatUp(
-					$e{ this.buildHeatUpBlock() }
+			override public function __arp_heatUpNow():Bool {
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatUpNow(
+					$e{ this.buildHeatUpNowBlock() }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			override public function arpHeatDown():Bool {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatDown(
-					$e{ this.buildHeatDownBlock() }
+			override public function __arp_heatDownNow():Bool {
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatDownNow(
+					$e{ this.buildHeatDownNowBlock() }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			override public function arpDispose():Void {
+			override public function __arp_dispose():Void {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpDispose(
 					$e{ this.buildDisposeBlock() }
 				);

@@ -77,7 +77,7 @@ class ArpDirectory {
 	private function addObject<T:IArpObject>(arpObj:T):T {
 		var slot:ArpSlot<T> = this.getOrCreateSlot(arpObj.arpType);
 		slot.value = arpObj;
-		arpObj.arpInit(slot);
+		arpObj.__arp_init(slot);
 		return arpObj;
 	}
 

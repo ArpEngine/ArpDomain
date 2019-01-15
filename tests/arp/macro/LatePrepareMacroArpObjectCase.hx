@@ -76,7 +76,7 @@ class LatePrepareMacroArpObjectCase {
 			assertEquals(1, arpObj.volatileInt);
 			assertEquals(ArpHeat.Warm, arpObj.arpHeat);
 
-			arpObj.arpDispose();
+			arpObj.__arp_dispose();
 			assertFalse(domain.isPending);
 			assertEquals(0, arpObj.volatileInt);
 			assertNull(arpObj._arpSlot);
