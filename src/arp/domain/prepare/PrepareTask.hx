@@ -10,7 +10,11 @@ class PrepareTask implements IPrepareTask {
 	private var _slot:ArpUntypedSlot;
 	private function get_slot():ArpUntypedSlot return _slot;
 
-	private var required:Bool;
+	public var required:Bool;
+
+	private var _blocking:Bool;
+	public var blocking(get, never):Bool;
+	private function get_blocking():Bool return _blocking;
 
 	public var waiting(get, set):Bool;
 	private var _waiting:Bool = false;
@@ -21,10 +25,11 @@ class PrepareTask implements IPrepareTask {
 
 	private var preparePropagated:Bool = false;
 
-	public function new(domain:ArpDomain, slot:ArpUntypedSlot, required:Bool = false) {
+	public function new(domain:ArpDomain, slot:ArpUntypedSlot, required:Bool = false, blocking:Bool = true) {
 		this.domain = domain;
 		this._slot = slot;
 		this.required = required;
+		this._blocking = blocking;
 	}
 
 	public function run():TaskStatus {

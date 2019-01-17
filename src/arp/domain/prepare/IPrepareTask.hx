@@ -5,6 +5,7 @@ import arp.task.ITask;
 
 interface IPrepareTask extends ITask {
 
+	var blocking(get, never):Bool;
 	var waiting(get, set):Bool;
 	var slot(get, never):ArpUntypedSlot;
 

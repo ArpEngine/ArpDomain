@@ -3,7 +3,6 @@ package arp.domain.prepare;
 import arp.domain.ArpDomain;
 import arp.domain.ArpUntypedSlot;
 import arp.domain.IArpObject;
-import arp.errors.ArpError;
 import arp.events.ArpProgressEvent;
 import arp.events.ArpSignal;
 import arp.events.IArpSignalOut;
@@ -12,7 +11,7 @@ import arp.task.TaskRunner;
 class PrepareQueue implements IPrepareStatus {
 
 	public var isPending(get, never):Bool;
-	inline private function get_isPending():Bool return !this.taskRunner.isCompleted;
+	inline private function get_isPending():Bool return this.tasksBlocking > 0;
 
 	public var tasksProcessed(get, never):Int;
 	inline private function get_tasksProcessed():Int return this.taskRunner.tasksProcessed;
@@ -22,6 +21,8 @@ class PrepareQueue implements IPrepareStatus {
 
 	public var tasksWaiting(get, never):Int;
 	inline private function get_tasksWaiting():Int return this.taskRunner.tasksWaiting;
+
+	public var tasksBlocking(default, null):Int;
 
 	private var _onComplete:ArpSignal<Int>;
 	public var onComplete(get, never):IArpSignalOut<Int>;
@@ -44,6 +45,7 @@ class PrepareQueue implements IPrepareStatus {
 		this._onProgress = new ArpSignal<ArpProgressEvent>();
 		this._onError = new ArpSignal<Dynamic>();
 		this._onComplete = new ArpSignal<Int>();
+		this.tasksBlocking = 0;
 		this.tasksBySlots = new Map();
 		this.taskRunner = new TaskRunner(rawTick, true);
 		this.taskRunner.onComplete.push(this.onTaskRunnerComplete);
@@ -87,16 +89,18 @@ class PrepareQueue implements IPrepareStatus {
 	private function onCompleteTask(task:IPrepareTask):Void {
 		task.slot.heat = ArpHeat.Warm;
 		this.tasksBySlots.remove(task.slot);
+		if (task.blocking) this.tasksBlocking--;
 	}
 
 	private function arpSlotToString(object:IArpObject, index:Int, array:Array<Dynamic>):String {
 		return (object != null) ? Std.string(object.arpSlot) : "<invalid reference>";
 	}
 
-	public function prepareLater(slot:ArpUntypedSlot, required:Bool = false):Void {
+	public function prepareLater(slot:ArpUntypedSlot, required:Bool = false, blocking:Bool = true):Void {
 		if (this.tasksBySlots.exists(slot)) return;
-		var task:PrepareTask = new PrepareTask(this.domain, slot, required);
+		var task:PrepareTask = new PrepareTask(this.domain, slot, required, blocking);
 		this.tasksBySlots.set(slot, task);
+		if (blocking) this.tasksBlocking++;
 		this.taskRunner.append(task);
 		task.slot.heat = ArpHeat.Warming;
 		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (required) "(required)" else ""}');
