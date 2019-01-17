@@ -89,21 +89,21 @@ class PrepareQueue implements IPrepareStatus {
 	private function onCompleteTask(task:PrepareTask):Void {
 		task.slot.heat = ArpHeat.Warm;
 		this.tasksBySlots.remove(task.slot);
-		if (task.blocking) this.tasksBlocking--;
+		if (!task.nonblocking) this.tasksBlocking--;
 	}
 
 	private function arpSlotToString(object:IArpObject, index:Int, array:Array<Dynamic>):String {
 		return (object != null) ? Std.string(object.arpSlot) : "<invalid reference>";
 	}
 
-	public function prepareLater(slot:ArpUntypedSlot, blocking:Bool = true):Void {
+	public function prepareLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Void {
 		if (this.tasksBySlots.exists(slot)) return;
-		var task:PrepareTask = new PrepareTask(this.domain, slot, blocking);
+		var task:PrepareTask = new PrepareTask(this.domain, slot, nonblocking);
 		this.tasksBySlots.set(slot, task);
-		if (blocking) this.tasksBlocking++;
+		if (!nonblocking) this.tasksBlocking++;
 		this.taskRunner.append(task);
 		task.slot.heat = ArpHeat.Warming;
-		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (blocking) "(blocking)" else ""}');
+		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (nonblocking) "(nonblocking)" else ""}');
 	}
 
 	public function waitBySlot(slot:ArpUntypedSlot):Void {

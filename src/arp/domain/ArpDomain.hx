@@ -168,7 +168,7 @@ class ArpDomain {
 					slot.value = arpObj;
 					switch (ArpHeat.fromName(seed.heat)) {
 						case ArpHeat.Cold:
-						case ArpHeat.Warming, ArpHeat.Warm: this.heatLater(slot, true);
+						case ArpHeat.Warming, ArpHeat.Warm: this.heatLater(slot);
 					}
 				}
 		}
@@ -203,8 +203,8 @@ class ArpDomain {
 		this._onLog.dispatch(new ArpLogEvent(category, message));
 	}
 
-	public function heatLater(slot:ArpUntypedSlot, blocking:Bool = true):Void {
-		this.prepareQueue.prepareLater(slot, blocking);
+	public function heatLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Void {
+		this.prepareQueue.prepareLater(slot, nonblocking);
 	}
 
 	public function heatDown(slot:ArpUntypedSlot):Void {

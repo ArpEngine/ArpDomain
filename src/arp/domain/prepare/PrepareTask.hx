@@ -9,16 +9,16 @@ class PrepareTask implements ITask {
 
 	private var domain:ArpDomain;
 	public var slot(default, null):ArpUntypedSlot;
-	public var blocking(default, null):Bool;
+	public var nonblocking(default, null):Bool;
 
 	public var waiting:Bool;
 
 	private var preparePropagated:Bool = false;
 
-	public function new(domain:ArpDomain, slot:ArpUntypedSlot, blocking:Bool = true) {
+	public function new(domain:ArpDomain, slot:ArpUntypedSlot, nonblocking:Bool = false) {
 		this.domain = domain;
 		this.slot = slot;
-		this.blocking = blocking;
+		this.nonblocking = nonblocking;
 	}
 
 	public function run():TaskStatus {
