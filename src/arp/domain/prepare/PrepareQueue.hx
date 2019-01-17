@@ -107,15 +107,6 @@ class PrepareQueue implements IPrepareStatus {
 		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (required) "(required)" else ""}');
 	}
 
-	public function prepareChildLater(slot:ArpUntypedSlot, name:String, childSlot:ArpUntypedSlot):Void {
-		if (this.tasksBySlots.exists(slot)) return;
-		throw new ArpError("PrepareQueue.prepareChildLater() will not be implemented"); // TODO delete this!
-		// var task:IPrepareTask = new PrepareChildTask(this.domain, slot, name, childSlot);
-		// this.tasksBySlots.set(slot, task);
-		// this.taskRunner.append(task);
-		// task.slot.heat = ArpHeat.Warming;
-	}
-
 	public function waitBySlot(slot:ArpUntypedSlot):Void {
 		if (this.tasksBySlots.exists(slot)) {
 			var task:IPrepareTask = this.tasksBySlots.get(slot);
