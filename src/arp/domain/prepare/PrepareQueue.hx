@@ -37,8 +37,8 @@ class PrepareQueue implements IPrepareStatus {
 	inline private function get_onProgress():IArpSignalOut<ArpProgressEvent> return _onProgress;
 
 	private var domain:ArpDomain;
-	private var tasksBySlots:Map<ArpUntypedSlot, IPrepareTask>;
-	private var taskRunner:TaskRunner<IPrepareTask>;
+	private var tasksBySlots:Map<ArpUntypedSlot, PrepareTask>;
+	private var taskRunner:TaskRunner<PrepareTask>;
 
 	public function new(domain:ArpDomain, rawTick:IArpSignalOut<Float>) {
 		this.domain = domain;
@@ -86,7 +86,7 @@ class PrepareQueue implements IPrepareStatus {
 		}
 	}
 
-	private function onCompleteTask(task:IPrepareTask):Void {
+	private function onCompleteTask(task:PrepareTask):Void {
 		task.slot.heat = ArpHeat.Warm;
 		this.tasksBySlots.remove(task.slot);
 		if (task.blocking) this.tasksBlocking--;
@@ -108,7 +108,7 @@ class PrepareQueue implements IPrepareStatus {
 
 	public function waitBySlot(slot:ArpUntypedSlot):Void {
 		if (this.tasksBySlots.exists(slot)) {
-			var task:IPrepareTask = this.tasksBySlots.get(slot);
+			var task:PrepareTask = this.tasksBySlots.get(slot);
 			task.waiting = true;
 			this.taskRunner.wait(task);
 		}
@@ -116,7 +116,7 @@ class PrepareQueue implements IPrepareStatus {
 
 	public function notifyBySlot(slot:ArpUntypedSlot):Void {
 		if (this.tasksBySlots.exists(slot)) {
-			var task:IPrepareTask = this.tasksBySlots.get(slot);
+			var task:PrepareTask = this.tasksBySlots.get(slot);
 			task.waiting = false;
 			this.taskRunner.notify(task);
 		}
