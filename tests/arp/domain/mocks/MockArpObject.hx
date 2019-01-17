@@ -41,7 +41,7 @@ class MockArpObject implements IArpObject {
 	public var arpHeat(get, never):ArpHeat;
 	private function get_arpHeat():ArpHeat return this._arpSlot.heat;
 
-	public function arpInit(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
+	public function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
 		this._arpDomain = slot.domain;
 		this._arpSlot = slot;
 		this.refFieldSlot = slot.domain.nullSlot;
@@ -54,11 +54,11 @@ class MockArpObject implements IArpObject {
 
 	}
 
-	public function arpHeatLater():Void {
+	public function __arp_heatLaterDeps():Void {
 		this._arpDomain.heatLater(this.refFieldSlot);
 	}
 
-	public function arpHeatUp():Bool {
+	public function __arp_heatUpNow():Bool {
 		return this.heatUp();
 	}
 
@@ -66,7 +66,7 @@ class MockArpObject implements IArpObject {
 		return true;
 	}
 
-	public function arpHeatDown():Bool {
+	public function __arp_heatDownNow():Bool {
 		return this.heatDown();
 	}
 
@@ -74,7 +74,7 @@ class MockArpObject implements IArpObject {
 		return true;
 	}
 
-	public function arpDispose():Void {
+	public function __arp_dispose():Void {
 		this.dispose();
 		this._arpSlot = null;
 		this._arpDomain = null;
@@ -118,7 +118,7 @@ class MockArpObject implements IArpObject {
 	@:access(arp.domain.ArpDomain)
 	public function arpClone():IArpObject {
 		var clone:MockArpObject = new MockArpObject();
-		clone.arpInit(this._arpDomain.allocSlot());
+		clone.__arp_init(this._arpDomain.allocSlot());
 		clone.arpCopyFrom(this);
 		return clone;
 	}

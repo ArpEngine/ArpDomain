@@ -31,13 +31,13 @@ class MockImpl {
 		this.initialHeat = this.currentHeat;
 	}
 
-	public function arpHeatUp():Bool {
+	public function __arp_heatUpNow():Bool {
 		currentHeat = ArpHeat.Warm;
 		return true;
 	}
-	public function arpHeatDown():Bool {
+	public function __arp_heatDownNow():Bool {
 		currentHeat = ArpHeat.Cold;
 		return true;
 	}
-	public function arpDispose():Void return;
+	public function __arp_dispose():Void return;
 }

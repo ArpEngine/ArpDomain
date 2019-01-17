@@ -3,7 +3,6 @@ package arp.domain.prepare;
 import arp.domain.ArpDomain;
 import arp.domain.ArpUntypedSlot;
 import arp.domain.IArpObject;
-import arp.errors.ArpError;
 import arp.events.ArpProgressEvent;
 import arp.events.ArpSignal;
 import arp.events.IArpSignalOut;
@@ -12,7 +11,7 @@ import arp.task.TaskRunner;
 class PrepareQueue implements IPrepareStatus {
 
 	public var isPending(get, never):Bool;
-	inline private function get_isPending():Bool return !this.taskRunner.isCompleted;
+	inline private function get_isPending():Bool return this.tasksBlocking > 0;
 
 	public var tasksProcessed(get, never):Int;
 	inline private function get_tasksProcessed():Int return this.taskRunner.tasksProcessed;
@@ -23,10 +22,7 @@ class PrepareQueue implements IPrepareStatus {
 	public var tasksWaiting(get, never):Int;
 	inline private function get_tasksWaiting():Int return this.taskRunner.tasksWaiting;
 
-	public var taskStatus(get, never):String;
-	private function get_taskStatus():String {
-		return "[" + Std.string(this.tasksProcessed + 1) + "/" + Std.string(this.tasksTotal) + "]";
-	}
+	public var tasksBlocking(default, null):Int;
 
 	private var _onComplete:ArpSignal<Int>;
 	public var onComplete(get, never):IArpSignalOut<Int>;
@@ -41,14 +37,15 @@ class PrepareQueue implements IPrepareStatus {
 	inline private function get_onProgress():IArpSignalOut<ArpProgressEvent> return _onProgress;
 
 	private var domain:ArpDomain;
-	private var tasksBySlots:Map<ArpUntypedSlot, IPrepareTask>;
-	private var taskRunner:TaskRunner<IPrepareTask>;
+	private var tasksBySlots:Map<ArpUntypedSlot, PrepareTask>;
+	private var taskRunner:TaskRunner<PrepareTask>;
 
 	public function new(domain:ArpDomain, rawTick:IArpSignalOut<Float>) {
 		this.domain = domain;
 		this._onProgress = new ArpSignal<ArpProgressEvent>();
 		this._onError = new ArpSignal<Dynamic>();
 		this._onComplete = new ArpSignal<Int>();
+		this.tasksBlocking = 0;
 		this.tasksBySlots = new Map();
 		this.taskRunner = new TaskRunner(rawTick, true);
 		this.taskRunner.onComplete.push(this.onTaskRunnerComplete);
@@ -89,36 +86,29 @@ class PrepareQueue implements IPrepareStatus {
 		}
 	}
 
-	private function onCompleteTask(task:IPrepareTask):Void {
+	private function onCompleteTask(task:PrepareTask):Void {
 		task.slot.heat = ArpHeat.Warm;
 		this.tasksBySlots.remove(task.slot);
+		if (!task.nonblocking) this.tasksBlocking--;
 	}
 
 	private function arpSlotToString(object:IArpObject, index:Int, array:Array<Dynamic>):String {
 		return (object != null) ? Std.string(object.arpSlot) : "<invalid reference>";
 	}
 
-	public function prepareLater(slot:ArpUntypedSlot, required:Bool = false):Void {
+	public function prepareLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Void {
 		if (this.tasksBySlots.exists(slot)) return;
-		var task:PrepareTask = new PrepareTask(this.domain, slot, required);
+		var task:PrepareTask = new PrepareTask(this.domain, slot, nonblocking);
 		this.tasksBySlots.set(slot, task);
+		if (!nonblocking) this.tasksBlocking++;
 		this.taskRunner.append(task);
 		task.slot.heat = ArpHeat.Warming;
-		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (required) "(required)" else ""}');
-	}
-
-	public function prepareChildLater(slot:ArpUntypedSlot, name:String, childSlot:ArpUntypedSlot):Void {
-		if (this.tasksBySlots.exists(slot)) return;
-		throw new ArpError("PrepareQueue.prepareChildLater() will not be implemented"); // TODO delete this!
-		// var task:IPrepareTask = new PrepareChildTask(this.domain, slot, name, childSlot);
-		// this.tasksBySlots.set(slot, task);
-		// this.taskRunner.append(task);
-		// task.slot.heat = ArpHeat.Warming;
+		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (nonblocking) "(nonblocking)" else ""}');
 	}
 
 	public function waitBySlot(slot:ArpUntypedSlot):Void {
 		if (this.tasksBySlots.exists(slot)) {
-			var task:IPrepareTask = this.tasksBySlots.get(slot);
+			var task:PrepareTask = this.tasksBySlots.get(slot);
 			task.waiting = true;
 			this.taskRunner.wait(task);
 		}
@@ -126,9 +116,13 @@ class PrepareQueue implements IPrepareStatus {
 
 	public function notifyBySlot(slot:ArpUntypedSlot):Void {
 		if (this.tasksBySlots.exists(slot)) {
-			var task:IPrepareTask = this.tasksBySlots.get(slot);
+			var task:PrepareTask = this.tasksBySlots.get(slot);
 			task.waiting = false;
 			this.taskRunner.notify(task);
 		}
+	}
+
+	public function toString():String {
+		return "[" + Std.string(this.tasksProcessed + 1) + "/" + Std.string(this.tasksTotal) + "]";
 	}
 }

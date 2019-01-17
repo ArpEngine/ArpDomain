@@ -48,7 +48,7 @@ class EarlyPrepareMacroArpObjectCase {
 		assertEquals(0, arpObj.volatileInt);
 		assertEquals(ArpHeat.Cold, arpObj.arpHeat);
 
-		arpObj.__arp_tryHeatUp();
+		arpObj.__arp_heatUpNow();
 		assertFalse(domain.isPending);
 		assertEquals(1, arpObj.volatileInt);
 		assertEquals(ArpHeat.Warm, arpObj.arpHeat);

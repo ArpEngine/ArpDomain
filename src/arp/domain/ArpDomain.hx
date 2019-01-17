@@ -203,8 +203,8 @@ class ArpDomain {
 		this._onLog.dispatch(new ArpLogEvent(category, message));
 	}
 
-	public function heatLater(slot:ArpUntypedSlot, required:Bool = false):Void {
-		this.prepareQueue.prepareLater(slot, required);
+	public function heatLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Void {
+		this.prepareQueue.prepareLater(slot, nonblocking);
 	}
 
 	public function heatDown(slot:ArpUntypedSlot):Void {
