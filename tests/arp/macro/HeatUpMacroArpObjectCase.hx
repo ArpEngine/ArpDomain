@@ -1,5 +1,6 @@
 package arp.macro;
 
+import arp.macro.mocks.MockEmptyArpObject;
 import arp.domain.ArpDomain;
 import arp.domain.ArpHeat;
 import arp.domain.ArpSlot;
@@ -19,8 +20,10 @@ class HeatUpMacroArpObjectCase {
 	public function setup():Void {
 		domain = new ArpDomain();
 		domain.addTemplate(MockMacroArpObject, true);
+		domain.addTemplate(MockEmptyArpObject, true);
 		xml = Xml.parse('<data>
-		<mock name="name1" intField="42" floatField="3.14" boolField="true" stringField="stringValue" refField="" />
+		<mock name="empty" class="empty" />
+		<mock name="name1" intField="42" floatField="3.14" boolField="true" stringField="stringValue" refField="empty" />
 		<mock name="name2" refField="/name1" />
 		<mock name="name3" />
 		<mock name="name4" heat="warm" />
