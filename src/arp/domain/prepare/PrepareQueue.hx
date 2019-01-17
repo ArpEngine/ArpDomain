@@ -23,11 +23,6 @@ class PrepareQueue implements IPrepareStatus {
 	public var tasksWaiting(get, never):Int;
 	inline private function get_tasksWaiting():Int return this.taskRunner.tasksWaiting;
 
-	public var taskStatus(get, never):String;
-	private function get_taskStatus():String {
-		return "[" + Std.string(this.tasksProcessed + 1) + "/" + Std.string(this.tasksTotal) + "]";
-	}
-
 	private var _onComplete:ArpSignal<Int>;
 	public var onComplete(get, never):IArpSignalOut<Int>;
 	inline private function get_onComplete():IArpSignalOut<Int> return _onComplete;
@@ -121,5 +116,9 @@ class PrepareQueue implements IPrepareStatus {
 			task.waiting = false;
 			this.taskRunner.notify(task);
 		}
+	}
+
+	public function toString():String {
+		return "[" + Std.string(this.tasksProcessed + 1) + "/" + Std.string(this.tasksTotal) + "]";
 	}
 }
