@@ -9,17 +9,15 @@ class PrepareTask implements ITask {
 
 	private var domain:ArpDomain;
 	public var slot(default, null):ArpUntypedSlot;
-	public var required(default, null):Bool;
 	public var blocking(default, null):Bool;
 
 	public var waiting:Bool;
 
 	private var preparePropagated:Bool = false;
 
-	public function new(domain:ArpDomain, slot:ArpUntypedSlot, required:Bool = false, blocking:Bool = true) {
+	public function new(domain:ArpDomain, slot:ArpUntypedSlot, blocking:Bool = true) {
 		this.domain = domain;
 		this.slot = slot;
-		this.required = required;
 		this.blocking = blocking;
 	}
 
@@ -28,13 +26,10 @@ class PrepareTask implements ITask {
 			if (this.slot.refCount <= 0) {
 				this.domain.log("arp_debug_prepare", 'PrepareTask.run(): ultimate unused and prepare canceled: ${this.slot}');
 				return TaskStatus.Complete;
-			} else if (this.required) {
+			} else {
 				var message = 'PrepareTask.run(): slot is required but was null: ${this.slot}';
 				this.domain.log("arp_debug_prepare", message);
 				return TaskStatus.Error(message);
-			} else {
-				this.domain.log("arp_debug_prepare", 'PrepareTask.run(): prepare complete (null): ${this.slot}');
-				return TaskStatus.Complete;
 			}
 		}
 

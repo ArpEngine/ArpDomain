@@ -96,14 +96,14 @@ class PrepareQueue implements IPrepareStatus {
 		return (object != null) ? Std.string(object.arpSlot) : "<invalid reference>";
 	}
 
-	public function prepareLater(slot:ArpUntypedSlot, required:Bool = false, blocking:Bool = true):Void {
+	public function prepareLater(slot:ArpUntypedSlot, blocking:Bool = true):Void {
 		if (this.tasksBySlots.exists(slot)) return;
-		var task:PrepareTask = new PrepareTask(this.domain, slot, required, blocking);
+		var task:PrepareTask = new PrepareTask(this.domain, slot, blocking);
 		this.tasksBySlots.set(slot, task);
 		if (blocking) this.tasksBlocking++;
 		this.taskRunner.append(task);
 		task.slot.heat = ArpHeat.Warming;
-		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (required) "(required)" else ""}');
+		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (blocking) "(blocking)" else ""}');
 	}
 
 	public function waitBySlot(slot:ArpUntypedSlot):Void {
