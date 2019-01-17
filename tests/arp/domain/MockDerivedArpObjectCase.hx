@@ -26,7 +26,7 @@ class MockDerivedArpObjectCase {
 	public function testBuildObject():Void {
 		slot = domain.dir("name1").getOrCreateSlot(new ArpType("mock"));
 		arpObj = new MockDerivedArpObject();
-		arpObj.arpInit(slot, seed);
+		arpObj.__arp_init(slot, seed);
 
 		assertEquals(domain, arpObj.arpDomain);
 		assertEquals(new ArpType("mock"), arpObj.arpType);

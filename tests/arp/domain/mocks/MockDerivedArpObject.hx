@@ -25,18 +25,18 @@ class MockDerivedArpObject extends MockArpObject {
 	override private function get_arpTypeInfo():ArpTypeInfo return _arpTypeInfo;
 	override private function get_arpType():ArpType return _arpTypeInfo.arpType;
 
-	override public function arpInit(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
+	override public function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
 		this.refField2Slot = slot.domain.nullSlot;
-		return super.arpInit(slot, seed);
+		return super.__arp_init(slot, seed);
 	}
 
-	override public function arpHeatLater():Void {
-		super.arpHeatLater();
+	override public function __arp_heatLaterDeps():Void {
+		super.__arp_heatLaterDeps();
 		this._arpDomain.heatLater(this.refField2Slot);
 	}
 
-	override public function arpDispose():Void {
-		super.dispose();
+	override public function __arp_dispose():Void {
+		super.__arp_dispose();
 	}
 
 	override private function arpConsumeSeedElement(element:ArpSeed):Void {
@@ -65,7 +65,7 @@ class MockDerivedArpObject extends MockArpObject {
 	@:access(arp.domain.ArpDomain)
 	override public function arpClone():IArpObject {
 		var clone:MockDerivedArpObject = new MockDerivedArpObject();
-		clone.arpInit(this._arpDomain.allocSlot());
+		clone.__arp_init(this._arpDomain.allocSlot());
 		clone.arpCopyFrom(this);
 		return clone;
 	}
