@@ -81,9 +81,7 @@ class ArpDirectory {
 		return arpObj;
 	}
 
-	inline public function child(name:String):ArpDirectory return this.trueChild(name);
-
-	public function trueChild(name:String):ArpDirectory {
+	public function child(name:String):ArpDirectory {
 		if (this.children.hasKey(name)) return this.children.get(name);
 		var child:ArpDirectory = this.domain.allocDir(ArpDid.build(this.did, name));
 		this.children.set(name, child);

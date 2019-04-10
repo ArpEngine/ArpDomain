@@ -14,8 +14,8 @@ class ArpDirectoryQueryCase {
 
 	public function setup():Void {
 		domain = new ArpDomain();
-		child = domain.root.trueChild("path");
-		dir = child.trueChild("to").trueChild("dir");
+		child = domain.root.child("path");
+		dir = child.child("to").child("dir");
 		arpObject = new MockArpObject();
 		arpType = arpObject.arpType;
 		dir.addOrphanObject(arpObject);
