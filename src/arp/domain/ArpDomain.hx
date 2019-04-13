@@ -144,16 +144,11 @@ class ArpDomain {
 	public function loadSeed<T:IArpObject>(seed:ArpSeed, lexicalType:ArpType = null):Null<ArpSlot<T>> {
 		var type:ArpType = (lexicalType != null) ? lexicalType : new ArpType(seed.seedName);
 		var slot:ArpSlot<T>;
-		var name:String;
+		var name:String = seed.name;
 		switch (seed.valueKind) {
 			case ArpSeedValueKind.Reference, ArpSeedValueKind.Ambigious if (seed.value != null):
 				slot = this.root.query(seed.value, type).slot();
-				name = seed.name;
-				if (name != null) {
-					this.root.query(name, type).setSlot(slot);
-				}
 			case _:
-				name = seed.name;
 				var oldDir:ArpDirectory = this.currentDir;
 				if (name == null) {
 					slot = allocSlot(new ArpSid('${_sid.next()}:${type}')); // FIXME
