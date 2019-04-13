@@ -55,12 +55,6 @@ class ArpDirectory {
 		return slot;
 	}
 
-	public function setSlot(type:ArpType, slot:ArpUntypedSlot):ArpUntypedSlot {
-		this.slots.set(type, slot);
-		slot.addDirectory(this);
-		return slot;
-	}
-
 	public function getValue(type:ArpType):IArpObject {
 		return this.getOrCreateSlot(type).value;
 	}
