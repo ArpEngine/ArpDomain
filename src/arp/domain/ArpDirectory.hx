@@ -49,9 +49,8 @@ class ArpDirectory {
 
 	public function getOrCreateSlot(type:ArpType):ArpUntypedSlot {
 		if (this.slots.exists(type)) return this.slots.get(type);
-		var slot:ArpUntypedSlot = this.domain.allocSlot(ArpSid.build(this.did, type));
+		var slot:ArpUntypedSlot = this.domain.allocBoundSlot(this, type);
 		this.slots.set(type, slot);
-		slot.addDirectory(this);
 		return slot;
 	}
 

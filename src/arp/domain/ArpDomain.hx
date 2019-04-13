@@ -70,7 +70,7 @@ class ArpDomain {
 		this.root = this.allocDir(new ArpDid(""));
 		this.currentDir = this.root;
 		this.slots = new Map();
-		this.nullSlot = this.allocSlot(new ArpSid(ArpIdGenerator.AUTO_HEADER + "null"));
+		this.nullSlot = this.allocUnboundSlot(new ArpSid(ArpIdGenerator.AUTO_HEADER + "null"));
 		this.registry = new ArpObjectFactoryRegistry();
 		this.prepareQueue = new PrepareQueue(this, this._rawTick);
 
@@ -88,9 +88,14 @@ class ArpDomain {
 		}
 	}
 
-	private function allocSlot(sid:ArpSid = null, type:String = null):ArpUntypedSlot {
-		if (sid == null) sid = new ArpSid(_sid.next());
-		var slot:ArpUntypedSlot = new ArpUntypedSlot(this, sid);
+	private function allocBoundSlot(dir:ArpDirectory, type:ArpType):ArpUntypedSlot {
+		var slot:ArpUntypedSlot = ArpUntypedSlot.createBound(this, dir, type);
+		this.slots.set(slot.sid.toString(), slot);
+		return slot;
+	}
+
+	private function allocUnboundSlot(sid:ArpSid):ArpUntypedSlot {
+		var slot:ArpUntypedSlot = ArpUntypedSlot.createUnbound(this, sid);
 		this.slots.set(sid.toString(), slot);
 		return slot;
 	}
@@ -111,7 +116,7 @@ class ArpDomain {
 	public function getOrCreateSlot<T:IArpObject>(sid:ArpSid):ArpSlot<T> {
 		var slot:ArpSlot<T> = this.slots.get(sid.toString());
 		if (slot != null) return slot;
-		return allocSlot(sid);
+		return allocUnboundSlot(sid);
 	}
 
 	inline public function dir(path:String = null):ArpDirectory {
@@ -142,22 +147,22 @@ class ArpDomain {
 	}
 
 	public function loadSeed<T:IArpObject>(seed:ArpSeed, lexicalType:ArpType = null):Null<ArpSlot<T>> {
-		var type:ArpType = (lexicalType != null) ? lexicalType : new ArpType(seed.seedName);
+		var arpType:ArpType = (lexicalType != null) ? lexicalType : new ArpType(seed.seedName);
 		var slot:ArpSlot<T>;
 		var name:String = seed.name;
 		switch (seed.valueKind) {
 			case ArpSeedValueKind.Reference, ArpSeedValueKind.Ambigious if (seed.value != null):
-				slot = this.root.query(seed.value, type).slot();
+				slot = this.root.query(seed.value, arpType).slot();
 			case _:
 				var oldDir:ArpDirectory = this.currentDir;
 				if (name == null) {
-					slot = allocSlot(new ArpSid('${_sid.next()}:${type}')); // FIXME
+					slot = this.allocUnboundSlot(new ArpSid('${_sid.next()}:${arpType.toString()}'));
 				} else {
 					var dir:ArpDirectory = this.currentDir.dir(name);
-					slot = dir.getOrCreateSlot(type);
+					slot = dir.getOrCreateSlot(arpType);
 					this.currentDir = dir;
 				}
-				var arpObj:T = this.registry.resolve(seed, type).arpInit(slot, seed);
+				var arpObj:T = this.registry.resolve(seed, arpType).arpInit(slot, seed);
 				this.currentDir = oldDir;
 				if (arpObj != null) {
 					slot.value = arpObj;
@@ -175,12 +180,17 @@ class ArpDomain {
 		return this.addObject(Type.createInstance(klass, args), sid);
 	}
 
-	public function addOrphanObject<T:IArpObject>(arpObj:T):T {
+	inline public function addOrphanObject<T:IArpObject>(arpObj:T):T {
 		return this.addObject(arpObj);
 	}
 
 	private function addObject<T:IArpObject>(arpObj:T, sid:ArpSid = null):T {
-		var slot:ArpSlot<T> = (sid != null) ? this.getOrCreateSlot(sid) : this.allocSlot(sid);
+		var slot:ArpSlot<T>;
+		if (sid == null) {
+			slot = this.allocUnboundSlot(new ArpSid('${_sid.next()}:${arpObj.arpType.toString()}'));
+		} else {
+			slot = this.getOrCreateSlot(sid);
+		}
 		slot.value = arpObj;
 		arpObj.__arp_init(slot);
 		return arpObj;

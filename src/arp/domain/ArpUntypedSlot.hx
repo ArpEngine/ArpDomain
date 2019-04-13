@@ -1,5 +1,7 @@
 package arp.domain;
 
+import arp.domain.core.ArpType;
+import arp.errors.ArpError;
 import arp.domain.core.ArpSid;
 
 @:allow(arp.domain.ArpSlot)
@@ -22,21 +24,9 @@ class ArpUntypedSlot {
 	}
 
 	private var _primaryDir:ArpDirectory;
-	private var _dirs:Array<ArpDirectory>;
 
 	public var primaryDir(get, never):ArpDirectory;
 	inline public function get_primaryDir():ArpDirectory return _primaryDir;
-
-	@:allow(arp.domain.ArpDirectory)
-	inline private function addDirectory(dir:ArpDirectory):Void {
-		dir.addReference();
-		if (this._primaryDir == null) {
-			this._primaryDir = dir;
-		} else {
-			if (_dirs == null) _dirs = [];
-			_dirs.push(_primaryDir);
-		}
-	}
 
 	private var _refCount:Int = 0;
 	public var refCount(get, never):Int;
@@ -51,9 +41,6 @@ class ArpUntypedSlot {
 			}
 			this._domain.freeSlot(this);
 			if (this._primaryDir != null) this._primaryDir.delReference();
-			if (this._dirs != null) {
-				for (dir in this._dirs) dir.delReference();
-			}
 		}
 		return this;
 	}
@@ -68,10 +55,20 @@ class ArpUntypedSlot {
 	inline private function get_heat():ArpHeat { return this._heat; }
 	inline private function set_heat(value:ArpHeat):ArpHeat { return this._heat = value; }
 
-	@:allow(arp.domain.ArpDomain)
-	private function new(domain:ArpDomain, sid:ArpSid) {
+	private function new(domain:ArpDomain, sid:ArpSid, dir:ArpDirectory = null) {
 		this.domain = domain;
+		this._primaryDir = dir;
 		this.sid = sid;
+	}
+
+	@:allow(arp.domain.ArpDomain)
+	private static function createBound(domain:ArpDomain, dir:ArpDirectory, type:ArpType) {
+		return new ArpUntypedSlot(domain, ArpSid.build(dir.did, type), dir);
+	}
+
+	@:allow(arp.domain.ArpDomain)
+	private static function createUnbound(domain:ArpDomain, sid:ArpSid) {
+		return new ArpUntypedSlot(domain, sid, null);
 	}
 
 	public function toString():String return '<$sid>';

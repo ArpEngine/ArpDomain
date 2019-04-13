@@ -115,10 +115,9 @@ class MockArpObject implements IArpObject {
 		output.writeUtf("refField", this.refFieldSlot.sid.toString());
 	}
 
-	@:access(arp.domain.ArpDomain)
 	public function arpClone():IArpObject {
 		var clone:MockArpObject = new MockArpObject();
-		clone.__arp_init(this._arpDomain.allocSlot());
+		this._arpDomain.addOrphanObject(clone);
 		clone.arpCopyFrom(this);
 		return clone;
 	}
