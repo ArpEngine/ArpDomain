@@ -2,7 +2,6 @@ package arp.domain;
 
 import arp.domain.ArpUntypedSlot;
 import arp.domain.core.ArpDid;
-import arp.domain.core.ArpSid;
 import arp.domain.core.ArpType;
 import arp.domain.query.ArpDirectoryQuery;
 import arp.domain.query.ArpObjectQuery;
@@ -76,7 +75,7 @@ class ArpDirectory {
 
 	public function child(name:String):ArpDirectory {
 		if (this.children.hasKey(name)) return this.children.get(name);
-		var child:ArpDirectory = this.domain.allocDir(ArpDid.build(this.did, name));
+		var child:ArpDirectory = new ArpDirectory(this.domain, ArpDid.build(this.did, name));
 		this.children.set(name, child);
 		child.parent = this.addReference();
 		return child;

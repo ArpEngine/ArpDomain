@@ -1,11 +1,11 @@
 package arp.data;
 
+import arp.domain.ArpDirectory;
 import arp.domain.ArpDomain;
 import arp.domain.ArpHeat;
 import arp.domain.ArpSlot;
 import arp.domain.ArpTypeInfo;
 import arp.domain.ArpUntypedSlot;
-import arp.domain.core.ArpSid;
 import arp.domain.core.ArpType;
 import arp.domain.IArpObject;
 import arp.errors.ArpError;
@@ -102,14 +102,14 @@ class DataGroup implements IArpObject {
 		this.children.push(slot);
 	}
 
-	public function allocObject<T:IArpObject>(klass:Class<T>, args:Array<Dynamic> = null, sid:ArpSid = null):T {
-		var obj:T = this.arpDomain.allocObject(klass, args, sid);
+	public function allocObject<T:IArpObject>(klass:Class<T>, args:Array<Dynamic> = null, dir:ArpDirectory = null):T {
+		var obj:T = this.arpDomain.allocObject(klass, args, dir);
 		this.children.push(obj.arpSlot);
 		return obj;
 	}
 
-	public function addOrphanObject<T:IArpObject>(arpObj:T):T {
-		var obj:T = this.arpDomain.addOrphanObject(arpObj);
+	public function addOrphanObject<T:IArpObject>(arpObj:T, dir:ArpDirectory = null):T {
+		var obj:T = this.arpDomain.addOrphanObject(arpObj, dir);
 		this.children.push(obj.arpSlot);
 		return obj;
 	}

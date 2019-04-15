@@ -1,7 +1,6 @@
 package arp.domain;
 
 import arp.domain.core.ArpType;
-import arp.errors.ArpError;
 import arp.domain.core.ArpSid;
 
 @:allow(arp.domain.ArpSlot)
@@ -23,10 +22,10 @@ class ArpUntypedSlot {
 		return this._value = value;
 	}
 
-	private var _primaryDir:ArpDirectory;
+	private var _primaryDir:Null<ArpDirectory>;
 
-	public var primaryDir(get, never):ArpDirectory;
-	inline public function get_primaryDir():ArpDirectory return _primaryDir;
+	public var primaryDir(get, never):Null<ArpDirectory>;
+	inline public function get_primaryDir():Null<ArpDirectory> return _primaryDir;
 
 	private var _refCount:Int = 0;
 	public var refCount(get, never):Int;

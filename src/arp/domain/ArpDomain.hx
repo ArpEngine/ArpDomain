@@ -41,7 +41,6 @@ class ArpDomain {
 
 	private var registry:ArpObjectFactoryRegistry;
 
-	private var _sid:ArpIdGenerator = new ArpIdGenerator();
 	private var _did:ArpIdGenerator = new ArpIdGenerator();
 
 	private var _rawTick:ArpSignal<Float>;
@@ -67,10 +66,10 @@ class ArpDomain {
 		this._tick = new ArpSignal<Float>();
 		this._onLog = new ArpSignal<ArpLogEvent>();
 
-		this.root = this.allocDir(new ArpDid(""));
+		this.root = new ArpDirectory(this, ArpDid.rootDir());
 		this.currentDir = this.root;
 		this.slots = new Map();
-		this.nullSlot = this.allocUnboundSlot(new ArpSid(ArpIdGenerator.AUTO_HEADER + "null"));
+		this.nullSlot = this.allocUnboundSlot(ArpSid.nullSlot());
 		this.registry = new ArpObjectFactoryRegistry();
 		this.prepareQueue = new PrepareQueue(this, this._rawTick);
 
@@ -88,8 +87,8 @@ class ArpDomain {
 		}
 	}
 
-	private function allocBoundSlot(dir:ArpDirectory, type:ArpType):ArpUntypedSlot {
-		var slot:ArpUntypedSlot = ArpUntypedSlot.createBound(this, dir, type);
+	private function allocBoundSlot(dir:ArpDirectory, arpType:ArpType):ArpUntypedSlot {
+		var slot:ArpUntypedSlot = ArpUntypedSlot.createBound(this, dir, arpType);
 		this.slots.set(slot.sid.toString(), slot);
 		return slot;
 	}
@@ -100,13 +99,13 @@ class ArpDomain {
 		return slot;
 	}
 
-	private function freeSlot(slot:ArpUntypedSlot):Void {
-		this.slots.remove(slot.sid.toString());
+	inline private function createAnonymousSlot(arpType:ArpType):ArpUntypedSlot {
+		var sid = ArpSid.build(new ArpDid(_did.next()), arpType);
+		return this.allocUnboundSlot(sid);
 	}
 
-	private function allocDir(did:ArpDid = null):ArpDirectory {
-		if (did == null) did = new ArpDid(_did.next());
-		return new ArpDirectory(this, did);
+	private function freeSlot(slot:ArpUntypedSlot):Void {
+		this.slots.remove(slot.sid.toString());
 	}
 
 	public function getSlot<T:IArpObject>(sid:ArpSid):ArpSlot<T> {
@@ -156,7 +155,7 @@ class ArpDomain {
 			case _:
 				var oldDir:ArpDirectory = this.currentDir;
 				if (name == null) {
-					slot = this.allocUnboundSlot(new ArpSid('${_sid.next()}:${arpType.toString()}'));
+					slot = this.createAnonymousSlot(arpType);
 				} else {
 					var dir:ArpDirectory = this.currentDir.dir(name);
 					slot = dir.getOrCreateSlot(arpType);
@@ -175,21 +174,21 @@ class ArpDomain {
 		return slot;
 	}
 
-	public function allocObject<T:IArpObject>(klass:Class<T>, args:Array<Dynamic> = null, sid:ArpSid = null):T {
+	public function allocObject<T:IArpObject>(klass:Class<T>, args:Array<Dynamic> = null, dir:ArpDirectory = null):T {
 		if (args == null) args = [];
-		return this.addObject(Type.createInstance(klass, args), sid);
+		return this.addObject(Type.createInstance(klass, args), dir);
 	}
 
-	inline public function addOrphanObject<T:IArpObject>(arpObj:T):T {
-		return this.addObject(arpObj);
+	inline public function addOrphanObject<T:IArpObject>(arpObj:T, dir:ArpDirectory = null):T {
+		return this.addObject(arpObj, dir);
 	}
 
-	private function addObject<T:IArpObject>(arpObj:T, sid:ArpSid = null):T {
+	private function addObject<T:IArpObject>(arpObj:T, dir:ArpDirectory = null):T {
 		var slot:ArpSlot<T>;
-		if (sid == null) {
-			slot = this.allocUnboundSlot(new ArpSid('${_sid.next()}:${arpObj.arpType.toString()}'));
+		if (dir == null) {
+			slot = this.createAnonymousSlot(arpObj.arpType);
 		} else {
-			slot = this.getOrCreateSlot(sid);
+			slot = dir.getOrCreateSlot(arpObj.arpType);
 		}
 		slot.value = arpObj;
 		arpObj.__arp_init(slot);
