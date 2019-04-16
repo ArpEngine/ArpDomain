@@ -1,6 +1,5 @@
 package arp.domain;
 
-import arp.domain.core.ArpType;
 import arp.domain.core.ArpSid;
 
 @:allow(arp.domain.ArpSlot)
@@ -54,20 +53,11 @@ class ArpUntypedSlot {
 	inline private function get_heat():ArpHeat { return this._heat; }
 	inline private function set_heat(value:ArpHeat):ArpHeat { return this._heat = value; }
 
+	@:allow(arp.domain.ArpDomain.allocSlot)
 	private function new(domain:ArpDomain, sid:ArpSid, dir:ArpDirectory = null) {
 		this.domain = domain;
-		this._primaryDir = dir;
 		this.sid = sid;
-	}
-
-	@:allow(arp.domain.ArpDomain)
-	private static function createBound(domain:ArpDomain, dir:ArpDirectory, type:ArpType) {
-		return new ArpUntypedSlot(domain, ArpSid.build(dir.did, type), dir);
-	}
-
-	@:allow(arp.domain.ArpDomain)
-	private static function createUnbound(domain:ArpDomain, sid:ArpSid) {
-		return new ArpUntypedSlot(domain, sid, null);
+		this._primaryDir = dir;
 	}
 
 	public function toString():String return '<$sid>';

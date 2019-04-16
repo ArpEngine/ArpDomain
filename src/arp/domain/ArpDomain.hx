@@ -26,8 +26,6 @@ import haxe.macro.Expr;
 import arp.macro.MacroArpObjectRegistry;
 #end
 
-@:allow(arp.domain.ArpDirectory)
-@:allow(arp.domain.ArpUntypedSlot)
 class ArpDomain {
 
 	public var root(default, null):ArpDirectory;
@@ -69,7 +67,7 @@ class ArpDomain {
 		this.root = new ArpDirectory(this, ArpDid.rootDir());
 		this.currentDir = this.root;
 		this.slots = new Map();
-		this.nullSlot = this.allocUnboundSlot(ArpSid.nullSlot());
+		this.nullSlot = this.allocSlot(ArpSid.nullSlot());
 		this.registry = new ArpObjectFactoryRegistry();
 		this.prepareQueue = new PrepareQueue(this, this._rawTick);
 
@@ -87,23 +85,24 @@ class ArpDomain {
 		}
 	}
 
-	private function allocBoundSlot(dir:ArpDirectory, arpType:ArpType):ArpUntypedSlot {
-		var slot:ArpUntypedSlot = ArpUntypedSlot.createBound(this, dir, arpType);
-		this.slots.set(slot.sid.toString(), slot);
-		return slot;
-	}
-
-	private function allocUnboundSlot(sid:ArpSid):ArpUntypedSlot {
-		var slot:ArpUntypedSlot = ArpUntypedSlot.createUnbound(this, sid);
+	inline private function allocSlot(sid:ArpSid, dir:ArpDirectory = null):ArpUntypedSlot {
+		var slot:ArpUntypedSlot = new ArpUntypedSlot(this, sid, dir);
 		this.slots.set(sid.toString(), slot);
 		return slot;
 	}
 
-	inline private function createAnonymousSlot(arpType:ArpType):ArpUntypedSlot {
-		var sid = ArpSid.build(new ArpDid(_did.next()), arpType);
-		return this.allocUnboundSlot(sid);
+	@:allow(arp.domain.ArpDirectory.getOrCreateSlot)
+	private function createBoundSlot(dir:ArpDirectory, arpType:ArpType):ArpUntypedSlot {
+		var sid:ArpSid = ArpSid.build(dir.did, arpType);
+		return this.allocSlot(sid, dir);
 	}
 
+	inline private function createAnonymousSlot(arpType:ArpType):ArpUntypedSlot {
+		var sid = ArpSid.build(new ArpDid(_did.next()), arpType);
+		return this.allocSlot(sid, null);
+	}
+
+	@:allow(arp.domain.ArpUntypedSlot.delReference)
 	private function freeSlot(slot:ArpUntypedSlot):Void {
 		this.slots.remove(slot.sid.toString());
 	}
@@ -115,7 +114,7 @@ class ArpDomain {
 	public function getOrCreateSlot<T:IArpObject>(sid:ArpSid):ArpSlot<T> {
 		var slot:ArpSlot<T> = this.slots.get(sid.toString());
 		if (slot != null) return slot;
-		return allocUnboundSlot(sid);
+		return allocSlot(sid);
 	}
 
 	inline public function dir(path:String = null):ArpDirectory {
