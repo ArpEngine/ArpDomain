@@ -90,11 +90,11 @@ class ArpObjectOmap<K, V:IArpObject> implements IOmap<K, V> implements IPersista
 		var oldSlotOmap:IOmap<K, ArpSlot<V>> = this.slotOmap;
 		this.slotOmap = new StdOmap<K, ArpSlot<V>>();
 		var nameList:Array<String> = input.readNameList("keys");
-		var values:IPersistInput = input.readEnter("values");
+		input.readEnter("values");
 		for (name in nameList) {
-			this.slotOmap.addPair(cast name, this.domain.getOrCreateSlot(new ArpSid(values.readUtf(name))).addReference());
+			this.slotOmap.addPair(cast name, this.domain.getOrCreateSlot(new ArpSid(input.readUtf(name))).addReference());
 		}
-		values.readExit();
+		input.readExit();
 
 		for (item in oldSlotOmap) item.delReference();
 	}
@@ -102,11 +102,11 @@ class ArpObjectOmap<K, V:IArpObject> implements IOmap<K, V> implements IPersista
 	public function writeSelf(output:IPersistOutput):Void {
 		var nameList:Array<String> = [for (key in this.slotOmap.keys()) cast key];
 		output.writeNameList("keys", nameList);
-		var values:IPersistOutput = output.writeEnter("values");
+		output.writeEnter("values");
 		for (name in nameList) {
-			values.writeUtf(name, this.slotOmap.get(cast name).sid.toString());
+			output.writeUtf(name, this.slotOmap.get(cast name).sid.toString());
 		}
-		values.writeExit();
+		output.writeExit();
 	}
 
 	// amend

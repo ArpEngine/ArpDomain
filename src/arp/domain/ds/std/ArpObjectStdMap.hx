@@ -71,11 +71,11 @@ class ArpObjectStdMap<V:IArpObject> implements IMap<String, V> implements IPersi
 		var oldSlots:Map<String, ArpSlot<V>> = this.slots;
 		this.slots = new Map();
 		var nameList:Array<String> = input.readNameList("keys");
-		var values:IPersistInput = input.readEnter("values");
+		input.readEnter("values");
 		for (name in nameList) {
-			this.slots.set(name, this.domain.getOrCreateSlot(new ArpSid(values.readUtf(name))).addReference());
+			this.slots.set(name, this.domain.getOrCreateSlot(new ArpSid(input.readUtf(name))).addReference());
 		}
-		values.readExit();
+		input.readExit();
 
 		for (item in oldSlots) item.delReference();
 	}
@@ -83,11 +83,11 @@ class ArpObjectStdMap<V:IArpObject> implements IMap<String, V> implements IPersi
 	public function writeSelf(output:IPersistOutput):Void {
 		var nameList:Array<String> = [for (name in this.slots.keys()) name];
 		output.writeNameList("keys", nameList);
-		var values:IPersistOutput = output.writeEnter("values");
+		output.writeEnter("values");
 		for (name in nameList) {
-			values.writeUtf(name, this.slots.get(name).sid.toString());
+			output.writeUtf(name, this.slots.get(name).sid.toString());
 		}
-		values.writeExit();
+		output.writeExit();
 	}
 }
 

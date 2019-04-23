@@ -52,27 +52,27 @@ class MacroArpValueMapField extends MacroArpValueCollectionFieldBase implements 
 
 	public function buildReadSelfBlock(fieldBlock:Array<Expr>):Void {
 		fieldBlock.push(macro @:pos(this.nativePos) {
-			collection = input.readEnter(${eGroupName});
-			nameList = collection.readNameList("keys");
-			values = input.readEnter("values");
+			input.readEnter(${eGroupName});
+			nameList = input.readNameList("keys");
+			input.readEnter("values");
 			for (name in nameList) {
 				this.$i_nativeName.set(name, ${this.type.createAsPersistable(this.nativePos, macro name)});
 			}
-			values.readExit();
-			collection.readExit();
+			input.readExit();
+			input.readExit();
 		});
 	}
 
 	public function buildWriteSelfBlock(fieldBlock:Array<Expr>):Void {
 		fieldBlock.push(macro @:pos(this.nativePos) {
-			collection = output.writeEnter(${eGroupName});
-			collection.writeNameList("keys", [for (key in this.$i_nativeName.keys()) key]);
-			values = output.writeEnter("values");
+			output.writeEnter(${eGroupName});
+			output.writeNameList("keys", [for (key in this.$i_nativeName.keys()) key]);
+			output.writeEnter("values");
 			for (key in this.$i_nativeName.keys()) {
 				${this.type.writeAsPersistable(this.nativePos, macro key, macro this.$i_nativeName.get(key))}
 			}
-			values.writeExit();
-			collection.writeExit();
+			output.writeExit();
+			output.writeExit();
 		});
 	}
 
