@@ -72,10 +72,13 @@ class ArpObjectMap<K, V:IArpObject> implements IMap<K, V> implements IPersistabl
 	public function readSelf(input:IPersistInput):Void {
 		var oldSlotMap:IMap<K, ArpSlot<V>> = this.slotMap;
 		this.slotMap = new StdMap<K, ArpSlot<V>>();
-		var nameList:Array<String> = input.readNameList("keys");
-		input.readEnter("values");
-		for (name in nameList) {
-			this.slotMap.set(cast name, this.domain.getOrCreateSlot(new ArpSid(input.readUtf(name))).addReference());
+		var c:Int = input.readInt32("c");
+		input.readListEnter("map");
+		for (i in 0...c) {
+			input.nextEnter();
+			var name:String = input.readUtf("k");
+			this.slotMap.set(cast name, this.domain.getOrCreateSlot(new ArpSid(input.readUtf("v"))).addReference());
+			input.readExit();
 		}
 		input.readExit();
 
@@ -83,11 +86,14 @@ class ArpObjectMap<K, V:IArpObject> implements IMap<K, V> implements IPersistabl
 	}
 
 	public function writeSelf(output:IPersistOutput):Void {
-		var nameList:Array<String> = [for (key in this.slotMap.keys()) cast key];
-		output.writeNameList("keys", nameList);
-		output.writeEnter("values");
-		for (name in nameList) {
-			output.writeUtf(name, this.slotMap.get(cast name).sid.toString());
+		var values:Array<String> = [for (key in this.slotMap.keys()) cast key];
+		output.writeInt32("c", values.length);
+		output.writeListEnter("map");
+		for (value in values) {
+			output.pushEnter();
+			output.writeUtf("k", value);
+			output.writeUtf("v", this.slotMap.get(cast value).sid.toString());
+			output.writeExit();
 		}
 		output.writeExit();
 	}

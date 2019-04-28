@@ -52,19 +52,24 @@ class ArpObjectSet<V:IArpObject> implements ISet<V> implements IPersistable {
 
 	// persist
 	public function readSelf(input:IPersistInput):Void {
-		var oldSlotSet:ISet<ArpSlot<V>> = this.slotSet;
+		var oldSlotList:ISet<ArpSlot<V>> = this.slotSet;
 		this.slotSet = new ArraySet();
-		var values:Array<String> = input.readNameList("values");
-		for (value in values) {
-			this.slotSet.add(this.domain.getOrCreateSlot(new ArpSid(value)).addReference());
+		var c:Int = input.readInt32("c");
+		input.readListEnter("set");
+		for (i in 0...c) {
+			this.slotSet.add(this.domain.getOrCreateSlot(new ArpSid(input.nextUtf())).addReference());
 		}
+		input.readExit();
 
-		for (item in oldSlotSet) item.delReference();
+		for (item in oldSlotList) item.delReference();
 	}
 
 	public function writeSelf(output:IPersistOutput):Void {
 		var values:Array<String> = [for (slot in this.slotSet) slot.sid.toString()];
-		output.writeNameList("values", values);
+		output.writeInt32("c", values.length);
+		output.writeListEnter("set");
+		for (value in values) output.pushUtf(value);
+		output.writeExit();
 	}
 
 	// amend
