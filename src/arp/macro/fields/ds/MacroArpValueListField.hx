@@ -2,6 +2,8 @@ package arp.macro.fields.ds;
 
 #if macro
 
+import arp.persistable.IPersistOutput;
+import arp.persistable.IPersistInput;
 import arp.domain.reflect.ArpFieldDs;
 import arp.macro.defs.MacroArpFieldDefinition;
 import arp.macro.fields.base.MacroArpValueCollectionFieldBase;
@@ -51,12 +53,14 @@ class MacroArpValueListField extends MacroArpValueCollectionFieldBase implements
 	}
 
 	public function buildReadSelfBlock(fieldBlock:Array<Expr>):Void {
+		var c:Int;
+		var input:IPersistInput;
 		fieldBlock.push(macro @:pos(this.nativePos) {
 			input.readEnter(${eGroupName});
-			nameList = input.readNameList("keys");
-			input.readEnter("values");
-			for (name in nameList) {
-				this.$i_nativeName.push(${this.type.createAsPersistable(this.nativePos, macro name)});
+			c = input.readInt32("c");
+			input.readListEnter("list");
+			for (i in 0...c) {
+				this.$i_nativeName.push(${this.type.createNextAsPersistable(this.nativePos)});
 			}
 			input.readExit();
 			input.readExit();
@@ -64,14 +68,14 @@ class MacroArpValueListField extends MacroArpValueCollectionFieldBase implements
 	}
 
 	public function buildWriteSelfBlock(fieldBlock:Array<Expr>):Void {
+		var c:Int;
+		var output:IPersistOutput;
 		fieldBlock.push(macro @:pos(this.nativePos) {
 			output.writeEnter(${eGroupName});
-			uniqId.reset();
-			output.writeNameList("keys", [for (value in this.$i_nativeName) uniqId.next()]);
-			output.writeEnter("values");
-			uniqId.reset();
+			output.writeInt32("c", this.$i_nativeName.length);
+			output.writeListEnter("set");
 			for (value in this.$i_nativeName) {
-				${this.type.writeAsPersistable(this.nativePos, macro uniqId.next(), macro value)}
+				${this.type.pushAsPersistable(this.nativePos, macro value)}
 			}
 			output.writeExit();
 			output.writeExit();

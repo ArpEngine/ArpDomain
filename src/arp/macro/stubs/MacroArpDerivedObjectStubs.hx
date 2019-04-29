@@ -76,7 +76,7 @@ class MacroArpDerivedObjectStubs {
 		@:macroLocal var input:arp.persistable.IPersistInput;
 		return macro @:mergeBlock {
 			super.readSelf(input);
-			var nameList:Array<String>;
+			var c:Int;
 			$e{ readSelfBlock }
 		}
 	}
@@ -85,8 +85,7 @@ class MacroArpDerivedObjectStubs {
 		@:macroLocal var output:arp.persistable.IPersistOutput;
 		return macro @:mergeBlock {
 			super.writeSelf(output);
-			var nameList:Array<String>;
-			var uniqId:arp.utils.ArpIdGenerator = new arp.utils.ArpIdGenerator();
+			var c:Int;
 			$e{ writeSelfBlock }
 		}
 	}

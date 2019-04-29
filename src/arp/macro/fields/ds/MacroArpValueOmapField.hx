@@ -2,6 +2,8 @@ package arp.macro.fields.ds;
 
 #if macro
 
+import arp.persistable.IPersistOutput;
+import arp.persistable.IPersistInput;
 import arp.domain.reflect.ArpFieldDs;
 import arp.macro.defs.MacroArpFieldDefinition;
 import arp.macro.fields.base.MacroArpValueCollectionFieldBase;
@@ -51,12 +53,16 @@ class MacroArpValueOmapField extends MacroArpValueCollectionFieldBase implements
 	}
 
 	public function buildReadSelfBlock(fieldBlock:Array<Expr>):Void {
+		var c:Int;
+		var input:IPersistInput;
 		fieldBlock.push(macro @:pos(this.nativePos) {
 			input.readEnter(${eGroupName});
-			nameList = input.readNameList("keys");
-			input.readEnter("values");
-			for (name in nameList) {
-				this.$i_nativeName.addPair(name, ${this.type.createAsPersistable(this.nativePos, macro name)});
+			c = input.readInt32("c");
+			input.readListEnter("omap");
+			for (i in 0...c) {
+				input.nextEnter();
+				this.$i_nativeName.addPair(input.readUtf("k"), ${this.type.createAsPersistable(this.nativePos, macro input.readUtf("v"))});
+				input.readExit();
 			}
 			input.readExit();
 			input.readExit();
@@ -64,12 +70,17 @@ class MacroArpValueOmapField extends MacroArpValueCollectionFieldBase implements
 	}
 
 	public function buildWriteSelfBlock(fieldBlock:Array<Expr>):Void {
+		var c:Int;
+		var output:IPersistOutput;
 		fieldBlock.push(macro @:pos(this.nativePos) {
 			output.writeEnter(${eGroupName});
-			output.writeNameList("keys", [for (key in this.$i_nativeName.keys()) key]);
-			output.writeEnter("values");
-			for (key in this.$i_nativeName.keys()) {
-				${this.type.writeAsPersistable(this.nativePos, macro key, macro this.$i_nativeName.get(key))}
+			output.writeInt32("c", this.$i_nativeName.length);
+			output.writeListEnter("omap");
+			for (key => value in this.$i_nativeName) {
+				output.pushEnter();
+				output.writeUtf("k", key);
+				${this.type.writeAsPersistable(this.nativePos, macro "v", macro value)}
+				output.writeExit();
 			}
 			output.writeExit();
 			output.writeExit();

@@ -47,7 +47,24 @@ class MacroArpPrimStringType implements IMacroArpValueType {
 		// if (nonNull)
 		// return macro @:pos(pos) { output.writeUtf($v{iFieldName}, ${eValue}); };
 		return macro @:pos(pos) { arp.persistable.PersistableTool.writeNullableUtf(output, ${eName}, ${eValue}); };
+	}
 
+	public function createNextAsPersistable(pos:Position):Expr {
+		// if (nonNull)
+		// return macro @:pos(pos) { input.nextUtf(); };
+		return macro @:pos(pos) { arp.persistable.PersistableTool.nextNullableUtf(input); };
+	}
+
+	public function nextAsPersistable(pos:Position, iFieldName:String):Expr {
+		// if (nonNull)
+		// return macro @:pos(pos) { this.$iFieldName = input.nextUtf(); };
+		return macro @:pos(pos) { this.$iFieldName = arp.persistable.PersistableTool.nextNullableUtf(input); };
+	}
+
+	public function pushAsPersistable(pos:Position, eValue:Expr):Expr {
+		// if (nonNull)
+		// return macro @:pos(pos) { output.pushUtf($v{iFieldName}); };
+		return macro @:pos(pos) { arp.persistable.PersistableTool.pushNullableUtf(output, ${eValue}); };
 	}
 
 	public function copyFrom(pos:Position, iFieldName:String):Expr {

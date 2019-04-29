@@ -44,6 +44,18 @@ class MacroArpPrimFloatType implements IMacroArpValueType {
 		return macro @:pos(pos) { output.writeDouble(${eName}, ${eValue}); };
 	}
 
+	public function createNextAsPersistable(pos:Position):Expr {
+		return macro @:pos(pos) { input.nextDouble(); };
+	}
+
+	public function nextAsPersistable(pos:Position, iFieldName:String):Expr {
+		return macro @:pos(pos) { this.$iFieldName = input.nextDouble(); };
+	}
+
+	public function pushAsPersistable(pos:Position, eValue:Expr):Expr {
+		return macro @:pos(pos) { output.pushDouble(${eValue}); };
+	}
+
 	public function copyFrom(pos:Position, iFieldName:String):Expr {
 		return macro @:pos(pos) { this.$iFieldName = src.$iFieldName; };
 	}

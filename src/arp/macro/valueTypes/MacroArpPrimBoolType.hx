@@ -44,6 +44,18 @@ class MacroArpPrimBoolType implements IMacroArpValueType {
 		return macro @:pos(pos) { output.writeBool(${eName}, ${eValue}); };
 	}
 
+	public function createNextAsPersistable(pos:Position):Expr {
+		return macro @:pos(pos) { input.nextBool(); };
+	}
+
+	public function nextAsPersistable(pos:Position, iFieldName:String):Expr {
+		return macro @:pos(pos) { this.$iFieldName = input.nextBool(); };
+	}
+
+	public function pushAsPersistable(pos:Position, eValue:Expr):Expr {
+		return macro @:pos(pos) { output.pushBool(${eValue}); };
+	}
+
 	public function copyFrom(pos:Position, iFieldName:String):Expr {
 		return macro @:pos(pos) { this.$iFieldName = src.$iFieldName; };
 	}

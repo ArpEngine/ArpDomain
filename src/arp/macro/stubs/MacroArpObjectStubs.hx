@@ -140,7 +140,7 @@ class MacroArpObjectStubs {
 	macro public static function readSelf(readSelfBlock:Expr):Expr {
 		@:macroLocal var input:arp.persistable.IPersistInput;
 		return macro @:mergeBlock {
-			var nameList:Array<String>;
+			var c:Int;
 			$e{ readSelfBlock }
 		}
 	}
@@ -148,8 +148,7 @@ class MacroArpObjectStubs {
 	macro public static function writeSelf(writeSelfBlock:Expr):Expr {
 		@:macroLocal var output:arp.persistable.IPersistOutput;
 		return macro @:mergeBlock {
-			var nameList:Array<String>;
-			var uniqId:arp.utils.ArpIdGenerator = new arp.utils.ArpIdGenerator();
+			var c:Int;
 			$e{ writeSelfBlock }
 		}
 	}

@@ -56,6 +56,18 @@ class MacroArpStructType implements IMacroArpValueType {
 		return macro @:pos(pos) { output.writePersistable(${eName}, ${eValue}); };
 	}
 
+	public function createNextAsPersistable(pos:Position):Expr {
+		return macro @:pos(pos) { input.nextPersistable(${this.createEmptyVo(pos)}); };
+	}
+
+	public function nextAsPersistable(pos:Position, iFieldName:String):Expr {
+		return macro @:pos(pos) { input.nextPersistable(this.$iFieldName); };
+	}
+
+	public function pushAsPersistable(pos:Position, eValue:Expr):Expr {
+		return macro @:pos(pos) { output.pushPersistable(${eValue}); };
+	}
+
 	public function copyFrom(pos:Position, iFieldName:String):Expr {
 		return macro @:pos(pos) { this.$iFieldName.copyFrom(src.$iFieldName); };
 	}
