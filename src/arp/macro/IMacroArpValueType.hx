@@ -18,6 +18,9 @@ interface IMacroArpValueType {
 	function createAsPersistable(pos:Position, eName:Expr):Expr;
 	function readAsPersistable(pos:Position, eName:Expr, iFieldName:String):Expr;
 	function writeAsPersistable(pos:Position, eName:Expr, eValue:Expr):Expr;
+	function createNextAsPersistable(pos:Position):Expr;
+	function nextAsPersistable(pos:Position, iFieldName:String):Expr;
+	function pushAsPersistable(pos:Position, eValue:Expr):Expr;
 	function copyFrom(pos:Position, iFieldName:String):Expr;
 
 }

@@ -76,17 +76,22 @@ class ArpObjectList<V:IArpObject> implements IList<V> implements IPersistable {
 	public function readSelf(input:IPersistInput):Void {
 		var oldSlotList:IList<ArpSlot<V>> = this.slotList;
 		this.slotList = new ArrayList();
-		var values:Array<String> = input.readNameList("values");
-		for (value in values) {
-			this.slotList.push(this.domain.getOrCreateSlot(new ArpSid(value)).addReference());
+		var c:Int = input.readInt32("c");
+		input.readListEnter("list");
+		for (i in 0...c) {
+			this.slotList.push(this.domain.getOrCreateSlot(new ArpSid(input.nextUtf())).addReference());
 		}
+		input.readExit();
 
 		for (item in oldSlotList) item.delReference();
 	}
 
 	public function writeSelf(output:IPersistOutput):Void {
 		var values:Array<String> = [for (slot in this.slotList) slot.sid.toString()];
-		output.writeNameList("values", values);
+		output.writeInt32("c", values.length);
+		output.writeListEnter("list");
+		for (value in values) output.pushUtf(value);
+		output.writeExit();
 	}
 
 	// amend

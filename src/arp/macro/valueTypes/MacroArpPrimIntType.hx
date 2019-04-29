@@ -43,6 +43,18 @@ class MacroArpPrimIntType implements IMacroArpValueType {
 		return macro @:pos(pos) { output.writeInt32(${eName}, ${eValue}); };
 	}
 
+	public function createNextAsPersistable(pos:Position):Expr {
+		return macro @:pos(pos) { input.nextInt32(); };
+	}
+
+	public function nextAsPersistable(pos:Position, iFieldName:String):Expr {
+		return macro @:pos(pos) { this.$iFieldName = input.nextInt32(); };
+	}
+
+	public function pushAsPersistable(pos:Position, eValue:Expr):Expr {
+		return macro @:pos(pos) { output.pushInt32(${eValue}); };
+	}
+
 	public function copyFrom(pos:Position, iFieldName:String):Expr {
 		return macro @:pos(pos) { this.$iFieldName = src.$iFieldName; };
 	}

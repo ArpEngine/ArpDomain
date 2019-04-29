@@ -70,24 +70,30 @@ class ArpObjectStdMap<V:IArpObject> implements IMap<String, V> implements IPersi
 	public function readSelf(input:IPersistInput):Void {
 		var oldSlots:Map<String, ArpSlot<V>> = this.slots;
 		this.slots = new Map();
-		var nameList:Array<String> = input.readNameList("keys");
-		var values:IPersistInput = input.readEnter("values");
-		for (name in nameList) {
-			this.slots.set(name, this.domain.getOrCreateSlot(new ArpSid(values.readUtf(name))).addReference());
+		var c:Int = input.readInt32("c");
+		input.readListEnter("map");
+		for (i in 0...c) {
+			input.nextEnter();
+			var name:String = input.readUtf("k");
+			this.slots.set(cast name, this.domain.getOrCreateSlot(new ArpSid(input.readUtf("v"))).addReference());
+			input.readExit();
 		}
-		values.readExit();
+		input.readExit();
 
 		for (item in oldSlots) item.delReference();
 	}
 
 	public function writeSelf(output:IPersistOutput):Void {
-		var nameList:Array<String> = [for (name in this.slots.keys()) name];
-		output.writeNameList("keys", nameList);
-		var values:IPersistOutput = output.writeEnter("values");
-		for (name in nameList) {
-			values.writeUtf(name, this.slots.get(name).sid.toString());
+		var values:Array<String> = [for (name in this.slots.keys()) name];
+		output.writeInt32("c", values.length);
+		output.writeListEnter("map");
+		for (value in values) {
+			output.pushEnter();
+			output.writeUtf("k", value);
+			output.writeUtf("v", this.slots.get(cast value).sid.toString());
+			output.writeExit();
 		}
-		values.writeExit();
+		output.writeExit();
 	}
 }
 
