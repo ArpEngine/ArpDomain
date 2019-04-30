@@ -8,23 +8,26 @@ import arp.seed.ArpSeed;
 
 class ArpObjectFactoryRegistry {
 
-	private var factories:ArpObjectFactoryListMap;
+	private var factoriesByArpType:ArpObjectFactoryListMap;
+	private var factoriesByFqn:Map<String, ArpObjectFactory<Dynamic>>;
 
 	public function new() {
-		this.factories = new ArpObjectFactoryListMap();
+		this.factoriesByArpType = new ArpObjectFactoryListMap();
+		this.factoriesByFqn = new Map<String, ArpObjectFactory<Dynamic>>();
 	}
 
 	public function addTemplate<T:IArpObject>(klass:Class<T>, forceDefault:Null<Bool> = null) {
 		var factory:ArpObjectFactory<T> = new ArpObjectFactory<T>(klass, forceDefault);
-		this.factories.listFor(factory.arpType).push(factory);
+		this.factoriesByArpType.listFor(factory.arpType).push(factory);
+		this.factoriesByFqn.set(factory.arpTypeInfo.fqn, factory);
 	}
 
-	public function resolve<T:IArpObject>(seed:ArpSeed, type:ArpType):ArpObjectFactory<T> {
+	public function resolveWithSeed<T:IArpObject>(seed:ArpSeed, type:ArpType):ArpObjectFactory<T> {
 		var className = seed.className;
 		if (className == null) className = seed.env.getDefaultClass(type.toString());
 		var result:ArpObjectFactory<Dynamic> = null;
 		var resultMatch:Float = 0;
-		for (factory in this.factories.listFor(type)) {
+		for (factory in this.factoriesByArpType.listFor(type)) {
 			var match:Float = factory.matchSeed(seed, type, className);
 			if (match > resultMatch) {
 				result = factory;
@@ -37,12 +40,19 @@ class ArpObjectFactoryRegistry {
 		return cast result;
 	}
 
-	public function allArpTypes():Array<ArpType> {
-		var result:ArraySet<ArpType> = new ArraySet();
-		for (arpType in this.factories.allArpTypes()) result.add(arpType);
-		return SetOp.toArray(result);
+	public function resolveWithFqn<T:IArpObject>(fqn:String):ArpObjectFactory<T> {
+		var result:ArpObjectFactory<Dynamic> = factoriesByFqn.get(fqn);
+		if (result == null) {
+			throw new ArpLoadError('factory [$fqn] not found');
+		}
+		return cast result;
 	}
 
+	public function allArpTypes():Array<ArpType> {
+		var result:ArraySet<ArpType> = new ArraySet();
+		for (arpType in this.factoriesByArpType.allArpTypes()) result.add(arpType);
+		return SetOp.toArray(result);
+	}
 }
 
 private class ArpObjectFactoryListMap {

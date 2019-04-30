@@ -4,7 +4,9 @@ import arp.domain.core.ArpType;
 import arp.domain.events.ArpLogEvent;
 import arp.domain.mocks.MockArpObject;
 import arp.seed.ArpSeed;
+
 import picotest.PicoAssert.*;
+import org.hamcrest.Matchers.*;
 
 class ArpDomainCase {
 
@@ -23,6 +25,10 @@ class ArpDomainCase {
 		').firstElement();
 		seed = ArpSeed.fromXml(xml);
 		domain.loadSeed(seed, new ArpType("data"));
+	}
+
+	public function testAllArpTypes():Void {
+		assertMatch(containsInAnyOrder("mock", "data", "seed"), domain.allArpTypes);
 	}
 
 	public function testDumpEntries():Void {

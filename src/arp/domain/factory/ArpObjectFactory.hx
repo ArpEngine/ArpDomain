@@ -5,8 +5,9 @@ import arp.seed.ArpSeed;
 
 class ArpObjectFactory<T:IArpObject> {
 
+	public var arpTypeInfo(default, null):ArpTypeInfo;
+
 	private var nativeClass:Class<T>;
-	private var arpTypeInfo:ArpTypeInfo;
 	private var isDefault:Bool;
 
 	public var arpType(get, never):ArpType;
@@ -31,7 +32,7 @@ class ArpObjectFactory<T:IArpObject> {
 		return Type.createInstance(nativeClass, []);
 	}
 
-	public function arpInit(slot:ArpSlot<T>, seed:ArpSeed):T {
+	public function arpInit(slot:ArpSlot<T>, seed:ArpSeed = null):T {
 		var arpObject:T = alloc(seed);
 		if (arpObject.__arp_init(slot, seed) == null) return null;
 		return arpObject;

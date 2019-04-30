@@ -17,10 +17,7 @@ class ArpDomainDirectoryScanner<T> {
 	}
 
 	public function scan(visitor:IArpDomainDirectoryVisitor<T>):Void {
-		this.scanRoot(visitor, this.domain.root);
-	}
-
-	private function scanRoot(visitor:IArpDomainDirectoryVisitor<T>, dir:ArpDirectory):Void {
+		var dir:ArpDirectory = this.domain.root;
 		var parent:T = visitor.visitRoot(dir);
 		var visitedSlotIds:Map<String, Bool> = new Map<String, Bool>();
 
@@ -47,9 +44,9 @@ class ArpDomainDirectoryScanner<T> {
 	@:access(arp.domain.ArpDirectory)
 	private function scanDirectoryChildren(visitor:IArpDomainDirectoryVisitor<T>, parent:T, dir:ArpDirectory, visitedSlotIds:Map<String, Bool>):Void {
 		var children:StdMap<String, ArpDirectory> = dir.children;
-		var slotNames:Array<String> = [for (key in children.keys()) key];
-		slotNames.sort(ArpDomainDump.compareString);
-		for (name in slotNames) {
+		var childrenNames:Array<String> = [for (key in children.keys()) key];
+		childrenNames.sort(ArpDomainDump.compareString);
+		for (name in childrenNames) {
 			scanDirectory(visitor, parent, children.get(name), name, visitedSlotIds);
 		}
 

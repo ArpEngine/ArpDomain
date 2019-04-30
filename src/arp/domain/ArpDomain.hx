@@ -160,7 +160,7 @@ class ArpDomain {
 					slot = dir.getOrCreateSlot(arpType);
 					this.currentDir = dir;
 				}
-				var arpObj:T = this.registry.resolve(seed, arpType).arpInit(slot, seed);
+				var arpObj:T = this.registry.resolveWithSeed(seed, arpType).arpInit(slot, seed);
 				this.currentDir = oldDir;
 				if (arpObj != null) {
 					slot.value = arpObj;
