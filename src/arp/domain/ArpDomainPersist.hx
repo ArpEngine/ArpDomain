@@ -46,11 +46,17 @@ abstract ArpDomainPersist(ArpDomain) {
 	private function readObject<T:IArpObject>(input:IPersistInput):Void {
 		input.nextEnter();
 		var className:String = input.readUtf("class");
+		var heat:ArpHeat = ArpHeat.fromName(input.readUtf("heat"));
 		var arpSlot:ArpSlot<T> = this.getOrCreateSlot(new ArpSid(input.readUtf("name")));
 		if (className != "$null") {
 			var arpObj:T = @:privateAccess this.registry.resolveWithFqn(className).arpInit(arpSlot, null);
 			arpSlot.value = arpObj;
 			arpObj.readSelf(input);
+			switch (heat) {
+				case ArpHeat.Cold:
+				case ArpHeat.Warming | ArpHeat.Warm:
+					this.heatLater(arpSlot);
+			}
 		}
 		input.readExit();
 	}
@@ -94,11 +100,13 @@ abstract ArpDomainPersist(ArpDomain) {
 		var arpObj:T = arpSlot.value;
 		if (arpObj == null) {
 			output.writeUtf("class", "$null");
+			output.writeUtf("heat", arpSlot.heat.toName());
 			output.writeUtf("name", arpSlot.sid.toString());
 			output.writeExit();
 			return;
 		}
 		output.writeUtf("class", arpObj.arpTypeInfo.fqn);
+		output.writeUtf("heat", arpSlot.heat.toName());
 		output.writeUtf("name", arpSlot.sid.toString());
 		arpObj.writeSelf(output);
 		output.writeExit();

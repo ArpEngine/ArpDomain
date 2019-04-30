@@ -48,10 +48,12 @@ class ArpDomainPersistCase {
 		"slots": [
 			{
 				"class": "data:data",
+				"heat": "cold",
 				"name": "$0:data"
 			},
 			{
 				"class": "$null",
+				"heat": "cold",
 				"name": "$null"
 			},
 			{
@@ -61,6 +63,7 @@ class ArpDomainPersistCase {
 				"name": "/name1:mock",
 				"floatField": 3.14,
 				"class": "mock:mock",
+				"heat": "cold",
 				"refField": "/name1:mock"
 			},
 			{
@@ -70,6 +73,7 @@ class ArpDomainPersistCase {
 				"name": "/name2:mock",
 				"floatField": 0,
 				"class": "mock:mock",
+				"heat": "cold",
 				"refField": "/name1:mock"
 			},
 			{
@@ -79,6 +83,7 @@ class ArpDomainPersistCase {
 				"name": "/name3:mock",
 				"floatField": 0,
 				"class": "mock:mock",
+				"heat": "cold",
 				"refField": "$null"
 			}
 		]
