@@ -14,7 +14,7 @@ class MockArpObject implements IArpObject {
 	public var intField:Int = 0;
 	public var floatField:Float = 0;
 	public var boolField:Bool = false;
-	public var stringField:String = null;
+	public var stringField:String = "stringDefault";
 
 	public var refFieldSlot(default, null):ArpSlot<MockArpObject>;
 	public var refField(get, set):MockArpObject;

@@ -64,7 +64,7 @@ class ArpDomainPersistCase {
 				"refField": "/name1:mock"
 			},
 			{
-				"stringField": null,
+				"stringField": "stringDefault",
 				"boolField": false,
 				"intField": 0,
 				"name": "/name2:mock",
@@ -73,7 +73,7 @@ class ArpDomainPersistCase {
 				"refField": "/name1:mock"
 			},
 			{
-				"stringField": null,
+				"stringField": "stringDefault",
 				"boolField": false,
 				"intField": 0,
 				"name": "/name3:mock",
