@@ -54,7 +54,7 @@ class MockDerivedArpObjectCase {
 		assertEquals(arpObj.intField2, 0);
 		assertEquals(arpObj.floatField, 0.0);
 		assertEquals(arpObj.boolField, false);
-		assertEquals(arpObj.stringField, null);
+		assertEquals(arpObj.stringField, "stringDefault");
 		assertEquals(arpObj.refField, null);
 		assertEquals(arpObj.refField2, null);
 	}

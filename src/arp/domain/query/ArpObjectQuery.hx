@@ -17,11 +17,6 @@ class ArpObjectQuery<T:IArpObject> extends ArpDirectoryQuery {
 		return target.getOrCreateSlot(this.type);
 	}
 
-	inline public function setSlot(value:ArpSlot<T>):ArpSlot<T> {
-		var target:ArpDirectory = this.directory();
-		return target.setSlot(this.type, value);
-	}
-
 	inline public function obj():T {
 		var value = this.slot().value;
 		return if (value != null) value else throw new ArpVoidReferenceError('Could not resolve $path of type $type from ArpDirectory ${root.did}.');

@@ -62,10 +62,9 @@ class MockDerivedArpObject extends MockArpObject {
 		output.writeUtf("refField2", this.refField2Slot.sid.toString());
 	}
 
-	@:access(arp.domain.ArpDomain)
 	override public function arpClone():IArpObject {
 		var clone:MockDerivedArpObject = new MockDerivedArpObject();
-		clone.__arp_init(this._arpDomain.allocSlot());
+		this._arpDomain.addOrphanObject(clone);
 		clone.arpCopyFrom(this);
 		return clone;
 	}

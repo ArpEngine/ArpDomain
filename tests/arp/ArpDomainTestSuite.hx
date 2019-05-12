@@ -1,5 +1,6 @@
 package arp;
 
+import arp.domain.ArpDomainPersistCase;
 import arp.domain.ArpDirectoryCase;
 import arp.domain.ArpDomainCase;
 import arp.domain.MockArpObjectCase;
@@ -48,6 +49,7 @@ class ArpDomainTestSuite {
 		r.load(MacroConcreteImplArpObjectCase);
 
 		r.load(ArpDomainCase);
+		r.load(ArpDomainPersistCase);
 
 		ArpDomainDsCompatTestSuite.addTo(r);
 	}

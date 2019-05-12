@@ -2,7 +2,6 @@ package arp.domain;
 
 import arp.domain.ArpUntypedSlot;
 import arp.domain.core.ArpDid;
-import arp.domain.core.ArpSid;
 import arp.domain.core.ArpType;
 import arp.domain.query.ArpDirectoryQuery;
 import arp.domain.query.ArpObjectQuery;
@@ -49,15 +48,8 @@ class ArpDirectory {
 
 	public function getOrCreateSlot(type:ArpType):ArpUntypedSlot {
 		if (this.slots.exists(type)) return this.slots.get(type);
-		var slot:ArpUntypedSlot = this.domain.allocSlot(ArpSid.build(this.did, type));
+		var slot:ArpUntypedSlot = this.domain.createBoundSlot(this, type);
 		this.slots.set(type, slot);
-		slot.addDirectory(this);
-		return slot;
-	}
-
-	public function setSlot(type:ArpType, slot:ArpUntypedSlot):ArpUntypedSlot {
-		this.slots.set(type, slot);
-		slot.addDirectory(this);
 		return slot;
 	}
 
@@ -81,11 +73,9 @@ class ArpDirectory {
 		return arpObj;
 	}
 
-	inline public function child(name:String):ArpDirectory return this.trueChild(name);
-
-	public function trueChild(name:String):ArpDirectory {
+	public function child(name:String):ArpDirectory {
 		if (this.children.hasKey(name)) return this.children.get(name);
-		var child:ArpDirectory = this.domain.allocDir(ArpDid.build(this.did, name));
+		var child:ArpDirectory = new ArpDirectory(this.domain, ArpDid.build(this.did, name));
 		this.children.set(name, child);
 		child.parent = this.addReference();
 		return child;

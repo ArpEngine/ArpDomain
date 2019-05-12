@@ -1,21 +1,22 @@
 package arp.domain.dump;
 
+import arp.domain.dump.ArpDomainDirectoryScanner.IArpDomainDirectoryVisitor;
 import arp.domain.ArpUntypedSlot;
 import arp.domain.core.ArpType;
-import arp.ds.impl.StdMap;
 import arp.ds.Tree;
 
 @:access(arp.domain.ArpDomain)
-class ArpDomainDump {
+class ArpDomainDump implements IArpDomainDirectoryVisitor<Tree<ArpDump>> {
 
 	private var domain:ArpDomain;
 	private var typeFilter:ArpType -> Bool;
+	private var result:Tree<ArpDump>;
 
-	private function defaultTypeFilter(type:ArpType):Bool return true;
+	public static function defaultTypeFilter(type:ArpType):Bool return true;
 
 	public function new(domain:ArpDomain, typeFilter:ArpType -> Bool) {
+		if (typeFilter == null) typeFilter = defaultTypeFilter;
 		this.domain = domain;
-		if (typeFilter == null) typeFilter = this.defaultTypeFilter;
 		this.typeFilter = typeFilter;
 	}
 
@@ -29,60 +30,28 @@ class ArpDomainDump {
 	}
 
 	public function dumpSlotStatusByName():Tree<ArpDump> {
-		return this._dumpSlotStatusByName(this.domain.root, "<<dir>>", new Map());
+		new ArpDomainDirectoryScanner(this.domain, this.typeFilter).scan(this);
+		return this.result;
 	}
 
-	@:access(arp.domain.ArpDirectory)
-	private function _dumpSlotStatusByName(dir:ArpDirectory, hashKey:String, visitedSlotIds:Map<String, Bool>):Tree<ArpDump> {
-		var result:Tree<ArpDump> = ArpDump.ofDir(dir, hashKey);
+	public function visitRoot(dir:ArpDirectory):Tree<ArpDump> {
+		var tree:Tree<ArpDump> = ArpDump.ofDir(dir, "<<dir>>");
+		this.result = tree;
+		return tree;
+	}
 
-		var children:StdMap<String, ArpDirectory> = dir.children;
-		var slotNames:Array<String> = [for (key in children.keys()) key];
-		slotNames.sort(compareString);
-		for (name in slotNames) {
-			var childrenDump:Tree<ArpDump> = _dumpSlotStatusByName(children.get(name), name, visitedSlotIds);
-			if (childrenDump.children.length > 0) result.children.push(childrenDump);
-		}
+	public function visitDirectory(parent:Tree<ArpDump>, dir:ArpDirectory, label:String):Tree<ArpDump> {
+		var tree:Tree<ArpDump> = ArpDump.ofDir(dir, label);
+		parent.children.push(tree);
+		return tree;
+	}
 
-		var namesToVisit:Array<String> = [];
-		var namesToIndex:Array<String> = [];
-		var slots:Map<String, ArpUntypedSlot> = dir.slots;
-		for (name in slots.keys()) {
-			if (!typeFilter(new ArpType(name))) continue;
-			var slot:ArpUntypedSlot = slots.get(name);
-			if (visitedSlotIds.exists(slot.sid.toString())) {
-				namesToIndex.push(name);
-			} else {
-				visitedSlotIds.set(slot.sid.toString(), true);
-				namesToVisit.push(name);
-			}
-		}
-		if (namesToVisit.length > 0) {
-			namesToVisit.sort(compareString);
-			for (name in namesToVisit) {
-				result.children.push(ArpDump.ofSlot(slots.get(name), '<$name>'));
-			}
-		}
-		if (namesToIndex.length > 0) {
-			namesToIndex.sort(compareString);
-			for (name in namesToIndex) {
-				result.children.push(ArpDump.ofSlot(slots.get(name), '<$name>'));
-			}
-		}
-		if (dir == this.domain.root) {
-			var namesOrphan:Array<String> = [];
-			for (child in this.domain.slots) {
-				if (child.value != null && !typeFilter(child.value.arpType)) continue;
-				if (!visitedSlotIds.exists(child.sid.toString())) {
-					namesOrphan.push(child.sid.toString());
-				}
-			}
-			namesOrphan.sort(compareString);
-			for (name in namesOrphan) {
-				result.children.push(ArpDump.ofSlot(domain.slots.get(name), '<<anonymous>>'));
-			}
-		}
-		return result;
+	public function visitBoundSlot(parent:Tree<ArpDump>, dir:ArpDirectory, label:String, slot:ArpUntypedSlot):Void {
+		parent.children.push(ArpDump.ofSlot(slot, '<$label>'));
+	}
+
+	public function visitAnonymousSlot(label:String, slot:ArpUntypedSlot):Void {
+		this.result.children.push(ArpDump.ofSlot(slot, '<<anonymous>>'));
 	}
 
 	public static function compareString(a:String, b:String):Int {

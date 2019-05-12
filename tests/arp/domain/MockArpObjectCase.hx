@@ -50,7 +50,7 @@ class MockArpObjectCase {
 		assertEquals(arpObj.intField, 0);
 		assertEquals(arpObj.floatField, 0.0);
 		assertEquals(arpObj.boolField, false);
-		assertEquals(arpObj.stringField, null);
+		assertEquals(arpObj.stringField, "stringDefault");
 		assertEquals(arpObj.refField, null);
 	}
 

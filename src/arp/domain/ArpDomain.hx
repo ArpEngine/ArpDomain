@@ -26,8 +26,6 @@ import haxe.macro.Expr;
 import arp.macro.MacroArpObjectRegistry;
 #end
 
-@:allow(arp.domain.ArpDirectory)
-@:allow(arp.domain.ArpUntypedSlot)
 class ArpDomain {
 
 	public var root(default, null):ArpDirectory;
@@ -41,7 +39,6 @@ class ArpDomain {
 
 	private var registry:ArpObjectFactoryRegistry;
 
-	private var _sid:ArpIdGenerator = new ArpIdGenerator();
 	private var _did:ArpIdGenerator = new ArpIdGenerator();
 
 	private var _rawTick:ArpSignal<Float>;
@@ -67,10 +64,10 @@ class ArpDomain {
 		this._tick = new ArpSignal<Float>();
 		this._onLog = new ArpSignal<ArpLogEvent>();
 
-		this.root = this.allocDir(new ArpDid(""));
+		this.root = new ArpDirectory(this, ArpDid.rootDir());
 		this.currentDir = this.root;
 		this.slots = new Map();
-		this.nullSlot = this.allocSlot(new ArpSid(ArpIdGenerator.AUTO_HEADER + "null"));
+		this.nullSlot = this.allocSlot(ArpSid.nullSlot());
 		this.registry = new ArpObjectFactoryRegistry();
 		this.prepareQueue = new PrepareQueue(this, this._rawTick);
 
@@ -88,20 +85,26 @@ class ArpDomain {
 		}
 	}
 
-	private function allocSlot(sid:ArpSid = null, type:String = null):ArpUntypedSlot {
-		if (sid == null) sid = new ArpSid(_sid.next());
-		var slot:ArpUntypedSlot = new ArpUntypedSlot(this, sid);
+	inline private function allocSlot(sid:ArpSid, dir:ArpDirectory = null):ArpUntypedSlot {
+		var slot:ArpUntypedSlot = new ArpUntypedSlot(this, sid, dir);
 		this.slots.set(sid.toString(), slot);
 		return slot;
 	}
 
-	private function freeSlot(slot:ArpUntypedSlot):Void {
-		this.slots.remove(slot.sid.toString());
+	@:allow(arp.domain.ArpDirectory.getOrCreateSlot)
+	private function createBoundSlot(dir:ArpDirectory, arpType:ArpType):ArpUntypedSlot {
+		var sid:ArpSid = ArpSid.build(dir.did, arpType);
+		return this.allocSlot(sid, dir);
 	}
 
-	private function allocDir(did:ArpDid = null):ArpDirectory {
-		if (did == null) did = new ArpDid(_did.next());
-		return new ArpDirectory(this, did);
+	inline private function createAnonymousSlot(arpType:ArpType):ArpUntypedSlot {
+		var sid = ArpSid.build(new ArpDid(_did.next()), arpType);
+		return this.allocSlot(sid, null);
+	}
+
+	@:allow(arp.domain.ArpUntypedSlot.delReference)
+	private function freeSlot(slot:ArpUntypedSlot):Void {
+		this.slots.remove(slot.sid.toString());
 	}
 
 	public function getSlot<T:IArpObject>(sid:ArpSid):ArpSlot<T> {
@@ -142,27 +145,22 @@ class ArpDomain {
 	}
 
 	public function loadSeed<T:IArpObject>(seed:ArpSeed, lexicalType:ArpType = null):Null<ArpSlot<T>> {
-		var type:ArpType = (lexicalType != null) ? lexicalType : new ArpType(seed.seedName);
+		var arpType:ArpType = (lexicalType != null) ? lexicalType : new ArpType(seed.seedName);
 		var slot:ArpSlot<T>;
-		var name:String;
+		var name:String = seed.name;
 		switch (seed.valueKind) {
 			case ArpSeedValueKind.Reference, ArpSeedValueKind.Ambigious if (seed.value != null):
-				slot = this.root.query(seed.value, type).slot();
-				name = seed.name;
-				if (name != null) {
-					this.root.query(name, type).setSlot(slot);
-				}
+				slot = this.root.query(seed.value, arpType).slot();
 			case _:
-				name = seed.name;
 				var oldDir:ArpDirectory = this.currentDir;
 				if (name == null) {
-					slot = allocSlot(new ArpSid('${_sid.next()}:${type}')); // FIXME
+					slot = this.createAnonymousSlot(arpType);
 				} else {
 					var dir:ArpDirectory = this.currentDir.dir(name);
-					slot = dir.getOrCreateSlot(type);
+					slot = dir.getOrCreateSlot(arpType);
 					this.currentDir = dir;
 				}
-				var arpObj:T = this.registry.resolve(seed, type).arpInit(slot, seed);
+				var arpObj:T = this.registry.resolveWithSeed(seed, arpType).arpInit(slot, seed);
 				this.currentDir = oldDir;
 				if (arpObj != null) {
 					slot.value = arpObj;
@@ -175,17 +173,22 @@ class ArpDomain {
 		return slot;
 	}
 
-	public function allocObject<T:IArpObject>(klass:Class<T>, args:Array<Dynamic> = null, sid:ArpSid = null):T {
+	public function allocObject<T:IArpObject>(klass:Class<T>, args:Array<Dynamic> = null, dir:ArpDirectory = null):T {
 		if (args == null) args = [];
-		return this.addObject(Type.createInstance(klass, args), sid);
+		return this.addObject(Type.createInstance(klass, args), dir);
 	}
 
-	public function addOrphanObject<T:IArpObject>(arpObj:T):T {
-		return this.addObject(arpObj);
+	inline public function addOrphanObject<T:IArpObject>(arpObj:T, dir:ArpDirectory = null):T {
+		return this.addObject(arpObj, dir);
 	}
 
-	private function addObject<T:IArpObject>(arpObj:T, sid:ArpSid = null):T {
-		var slot:ArpSlot<T> = (sid != null) ? this.getOrCreateSlot(sid) : this.allocSlot(sid);
+	private function addObject<T:IArpObject>(arpObj:T, dir:ArpDirectory = null):T {
+		var slot:ArpSlot<T>;
+		if (dir == null) {
+			slot = this.createAnonymousSlot(arpObj.arpType);
+		} else {
+			slot = dir.getOrCreateSlot(arpObj.arpType);
+		}
 		slot.value = arpObj;
 		arpObj.__arp_init(slot);
 		return arpObj;
