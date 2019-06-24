@@ -50,6 +50,8 @@ class MacroArpObjectListField extends MacroArpObjectCollectionFieldBase implemen
 	}
 
 	public function buildHeatDownNowBlock(heatDownNowBlock:Array<Expr>):Void {
+		if (!this.arpIsOwner) return;
+		heatDownNowBlock.push(macro @:pos(this.nativePos) { for (slot in this.$i_nativeName.slotList) this._arpDomain.heatDown(slot); });
 	}
 
 	public function buildDisposeBlock(disposeBlock:Array<Expr>):Void {

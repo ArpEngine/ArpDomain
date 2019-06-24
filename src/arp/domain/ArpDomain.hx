@@ -215,6 +215,8 @@ class ArpDomain {
 		slot.heat = ArpHeat.Cold;
 	}
 
+	// TODO method to upkeep all Warm objects after possible invalid heatDown
+
 	public var isPending(get, never):Bool;
 	inline public function get_isPending():Bool return this.prepareQueue.isPending;
 

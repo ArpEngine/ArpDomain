@@ -66,7 +66,8 @@ class MacroArpObjectField extends MacroArpFieldBase implements IMacroArpField {
 	}
 
 	public function buildHeatDownNowBlock(heatDownNowBlock:Array<Expr>):Void {
-		heatDownNowBlock.push(macro @:pos(this.nativePos) { null; });
+		if (!this.arpIsOwner) return;
+		heatDownNowBlock.push(macro @:pos(this.nativePos) { this._arpDomain.heatDown(this.$iNativeSlot); });
 	}
 
 	public function buildDisposeBlock(disposeBlock:Array<Expr>):Void {
