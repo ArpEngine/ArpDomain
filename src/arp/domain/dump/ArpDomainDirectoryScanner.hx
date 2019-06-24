@@ -10,7 +10,7 @@ class ArpDomainDirectoryScanner<T> {
 	private var domain:ArpDomain;
 	private var typeFilter:ArpType -> Bool;
 
-	public function new(domain:ArpDomain, typeFilter:ArpType -> Bool) {
+	public function new(domain:ArpDomain, typeFilter:ArpType -> Bool = null) {
 		if (typeFilter == null) typeFilter = ArpDomainDump.defaultTypeFilter;
 		this.domain = domain;
 		this.typeFilter = typeFilter;

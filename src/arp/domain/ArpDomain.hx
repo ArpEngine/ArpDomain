@@ -1,5 +1,6 @@
 package arp.domain;
 
+import arp.domain.prepare.ArpHeatUpkeepScanner;
 import arp.data.DataGroup;
 import arp.domain.ArpSlot;
 import arp.domain.core.ArpDid;
@@ -215,7 +216,7 @@ class ArpDomain {
 		slot.heat = ArpHeat.Cold;
 	}
 
-	// TODO method to upkeep all Warm objects after possible invalid heatDown
+	public function heatUpkeep():Void ArpHeatUpkeepScanner.execute(this);
 
 	public var isPending(get, never):Bool;
 	inline public function get_isPending():Bool return this.prepareQueue.isPending;
