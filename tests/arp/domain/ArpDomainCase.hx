@@ -34,24 +34,24 @@ class ArpDomainCase {
 	public function testDumpEntries():Void {
 		var DUMP:String = '# <<slots>> {
 -   $$0:data [0]
-!   $$null [0]
--   /name1:mock [1]
--   /name2:mock [1]
--   /name3:mock [1]
+!   $$null [1]
+-   /name1:mock [2]
+-   /name2:mock [2]
+-   /name3:mock [2]
   }
 ';
 		var DUMP_BY_NAME:String = '% <<dir>>:  {
 %   name1: /name1 {
--     <mock>: /name1:mock [1]
+-     <mock>: /name1:mock [2]
     }
 %   name2: /name2 {
--     <mock>: /name2:mock [1]
+-     <mock>: /name2:mock [2]
     }
 %   name3: /name3 {
--     <mock>: /name3:mock [1]
+-     <mock>: /name3:mock [2]
     }
 -   <<anonymous>>: $$0:data [0]
-!   <<anonymous>>: $$null [0]
+!   <<anonymous>>: $$null [1]
   }
 ';
 		assertEquals(DUMP, domain.dumpEntries());
@@ -90,27 +90,51 @@ class ArpDomainCase {
 		assertEquals("message2", event.message);
 	}
 
-	public function testGc():Void {
+	public function testDelReference():Void {
 		var DUMP:String = '# <<slots>> {
 -   $$0:data [0]
-!   $$null [0]
--   /name2:mock [1]
--   /name3:mock [1]
+!   $$null [1]
+-   /name2:mock [2]
+-   /name3:mock [2]
   }
 ';
 		var DUMP_BY_NAME:String = '% <<dir>>:  {
 %   name2: /name2 {
--     <mock>: /name2:mock [1]
+-     <mock>: /name2:mock [2]
     }
 %   name3: /name3 {
--     <mock>: /name3:mock [1]
+-     <mock>: /name3:mock [2]
     }
 -   <<anonymous>>: $$0:data [0]
-!   <<anonymous>>: $$null [0]
+!   <<anonymous>>: $$null [1]
   }
 ';
 		domain.query("name1", new ArpType("mock")).slot().delReference();
-		//domain.gc();
+		domain.query("name1", new ArpType("mock")).slot().delReference();
+		assertEquals(DUMP, domain.dumpEntries());
+		assertEquals(DUMP_BY_NAME, domain.dumpEntriesByName());
+	}
+
+	public function testGc():Void {
+		var DUMP:String = '# <<slots>> {
+!   $$null [1]
+-   /name2:mock [2]
+-   /name3:mock [2]
+  }
+';
+		var DUMP_BY_NAME:String = '% <<dir>>:  {
+%   name2: /name2 {
+-     <mock>: /name2:mock [2]
+    }
+%   name3: /name3 {
+-     <mock>: /name3:mock [2]
+    }
+!   <<anonymous>>: $$null [1]
+  }
+';
+		domain.query("name1", new ArpType("mock")).slot().delReference();
+		domain.query("name1", new ArpType("mock")).slot().delReference();
+		domain.gc();
 		assertEquals(DUMP, domain.dumpEntries());
 		assertEquals(DUMP_BY_NAME, domain.dumpEntriesByName());
 	}

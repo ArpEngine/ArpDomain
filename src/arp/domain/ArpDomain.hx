@@ -1,5 +1,6 @@
 package arp.domain;
 
+import arp.domain.prepare.ArpDomainGcScanner;
 import arp.domain.prepare.ArpHeatUpkeepScanner;
 import arp.data.DataGroup;
 import arp.domain.ArpSlot;
@@ -68,7 +69,7 @@ class ArpDomain {
 		this.root = new ArpDirectory(this, ArpDid.rootDir());
 		this.currentDir = this.root;
 		this.slots = new Map();
-		this.nullSlot = this.allocSlot(ArpSid.nullSlot());
+		this.nullSlot = this.allocSlot(ArpSid.nullSlot()).addReference();
 		this.registry = new ArpObjectFactoryRegistry();
 		this.prepareQueue = new PrepareQueue(this, this._rawTick);
 
@@ -200,7 +201,14 @@ class ArpDomain {
 	}
 
 	public function gc():Void {
-		throw new ArpError("ArpDomain.gc() is not implemented");
+		ArpDomainGcScanner.execute(this);
+		for (kv in this.slots.keyValueIterator()) {
+			var v = kv.value;
+			if (v.refCount < 0 && v != this.nullSlot) {
+				this.slots.remove(kv.key);
+			}
+		}
+		return;
 	}
 
 	public function log(category:String, message:String):Void {
