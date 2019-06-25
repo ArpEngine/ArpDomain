@@ -48,6 +48,8 @@ class ArpUntypedSlot {
 		return this;
 	}
 
+	inline public function eternalReference():ArpUntypedSlot return this.addReference();
+
 	private var _heat:ArpHeat = ArpHeat.Cold;
 	public var heat(get, set):ArpHeat;
 	inline private function get_heat():ArpHeat { return this._heat; }

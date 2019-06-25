@@ -69,7 +69,7 @@ class ArpDomain {
 		this.root = new ArpDirectory(this, ArpDid.rootDir());
 		this.currentDir = this.root;
 		this.slots = new Map();
-		this.nullSlot = this.allocSlot(ArpSid.nullSlot()).addReference();
+		this.nullSlot = this.allocSlot(ArpSid.nullSlot()).eternalReference();
 		this.registry = new ArpObjectFactoryRegistry();
 		this.prepareQueue = new PrepareQueue(this, this._rawTick);
 
