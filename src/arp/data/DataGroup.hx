@@ -50,7 +50,10 @@ class DataGroup implements IArpObject {
 		this._arpSlot = slot;
 		if (seed != null) {
 			this.name = seed.name;
-			if (this.name != null && this.children == null) this.children = [];
+			if (this.name != null && this.children == null) {
+				this.children = [];
+				slot.eternalReference();
+			}
 			for (element in seed) this.arpConsumeSeedElement(element);
 		}
 		return this;
@@ -79,8 +82,12 @@ class DataGroup implements IArpObject {
 		if (element.seedName == "value") return;
 
 		var slot = this.arpDomain.loadSeed(element).addReference();
-		if (slot != null && this.name != null) {
-			this.children.push(slot);
+		if (slot != null) {
+			if (this.name != null) {
+				this.children.push(slot);
+			} else {
+				slot.eternalReference();
+			}
 		}
 	}
 

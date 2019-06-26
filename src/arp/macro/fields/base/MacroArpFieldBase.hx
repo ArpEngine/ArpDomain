@@ -38,6 +38,8 @@ class MacroArpFieldBase {
 			case MacroArpMetaArpBarrier.Required: true;
 		}
 	}
+	private var arpIsOwner(get, never):Bool;
+	private function get_arpIsOwner():Bool return fieldDef.metaArpOwner;
 
 	private var nativePos(get, never):Position;
 	private function get_nativePos():Position return this.nativeField.pos;

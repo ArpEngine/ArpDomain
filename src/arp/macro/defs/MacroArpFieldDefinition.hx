@@ -24,6 +24,7 @@ class MacroArpFieldDefinition {
 	public var metaArpVolatile(default, null):Bool = false;
 	public var metaArpReadOnly(default, null):Bool = false;
 	public var metaArpBarrier(default, null):MacroArpMetaArpBarrier = MacroArpMetaArpBarrier.None;
+	public var metaArpOwner(default, null):Bool = false;
 	public var metaArpDefault(default, null):MacroArpMetaArpDefault = MacroArpMetaArpDefault.Zero;
 
 	// Impl family
@@ -163,7 +164,8 @@ class MacroArpFieldDefinition {
 				case ExprDef.EConst(Constant.CIdent("readonly")):
 					this.metaArpReadOnly = true;
 				case _:
-					Context.error("invalid expr", this.nativePos);
+					var errorMessage = "Invalid @:arpField argument.\nAccepts: \"String literal\" | true | false | volatile | readonly";
+					Context.error(errorMessage, this.nativePos);
 			}
 		}
 
@@ -181,7 +183,17 @@ class MacroArpFieldDefinition {
 		this.metaArpBarrier = switch (params[0].expr) {
 			case ExprDef.EConst(Constant.CIdent("true")): MacroArpMetaArpBarrier.Required;
 			case ExprDef.EConst(Constant.CIdent("false")): MacroArpMetaArpBarrier.Optional;
-			case _: Context.error("invalid expr", this.nativePos);
+			case _:
+				var errorMessage = "Invalid @:arpBarrier argument.\nAccepts: true | false";
+				Context.error(errorMessage, this.nativePos);
+		}
+		if (params.length == 1) return;
+		this.metaArpOwner = switch (params[1].expr) {
+			case ExprDef.EConst(Constant.CIdent("true")): true;
+			case ExprDef.EConst(Constant.CIdent("false")): false;
+			case _:
+				var errorMessage = "Invalid @:arpBarrier argument.\nAccepts: true | false";
+				Context.error(errorMessage, this.nativePos);
 		}
 	}
 }

@@ -1,8 +1,8 @@
 package arp;
 
-import arp.domain.ArpDomainPersistCase;
 import arp.domain.ArpDirectoryCase;
 import arp.domain.ArpDomainCase;
+import arp.domain.ArpDomainPersistCase;
 import arp.domain.MockArpObjectCase;
 import arp.domain.MockDerivedArpObjectCase;
 import arp.domain.query.ArpDirectoryQueryCase;
@@ -19,6 +19,7 @@ import arp.macro.MacroDefaultArpObjectCase;
 import arp.macro.MacroDerivedArpObjectCase;
 import arp.macro.MacroHierarchicalArpObjectCase;
 import arp.macro.MacroImplArpObjectCase;
+import arp.macro.MacroOwnerArpObjectCase;
 import arp.macro.StdDsMacroArpObjectCase;
 import arp.tests.ArpDomainTestUtilCase;
 import picotest.PicoTestRunner;
@@ -47,6 +48,7 @@ class ArpDomainTestSuite {
 		r.load(EarlyPrepareMacroArpObjectCase);
 		r.load(MacroImplArpObjectCase);
 		r.load(MacroConcreteImplArpObjectCase);
+		r.load(MacroOwnerArpObjectCase);
 
 		r.load(ArpDomainCase);
 		r.load(ArpDomainPersistCase);
