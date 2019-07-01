@@ -1,5 +1,6 @@
 package arp.tests;
 
+import haxe.io.Path;
 import arp.persistable.AnonPersistOutput;
 import arp.persistable.PackedPersistInput;
 import arp.persistable.PackedPersistOutput;
@@ -14,6 +15,7 @@ import arp.domain.IArpObject;
 #if macro
 import haxe.ds.Option;
 import haxe.macro.Context;
+import haxe.macro.Compiler;
 import haxe.macro.Expr.ExprOf;
 import sys.FileSystem;
 import sys.io.File;
@@ -24,22 +26,40 @@ class ArpDomainTestUtil {
 	#if macro
 	private static var fileCache:Map<String, Option<String>>;
 
+	private static function resolveFile(file:String):Option<String> {
+		for (cp in Context.getClassPath()) {
+			var fp:String = FileSystem.absolutePath('$cp$file');
+			if (FileSystem.exists(fp)) return Some(fp);
+		}
+		return None;
+	}
+
 	private static function readFile(file:String):Option<String> {
 		if (fileCache == null) fileCache = new Map();
 
 		if (fileCache.exists(file)) return fileCache.get(file);
 
-		for (cp in Context.getClassPath()) {
-			var fp:String = FileSystem.absolutePath('$cp$file');
-			if (FileSystem.exists(fp)) {
-				fileCache.set(file, Option.Some(File.getContent(fp)));
-				return fileCache.get(file);
-			}
-		}
-		fileCache.set(file, Option.None);
+		fileCache.set(file, switch (resolveFile(file)) {
+			case None: None;
+			case Some(fp): Some(File.getContent(fp));
+		});
 		return fileCache.get(file);
 	}
 	#end
+
+	@:noUsing
+	macro public static function deployFile(file:String):ExprOf<Void> {
+		switch (resolveFile(file)) {
+			case None:
+				Context.error('File <$file> not found in classpaths', Context.currentPos());
+			case Some(sp):
+				var destRoot:String = #if sys Sys.getCwd() #else Path.directory(Compiler.getOutput()) #end ;
+				var dp:String = Path.join([destRoot, file]);
+				FileSystem.createDirectory(Path.directory(dp));
+				File.copy(sp, dp);
+		}
+		return macro null;
+	}
 
 	@:noUsing
 	macro public static function string(file:String, section:String):ExprOf<String> {
