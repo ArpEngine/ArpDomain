@@ -45,6 +45,15 @@ class ArpDomainTestUtil {
 		});
 		return fileCache.get(file);
 	}
+
+	private static var destRoot(get, never):String;
+	private static function get_destRoot():String {
+		#if (flash || js)
+		return Path.directory(Compiler.getOutput());
+		#else
+		return Sys.getCwd();
+		#end
+	}
 	#end
 
 	@:noUsing
@@ -53,7 +62,6 @@ class ArpDomainTestUtil {
 			case None:
 				Context.error('File <$file> not found in classpaths', Context.currentPos());
 			case Some(sp):
-				var destRoot:String = #if sys Sys.getCwd() #else Path.directory(Compiler.getOutput()) #end ;
 				var dp:String = Path.join([destRoot, file]);
 				FileSystem.createDirectory(Path.directory(dp));
 				File.copy(sp, dp);
