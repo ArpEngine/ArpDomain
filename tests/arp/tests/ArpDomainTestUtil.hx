@@ -53,7 +53,8 @@ class ArpDomainTestUtil {
 			case None:
 				Context.error('File <$file> not found in classpaths', Context.currentPos());
 			case Some(sp):
-				var dp:String = Path.join([Path.directory(Compiler.getOutput()), file]);
+				var destRoot:String = #if sys Sys.getCwd() #else Path.directory(Compiler.getOutput()) #end ;
+				var dp:String = Path.join([destRoot, file]);
 				FileSystem.createDirectory(Path.directory(dp));
 				File.copy(sp, dp);
 		}
