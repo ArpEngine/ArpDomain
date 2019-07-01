@@ -11,6 +11,7 @@ pipeline {
             steps {
                 githubNotify(context: 'swf', description: '', status: 'PENDING');
                 githubNotify(context: 'js', description: '', status: 'PENDING');
+                githubNotify(context: 'neko', description: '', status: 'PENDING');
                 sh "haxelib newrepo"
                 sh "haxelib git arp_ci https://github.com/ArpEngine/Arp-ci master --always"
                 sh "haxelib run arp_ci sync"
