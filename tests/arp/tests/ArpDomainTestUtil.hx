@@ -48,11 +48,11 @@ class ArpDomainTestUtil {
 
 	private static var destRoot(get, never):String;
 	private static function get_destRoot():String {
-		#if (flash || js)
-		return Path.directory(Compiler.getOutput());
-		#else
-		return Sys.getCwd();
-		#end
+		if (Context.defined("flash") || Context.defined("js")) {
+			return Path.directory(Compiler.getOutput());
+		} else {
+			return Sys.getCwd();
+		}
 	}
 	#end
 
