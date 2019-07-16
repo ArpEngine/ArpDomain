@@ -223,11 +223,13 @@ class ArpDomain {
 		}
 	}
 
-	public function heatDown(slot:ArpUntypedSlot):Void {
-		slot.value.arpHeatDownNow();
-	}
+	inline public function heatUpNow(slot:ArpUntypedSlot):Bool return slot.value.arpHeatUpNow();
+	inline public function heatDownNow(slot:ArpUntypedSlot):Bool return slot.value.arpHeatDownNow();
 
-	public function heatUpkeep():Void ArpHeatUpkeepScanner.execute(this);
+	@:deprecated("heatDown() is renamed to heatDownNow()")
+	inline public function heatDown(slot:ArpUntypedSlot):Void slot.value.arpHeatDownNow();
+
+	inline public function heatUpkeep():Void ArpHeatUpkeepScanner.execute(this);
 
 	public var isPending(get, never):Bool;
 	inline public function get_isPending():Bool return this.prepareQueue.isPending;
