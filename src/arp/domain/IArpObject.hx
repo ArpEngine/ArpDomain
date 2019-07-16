@@ -21,6 +21,7 @@ interface IArpObject extends IPersistable /* extends IArpObjectImpl */ {
 
 	function arpHeatUpNow():Bool;
 	function arpHeatDownNow():Bool;
+	function arpHeatLater(nonblocking:Bool):Bool;
 
 	@:noDoc @:noCompletion function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject;
 	@:noDoc @:noCompletion function __arp_dispose():Void;

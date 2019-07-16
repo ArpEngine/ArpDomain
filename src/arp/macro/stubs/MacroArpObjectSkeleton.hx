@@ -78,7 +78,6 @@ class MacroArpObjectSkeleton {
 				);
 			}
 
-			@:noDoc @:noCompletion
 			public function arpHeatUpNow():Bool {
 				arp.macro.stubs.MacroArpObjectStubs.arpHeatUpNow(
 					$e{ this.buildHeatUpNowBlock() },
@@ -86,13 +85,14 @@ class MacroArpObjectSkeleton {
 				);
 			}
 
-			@:noDoc @:noCompletion
 			public function arpHeatDownNow():Bool {
 				arp.macro.stubs.MacroArpObjectStubs.arpHeatDownNow(
 					$e{ this.buildHeatDownNowBlock() },
 					$v{ this.classDef.hasImpl }
 				);
 			}
+
+			inline public function arpHeatLater(nonblocking:Bool):Bool return this._arpDomain.heatLater(this._arpSlot, nonblocking);
 
 			@:noDoc @:noCompletion
 			public function __arp_dispose():Void {
@@ -156,14 +156,12 @@ class MacroArpObjectSkeleton {
 				);
 			}
 
-			@:noDoc @:noCompletion
 			override public function arpHeatUpNow():Bool {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatUpNow(
 					$e{ this.buildHeatUpNowBlock() }
 				);
 			}
 
-			@:noDoc @:noCompletion
 			override public function arpHeatDownNow():Bool {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatDownNow(
 					$e{ this.buildHeatDownNowBlock() }
