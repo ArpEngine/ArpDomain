@@ -53,11 +53,11 @@ class SeedObject implements IArpObject {
 	public function __arp_heatLaterDeps():Void {
 	}
 
-	public function __arp_heatUpNow():Bool {
+	public function arpHeatUpNow():Bool {
 		return true;
 	}
 
-	public function __arp_heatDownNow():Bool {
+	public function arpHeatDownNow():Bool {
 		return true;
 	}
 

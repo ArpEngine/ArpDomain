@@ -52,8 +52,8 @@ class ArpUntypedSlot {
 
 	public var heat(default, null):ArpHeat = ArpHeat.Cold;
 
-	inline public function heatUpNow():Bool return this._value.__arp_heatUpNow();
-	inline public function heatDownNow():Bool return this._value.__arp_heatDownNow();
+	inline public function heatUpNow():Bool return this._value.arpHeatUpNow();
+	inline public function heatDownNow():Bool return this._value.arpHeatDownNow();
 	inline public function heatLater(nonblocking:Bool = false):Bool return this._domain.heatLater(this, nonblocking);
 
 	@:allow(arp.domain.ArpDomain.allocSlot)

@@ -36,7 +36,7 @@ private class ArpHeatUpkeepVisitor implements IArpDomainDirectoryVisitor<Bool> {
 		switch (slot.heat) {
 			case ArpHeat.Warming | ArpHeat.Warm:
 				var value:IArpObject = slot.value;
-				if (value.__arp_heatUpNow()) return;
+				if (value.arpHeatUpNow()) return;
 				@:privateAccess value.arpDomain.prepareQueue.prepareLater(slot, false);
 				isPending = true;
 			case _:

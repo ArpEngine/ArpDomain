@@ -75,7 +75,7 @@ class MacroArpObjectStubs {
 				if (hasImpl) {
 					macro {
 						if (this.arpImpl == null) throw new arp.errors.ArpTemplateError($v{"@:arpImpl could not find backend for "} + Type.getClassName(Type.getClass(this)));
-						if (!this.arpImpl.__arp_heatUpNow()) isSync = false;
+						if (!this.arpImpl.arpHeatUpNow()) isSync = false;
 					}
 				} else {
 					macro null;
@@ -100,7 +100,7 @@ class MacroArpObjectStubs {
 			var isSync:Bool = true;
 			$e{
 				if (hasImpl) {
-					macro if (!this.arpImpl.__arp_heatDownNow()) isSync = false;
+					macro if (!this.arpImpl.arpHeatDownNow()) isSync = false;
 				} else {
 					macro null;
 				}
@@ -117,7 +117,7 @@ class MacroArpObjectStubs {
 #if arp_debug
 			if (this._arpSlot == null) throw new arp.errors.ArpError("ArpObject is not initialized");
 #end
-			this.__arp_heatDownNow();
+			this.arpHeatDownNow();
 			$e{
 				if (hasImpl) {
 					macro this.arpImpl.__arp_dispose();

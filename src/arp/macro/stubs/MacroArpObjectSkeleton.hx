@@ -79,7 +79,7 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:noDoc @:noCompletion
-			public function __arp_heatUpNow():Bool {
+			public function arpHeatUpNow():Bool {
 				arp.macro.stubs.MacroArpObjectStubs.arpHeatUpNow(
 					$e{ this.buildHeatUpNowBlock() },
 					$v{ this.classDef.hasImpl }
@@ -87,7 +87,7 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:noDoc @:noCompletion
-			public function __arp_heatDownNow():Bool {
+			public function arpHeatDownNow():Bool {
 				arp.macro.stubs.MacroArpObjectStubs.arpHeatDownNow(
 					$e{ this.buildHeatDownNowBlock() },
 					$v{ this.classDef.hasImpl }
@@ -157,14 +157,14 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:noDoc @:noCompletion
-			override public function __arp_heatUpNow():Bool {
+			override public function arpHeatUpNow():Bool {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatUpNow(
 					$e{ this.buildHeatUpNowBlock() }
 				);
 			}
 
 			@:noDoc @:noCompletion
-			override public function __arp_heatDownNow():Bool {
+			override public function arpHeatDownNow():Bool {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatDownNow(
 					$e{ this.buildHeatDownNowBlock() }
 				);

@@ -63,11 +63,11 @@ class DataGroup implements IArpObject {
 		for (slot in this.children) this.arpDomain.heatLater(slot);
 	}
 
-	public function __arp_heatUpNow():Bool {
+	public function arpHeatUpNow():Bool {
 		return true;
 	}
 
-	public function __arp_heatDownNow():Bool {
+	public function arpHeatDownNow():Bool {
 		return true;
 	}
 
