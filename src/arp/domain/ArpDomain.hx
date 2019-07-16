@@ -216,6 +216,7 @@ class ArpDomain {
 	}
 
 	public function heatLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Void {
+		if (slot.heat != ArpHeat.Cold) return;
 		this.prepareQueue.prepareLater(slot, nonblocking);
 	}
 
