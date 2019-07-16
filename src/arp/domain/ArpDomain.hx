@@ -215,9 +215,12 @@ class ArpDomain {
 		this._onLog.dispatch(new ArpLogEvent(category, message));
 	}
 
-	public function heatLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Void {
-		if (slot.heat != ArpHeat.Cold) return;
-		this.prepareQueue.prepareLater(slot, nonblocking);
+	public function heatLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Bool {
+		switch (slot.heat) {
+			case ArpHeat.Warm: return true;
+			case ArpHeat.Warming: return false;
+			case ArpHeat.Cold: this.prepareQueue.prepareLater(slot, nonblocking); return false;
+		}
 	}
 
 	public function heatDown(slot:ArpUntypedSlot):Void {
