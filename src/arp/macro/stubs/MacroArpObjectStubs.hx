@@ -107,6 +107,7 @@ class MacroArpObjectStubs {
 			}
 			if (!this.arpSelfHeatDown()) isSync = false;
 			$e{ heatDownNowBlock }
+			@:privateAccess this.arpSlot.heat = arp.domain.ArpHeat.Cold;
 			return isSync;
 		}
 	}
