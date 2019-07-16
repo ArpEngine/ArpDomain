@@ -87,7 +87,7 @@ class PrepareQueue implements IPrepareStatus {
 	}
 
 	private function onCompleteTask(task:PrepareTask):Void {
-		task.slot.heat = ArpHeat.Warm;
+		@:privateAccess task.slot.heat = ArpHeat.Warm;
 		this.tasksBySlots.remove(task.slot);
 		if (!task.nonblocking) this.tasksBlocking--;
 	}
@@ -102,7 +102,7 @@ class PrepareQueue implements IPrepareStatus {
 		this.tasksBySlots.set(slot, task);
 		if (!nonblocking) this.tasksBlocking++;
 		this.taskRunner.append(task);
-		task.slot.heat = ArpHeat.Warming;
+		@:privateAccess task.slot.heat = ArpHeat.Warming;
 		this.domain.log("arp_debug_prepare", 'PrepareQueue.prepareLater(): prepare later ${slot} ${if (nonblocking) "(nonblocking)" else ""}');
 	}
 

@@ -221,7 +221,7 @@ class ArpDomain {
 
 	public function heatDown(slot:ArpUntypedSlot):Void {
 		slot.value.__arp_heatDownNow();
-		slot.heat = ArpHeat.Cold;
+		@:privateAccess slot.heat = ArpHeat.Cold;
 	}
 
 	public function heatUpkeep():Void ArpHeatUpkeepScanner.execute(this);

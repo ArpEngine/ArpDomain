@@ -50,10 +50,7 @@ class ArpUntypedSlot {
 
 	inline public function eternalReference():ArpUntypedSlot return this.addReference();
 
-	private var _heat:ArpHeat = ArpHeat.Cold;
-	public var heat(get, set):ArpHeat;
-	inline private function get_heat():ArpHeat { return this._heat; }
-	inline private function set_heat(value:ArpHeat):ArpHeat { return this._heat = value; }
+	public var heat(default, null):ArpHeat = ArpHeat.Cold;
 
 	@:allow(arp.domain.ArpDomain.allocSlot)
 	private function new(domain:ArpDomain, sid:ArpSid, dir:ArpDirectory = null) {

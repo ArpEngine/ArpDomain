@@ -82,10 +82,10 @@ class MacroArpObjectStubs {
 				}
 			}
 			if (isSync) {
-				this.arpSlot.heat = arp.domain.ArpHeat.Warm;
+				@:privateAccess this.arpSlot.heat = arp.domain.ArpHeat.Warm;
 				return true;
 			} else {
-				this.arpSlot.heat = arp.domain.ArpHeat.Warming;
+				@:privateAccess this.arpSlot.heat = arp.domain.ArpHeat.Warming;
 				return false;
 			}
 		}
