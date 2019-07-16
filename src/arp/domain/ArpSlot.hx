@@ -33,6 +33,10 @@ abstract ArpSlot<T:IArpObject>(ArpUntypedSlot) from ArpUntypedSlot to ArpUntyped
 	public var heat(get, never):ArpHeat;
 	inline private function get_heat():ArpHeat return this.heat;
 
+	inline public function heatUpNow():Bool return this.heatUpNow();
+	inline public function heatDownNow():Bool return this.heatDownNow();
+	inline public function heatLater(nonblocking:Bool = false):Bool return this.heatLater(nonblocking);
+
 	inline public function toString():String return this.toString();
 	inline public function describe():String return this.describe();
 

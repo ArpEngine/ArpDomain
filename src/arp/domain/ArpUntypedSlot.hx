@@ -52,6 +52,10 @@ class ArpUntypedSlot {
 
 	public var heat(default, null):ArpHeat = ArpHeat.Cold;
 
+	inline public function heatUpNow():Bool return this._value.__arp_heatUpNow();
+	inline public function heatDownNow():Bool return this._value.__arp_heatDownNow();
+	inline public function heatLater(nonblocking:Bool = false):Bool return this._domain.heatLater(this, nonblocking);
+
 	@:allow(arp.domain.ArpDomain.allocSlot)
 	private function new(domain:ArpDomain, sid:ArpSid, dir:ArpDirectory = null) {
 		this.domain = domain;
