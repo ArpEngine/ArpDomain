@@ -40,7 +40,7 @@ class PrepareTask implements ITask {
 		}
 
 		// try to heat up myself
-		if (!this.slot.value.__arp_heatUpNow()) {
+		if (!this.slot.value.arpHeatUpNow()) {
 			this.domain.log("arp_debug_prepare", 'PrepareTask.run(): waiting depending prepares: ${this.slot}');
 			return TaskStatus.Stalled;
 		}

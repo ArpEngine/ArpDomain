@@ -30,10 +30,12 @@ abstract ArpSlot<T:IArpObject>(ArpUntypedSlot) from ArpUntypedSlot to ArpUntyped
 	inline public function takeReference(from:ArpSlot<T>):ArpSlot<T> return this.takeReference(from);
 	inline public function eternalReference():ArpSlot<T> return this.eternalReference();
 
-	// FIXME make setter friend access
-	public var heat(get, set):ArpHeat;
+	public var heat(get, never):ArpHeat;
 	inline private function get_heat():ArpHeat return this.heat;
-	inline private function set_heat(value:ArpHeat):ArpHeat return this.heat = value;
+
+	inline public function heatUpNow():Bool return this.heatUpNow();
+	inline public function heatDownNow():Bool return this.heatDownNow();
+	inline public function heatLater(nonblocking:Bool = false):Bool return this.heatLater(nonblocking);
 
 	inline public function toString():String return this.toString();
 	inline public function describe():String return this.describe();

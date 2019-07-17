@@ -16,12 +16,14 @@ interface IArpObject extends IPersistable /* extends IArpObjectImpl */ {
 	var arpSlot(get, never):ArpUntypedSlot;
 	var arpHeat(get, never):ArpHeat;
 
-	@:noDoc @:noCompletion function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject;
-	@:noDoc @:noCompletion function __arp_dispose():Void;
 	function arpClone():IArpObject;
 	function arpCopyFrom(source:IArpObject):IArpObject;
 
+	function arpHeatUpNow():Bool;
+	function arpHeatDownNow():Bool;
+	function arpHeatLater(nonblocking:Bool):Bool;
+
+	@:noDoc @:noCompletion function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject;
+	@:noDoc @:noCompletion function __arp_dispose():Void;
 	@:noDoc @:noCompletion function __arp_heatLaterDeps():Void;
-	@:noDoc @:noCompletion function __arp_heatUpNow():Bool;
-	@:noDoc @:noCompletion function __arp_heatDownNow():Bool;
 }

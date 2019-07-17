@@ -40,11 +40,11 @@ class MockConcreteImpl implements IMockConcreteImpl {
 		this.initialHeat = this.currentHeat;
 	}
 
-	public function __arp_heatUpNow():Bool {
+	public function arpHeatUpNow():Bool {
 		currentHeat = ArpHeat.Warm;
 		return true;
 	}
-	public function __arp_heatDownNow():Bool {
+	public function arpHeatDownNow():Bool {
 		currentHeat = ArpHeat.Cold;
 		return true;
 	}

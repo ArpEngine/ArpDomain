@@ -215,16 +215,21 @@ class ArpDomain {
 		this._onLog.dispatch(new ArpLogEvent(category, message));
 	}
 
-	public function heatLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Void {
-		this.prepareQueue.prepareLater(slot, nonblocking);
+	public function heatLater(slot:ArpUntypedSlot, nonblocking:Bool = false):Bool {
+		switch (slot.heat) {
+			case ArpHeat.Warm: return true;
+			case ArpHeat.Warming: return false;
+			case ArpHeat.Cold: this.prepareQueue.prepareLater(slot, nonblocking); return false;
+		}
 	}
 
-	public function heatDown(slot:ArpUntypedSlot):Void {
-		slot.value.__arp_heatDownNow();
-		slot.heat = ArpHeat.Cold;
-	}
+	inline public function heatUpNow(slot:ArpUntypedSlot):Bool return slot.value.arpHeatUpNow();
+	inline public function heatDownNow(slot:ArpUntypedSlot):Bool return slot.value.arpHeatDownNow();
 
-	public function heatUpkeep():Void ArpHeatUpkeepScanner.execute(this);
+	@:deprecated("heatDown() is renamed to heatDownNow()")
+	inline public function heatDown(slot:ArpUntypedSlot):Void slot.value.arpHeatDownNow();
+
+	inline public function heatUpkeep():Void ArpHeatUpkeepScanner.execute(this);
 
 	public var isPending(get, never):Bool;
 	inline public function get_isPending():Bool return this.prepareQueue.isPending;
