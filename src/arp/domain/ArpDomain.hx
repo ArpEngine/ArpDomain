@@ -223,8 +223,15 @@ class ArpDomain {
 		}
 	}
 
-	inline public function heatUpNow(slot:ArpUntypedSlot):Bool return slot.value.arpHeatUpNow();
-	inline public function heatDownNow(slot:ArpUntypedSlot):Bool return slot.value.arpHeatDownNow();
+	inline public function heatUpNow(slot:ArpUntypedSlot):Bool {
+		if (slot.value == null) return true;
+		return slot.value.arpHeatUpNow();
+
+	}
+	inline public function heatDownNow(slot:ArpUntypedSlot):Bool {
+		if (slot.value == null) return true;
+		return slot.value.arpHeatDownNow();
+	}
 
 	@:deprecated("heatDown() is renamed to heatDownNow()")
 	inline public function heatDown(slot:ArpUntypedSlot):Void slot.value.arpHeatDownNow();
