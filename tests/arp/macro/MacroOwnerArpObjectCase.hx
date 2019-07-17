@@ -63,7 +63,7 @@ class MacroOwnerArpObjectCase {
 		assertEquals(ArpHeat.Warm, arpObj.requiredRefField.arpHeat);
 		assertEquals(ArpHeat.Warm, arpObj.ownedRequiredRefField.arpHeat);
 
-		domain.heatDown(slot);
+		domain.heatDownNow(slot);
 
 		assertEquals(ArpHeat.Cold, arpObj.arpHeat);
 		assertEquals(ArpHeat.Warm, arpObj.optionalRefField.arpHeat);
@@ -106,7 +106,7 @@ class MacroOwnerArpObjectCase {
 		otherSlot = domain.query("otherValue", MockOwnerMacroArpObject).slot();
 		arpObj = slot.value;
 
-		domain.heatDown(slot);
+		domain.heatDownNow(slot);
 
 		assertEquals(ArpHeat.Warm, otherSlot.heat);
 		assertEquals(ArpHeat.Cold, arpObj.arpHeat);

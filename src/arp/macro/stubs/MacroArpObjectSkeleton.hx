@@ -92,7 +92,7 @@ class MacroArpObjectSkeleton {
 				);
 			}
 
-			inline public function arpHeatLater(nonblocking:Bool):Bool return this._arpDomain.heatLater(this._arpSlot, nonblocking);
+			inline public function arpHeatLater(nonblocking:Bool = false):Bool return this._arpDomain.heatLater(this._arpSlot, nonblocking);
 
 			@:noDoc @:noCompletion
 			public function __arp_dispose():Void {
