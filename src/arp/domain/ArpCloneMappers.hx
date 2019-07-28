@@ -6,9 +6,13 @@ import arp.domain.cloneMappers.ShallowCloneMapper;
 
 class ArpCloneMappers {
 
-	public static function shallow():IArpCloneMapper return new ShallowCloneMapper();
+	inline public static function valueOrDefault(cloneMapper:Null<IArpCloneMapper>):IArpCloneMapper {
+		return if (cloneMapper != null) cloneMapper else shallow();
+	}
 
-	public static function deep():IArpCloneMapper return new DeepCloneMapper();
+	inline public static function shallow():IArpCloneMapper return new ShallowCloneMapper();
 
-	public static function serialize():IArpCloneMapper return new SerializeCloneMapper();
+	inline public static function deep():IArpCloneMapper return new DeepCloneMapper();
+
+	inline public static function serialize():IArpCloneMapper return new SerializeCloneMapper();
 }

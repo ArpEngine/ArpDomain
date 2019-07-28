@@ -72,7 +72,6 @@ class MacroDeepCopyArpObjectCase {
 		checkIsIdentity(recRef.refField, recClone.refField);
 	}
 
-	@Ignore("not implemented")
 	public function testArpCloneDeep():Void {
 		var nullRef:MockMacroArpObject = domain.query("nullRef", MOCK_TYPE).value();
 		var nullClone:MockMacroArpObject = cast nullRef.arpClone(ArpCloneMappers.deep());
@@ -90,7 +89,6 @@ class MacroDeepCopyArpObjectCase {
 		checkIsClone(recRef.refField, recClone.refField);
 	}
 
-	@Ignore("not implemented")
 	public function testArpCloneMarshal():Void {
 		var nullRef:MockMacroArpObject = domain.query("nullRef", MOCK_TYPE).value();
 		var nullClone:MockMacroArpObject = cast nullRef.arpClone(ArpCloneMappers.serialize());

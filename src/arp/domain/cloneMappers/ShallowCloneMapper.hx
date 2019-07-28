@@ -10,6 +10,6 @@ class ShallowCloneMapper implements IArpCloneMapper {
 		return src;
 	}
 
-	public function addMappingObj(src:IArpObject, dest:IArpObject):Void CloneMapperTools.addMappingObj(this, src, dest);
-	public function resolveObj(src:IArpObject):IArpObject return CloneMapperTools.resolveObj(this, src);
+	public function addMappingObj<T:IArpObject>(src:T, dest:T):Void CloneMapperTools.addMappingObj(this, src, dest);
+	public function resolveObj<T:IArpObject>(src:T):T return CloneMapperTools.resolveObj(this, src);
 }

@@ -87,7 +87,7 @@ class MacroArpObjectStdMapField extends MacroArpObjectCollectionFieldBase implem
 	public function buildCopyFromBlock(copyFromBlock:Array<Expr>):Void {
 		copyFromBlock.push(macro @:pos(this.nativePos) {
 			for (k in this.$i_nativeName.keys()) this.$i_nativeName.remove(k);
-			for (k in src.$i_nativeName.keys()) this.$i_nativeName.set(k, src.$i_nativeName.get(k));
+			for (k in src.$i_nativeName.keys()) this.$i_nativeName.set(k, cloneMapper.resolveObj(src.$i_nativeName.get(k)));
 		});
 	}
 }
