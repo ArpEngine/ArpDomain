@@ -24,7 +24,7 @@ class MacroArpFieldDefinition {
 	public var metaArpVolatile(default, null):Bool = false;
 	public var metaArpReadOnly(default, null):Bool = false;
 	public var metaArpBarrier(default, null):MacroArpMetaArpBarrier = MacroArpMetaArpBarrier.None;
-	public var metaArpOwner(default, null):Bool = false;
+	public var metaArpReverseBarrier(default, null):Bool = false;
 	public var metaArpDefault(default, null):MacroArpMetaArpDefault = MacroArpMetaArpDefault.Zero;
 
 	// Impl family
@@ -188,7 +188,7 @@ class MacroArpFieldDefinition {
 				Context.error(errorMessage, this.nativePos);
 		}
 		if (params.length == 1) return;
-		this.metaArpOwner = switch (params[1].expr) {
+		this.metaArpReverseBarrier = switch (params[1].expr) {
 			case ExprDef.EConst(Constant.CIdent("true")): true;
 			case ExprDef.EConst(Constant.CIdent("false")): false;
 			case _:
