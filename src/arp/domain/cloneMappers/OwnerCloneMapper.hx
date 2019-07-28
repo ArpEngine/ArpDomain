@@ -1,6 +1,6 @@
 package arp.domain.cloneMappers;
 
-class DeepCloneMapper implements IArpCloneMapper {
+class OwnerCloneMapper implements IArpCloneMapper {
 
 	private var map:Map<ArpUntypedSlot, ArpUntypedSlot>;
 
@@ -13,6 +13,7 @@ class DeepCloneMapper implements IArpCloneMapper {
 	}
 
 	public function resolve(src:ArpUntypedSlot, owner:Bool):ArpUntypedSlot {
+		if (!owner) return src;
 		if (this.map.exists(src)) return this.map.get(src);
 		var value:IArpObject = src.value;
 		if (value == null) return src;

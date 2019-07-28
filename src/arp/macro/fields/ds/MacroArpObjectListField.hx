@@ -91,7 +91,7 @@ class MacroArpObjectListField extends MacroArpObjectCollectionFieldBase implemen
 	public function buildCopyFromBlock(copyFromBlock:Array<Expr>):Void {
 		copyFromBlock.push(macro @:pos(this.nativePos) {
 			this.$i_nativeName.clear();
-			for (v in src.$i_nativeName) this.$i_nativeName.push(cloneMapper.resolveObj(v));
+			for (v in src.$i_nativeName) this.$i_nativeName.push(cloneMapper.resolveObj(v, ${this.eArpIsOwner}));
 		});
 	}
 }

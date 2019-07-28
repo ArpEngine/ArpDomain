@@ -2,6 +2,7 @@ package arp.macro.fields.base;
 
 #if macro
 
+import haxe.macro.Context;
 import arp.domain.core.ArpType;
 import arp.domain.reflect.ArpFieldDs;
 import arp.domain.reflect.ArpFieldInfo;
@@ -43,6 +44,8 @@ class MacroArpFieldBase {
 
 	private var arpIsOwner(get, never):Bool;
 	private function get_arpIsOwner():Bool return fieldDef.metaArpOwner;
+	private var eArpIsOwner(get, never):Expr;
+	private function get_eArpIsOwner():Expr return macro @:mergeBlock { $v{this.arpIsOwner} };
 
 	private var nativePos(get, never):Position;
 	private function get_nativePos():Position return this.nativeField.pos;

@@ -7,7 +7,7 @@ class CloneMapperTools {
 		cloneMapper.addMapping(src.arpSlot, dest.arpSlot);
 	}
 
-	inline public static function resolveObj<T:IArpObject>(cloneMapper:IArpCloneMapper, src:T):T {
-		return cast cloneMapper.resolve(src.arpSlot).value;
+	inline public static function resolveObj<T:IArpObject>(cloneMapper:IArpCloneMapper, src:T, owner:Bool):T {
+		return cast cloneMapper.resolve(src.arpSlot, owner).value;
 	}
 }

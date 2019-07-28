@@ -1,6 +1,7 @@
 package arp.domain;
 
 import arp.domain.cloneMappers.DeepCloneMapper;
+import arp.domain.cloneMappers.OwnerCloneMapper;
 import arp.domain.cloneMappers.SerializeCloneMapper;
 import arp.domain.cloneMappers.ShallowCloneMapper;
 
@@ -11,6 +12,8 @@ class ArpCloneMappers {
 	}
 
 	inline public static function shallow():IArpCloneMapper return new ShallowCloneMapper();
+
+	inline public static function owner():IArpCloneMapper return new OwnerCloneMapper();
 
 	inline public static function deep():IArpCloneMapper return new DeepCloneMapper();
 

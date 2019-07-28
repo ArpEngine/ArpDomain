@@ -100,7 +100,7 @@ class MacroArpObjectField extends MacroArpFieldBase implements IMacroArpField {
 	}
 
 	public function buildCopyFromBlock(copyFromBlock:Array<Expr>):Void {
-		copyFromBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = cloneMapper.resolve(src.$iNativeSlot).takeReference(this.$iNativeSlot); });
+		copyFromBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = cloneMapper.resolve(src.$iNativeSlot, ${this.eArpIsOwner}).takeReference(this.$iNativeSlot); });
 	}
 }
 
