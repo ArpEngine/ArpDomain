@@ -8,7 +8,7 @@ import arp.domain.cloneMappers.ShallowCloneMapper;
 class ArpCloneMappers {
 
 	inline public static function valueOrDefault(cloneMapper:Null<IArpCloneMapper>):IArpCloneMapper {
-		return if (cloneMapper != null) cloneMapper else shallow();
+		return if (cloneMapper != null) cloneMapper else owner();
 	}
 
 	inline public static function shallow():IArpCloneMapper return new ShallowCloneMapper();
