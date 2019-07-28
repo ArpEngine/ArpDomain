@@ -41,6 +41,9 @@ class MacroArpFieldBase {
 	private var arpHasReverseBarrier(get, never):Bool;
 	private function get_arpHasReverseBarrier():Bool return fieldDef.metaArpReverseBarrier;
 
+	private var arpIsOwner(get, never):Bool;
+	private function get_arpIsOwner():Bool return fieldDef.metaArpOwner;
+
 	private var nativePos(get, never):Position;
 	private function get_nativePos():Position return this.nativeField.pos;
 
