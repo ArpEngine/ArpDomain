@@ -62,14 +62,14 @@ class MockDerivedArpObject extends MockArpObject {
 		output.writeUtf("refField2", this.refField2Slot.sid.toString());
 	}
 
-	override public function arpClone():IArpObject {
+	override public function arpClone(cloneMapper:arp.domain.IArpCloneMapper = null):IArpObject {
 		var clone:MockDerivedArpObject = new MockDerivedArpObject();
 		this._arpDomain.addOrphanObject(clone);
 		clone.arpCopyFrom(this);
 		return clone;
 	}
 
-	override public function arpCopyFrom(source:IArpObject):IArpObject {
+	override public function arpCopyFrom(source:IArpObject, cloneMapper:arp.domain.IArpCloneMapper = null):IArpObject {
 		var src:MockDerivedArpObject = cast source;
 		this.intField2 = src.intField2;
 		this.refField2 = src.refField2;

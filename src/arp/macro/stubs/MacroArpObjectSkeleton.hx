@@ -122,11 +122,11 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:access(arp.domain.ArpDomain)
-			public function arpClone():arp.domain.IArpObject {
+			public function arpClone(cloneMapper:arp.domain.IArpCloneMapper = null):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpObjectStubs.arpClone();
 			}
 
-			public function arpCopyFrom(source:arp.domain.IArpObject):arp.domain.IArpObject {
+			public function arpCopyFrom(source:arp.domain.IArpObject, cloneMapper:arp.domain.IArpCloneMapper = null):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpObjectStubs.arpCopyFrom(
 					$e{ this.buildCopyFromBlock() }
 				);
@@ -195,11 +195,11 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:access(arp.domain.ArpDomain)
-			override public function arpClone():arp.domain.IArpObject {
+			override public function arpClone(cloneMapper:arp.domain.IArpCloneMapper = null):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpClone();
 			}
 
-			override public function arpCopyFrom(source:arp.domain.IArpObject):arp.domain.IArpObject {
+			override public function arpCopyFrom(source:arp.domain.IArpObject, cloneMapper:arp.domain.IArpCloneMapper = null):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpCopyFrom(
 					$e{ this.buildCopyFromBlock() }
 				);
