@@ -81,11 +81,11 @@ class SeedObject implements IArpObject {
 	public function writeSelf(output:IPersistOutput):Void {
 	}
 
-	public function arpClone():IArpObject {
+	public function arpClone(cloneMapper:arp.domain.IArpCloneMapper = null):IArpObject {
 		throw new ArpError("not supported");
 	}
 
-	public function arpCopyFrom(source:IArpObject):IArpObject {
+	public function arpCopyFrom(source:IArpObject, cloneMapper:arp.domain.IArpCloneMapper = null):IArpObject {
 		throw new ArpError("not supported");
 	}
 

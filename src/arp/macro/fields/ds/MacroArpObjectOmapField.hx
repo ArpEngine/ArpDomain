@@ -50,7 +50,7 @@ class MacroArpObjectOmapField extends MacroArpObjectCollectionFieldBase implemen
 	}
 
 	public function buildHeatDownNowBlock(heatDownNowBlock:Array<Expr>):Void {
-		if (!this.arpIsOwner) return;
+		if (!this.arpHasReverseBarrier) return;
 		heatDownNowBlock.push(macro @:pos(this.nativePos) { for (slot in this.$i_nativeName.slotOmap) this._arpDomain.heatDownNow(slot); });
 	}
 
@@ -90,7 +90,7 @@ class MacroArpObjectOmapField extends MacroArpObjectCollectionFieldBase implemen
 	public function buildCopyFromBlock(copyFromBlock:Array<Expr>):Void {
 		copyFromBlock.push(macro @:pos(this.nativePos) {
 			this.$i_nativeName.clear();
-			for (k in src.$i_nativeName.keys()) this.$i_nativeName.addPair(k, src.$i_nativeName.get(k));
+			for (k in src.$i_nativeName.keys()) this.$i_nativeName.addPair(k, cloneMapper.resolveObj(src.$i_nativeName.get(k), ${this.eArpDeepCopy}));
 		});
 	}
 }

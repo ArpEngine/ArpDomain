@@ -70,12 +70,4 @@ class MacroArpObjectCase {
 		var clone:MockMacroArpObject = ArpDomainTestUtil.roundTrip(domain, arpObj, MockMacroArpObject);
 		checkIsClone(arpObj, clone);
 	}
-
-	public function testArpClone():Void {
-		slot = domain.loadSeed(seed, new ArpType("mock"));
-		arpObj = slot.value;
-
-		var clone:MockMacroArpObject = cast arpObj.arpClone();
-		checkIsClone(arpObj, clone);
-	}
 }

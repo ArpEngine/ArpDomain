@@ -16,8 +16,8 @@ interface IArpObject extends IPersistable /* extends IArpObjectImpl */ {
 	var arpSlot(get, never):ArpUntypedSlot;
 	var arpHeat(get, never):ArpHeat;
 
-	function arpClone():IArpObject;
-	function arpCopyFrom(source:IArpObject):IArpObject;
+	function arpClone(cloneMapper:IArpCloneMapper = null):IArpObject;
+	function arpCopyFrom(source:IArpObject, cloneMapper:IArpCloneMapper = null):IArpObject;
 
 	function arpHeatUpNow():Bool;
 	function arpHeatDownNow():Bool;

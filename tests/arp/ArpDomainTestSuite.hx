@@ -15,6 +15,7 @@ import arp.macro.LatePrepareMacroArpObjectCase;
 import arp.macro.MacroArpObjectCase;
 import arp.macro.MacroColumnArpObjectCase;
 import arp.macro.MacroConcreteImplArpObjectCase;
+import arp.macro.MacroDeepCopyArpObjectCase;
 import arp.macro.MacroDefaultArpObjectCase;
 import arp.macro.MacroDerivedArpObjectCase;
 import arp.macro.MacroHierarchicalArpObjectCase;
@@ -39,6 +40,7 @@ class ArpDomainTestSuite {
 		r.load(MacroDefaultArpObjectCase);
 		r.load(MacroHierarchicalArpObjectCase);
 		r.load(MacroColumnArpObjectCase);
+		r.load(MacroDeepCopyArpObjectCase);
 		r.load(MacroDerivedArpObjectCase);
 		r.load(StdDsMacroArpObjectCase);
 		r.load(DsMacroArpObjectCase);

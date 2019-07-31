@@ -2,6 +2,7 @@ package arp.macro.fields.base;
 
 #if macro
 
+import haxe.macro.Context;
 import arp.domain.core.ArpType;
 import arp.domain.reflect.ArpFieldDs;
 import arp.domain.reflect.ArpFieldInfo;
@@ -38,8 +39,13 @@ class MacroArpFieldBase {
 			case MacroArpMetaArpBarrier.Required: true;
 		}
 	}
-	private var arpIsOwner(get, never):Bool;
-	private function get_arpIsOwner():Bool return fieldDef.metaArpOwner;
+	private var arpHasReverseBarrier(get, never):Bool;
+	private function get_arpHasReverseBarrier():Bool return fieldDef.metaArpReverseBarrier;
+
+	private var arpDeepCopy(get, never):Bool;
+	private function get_arpDeepCopy():Bool return fieldDef.metaArpDeepCopy;
+	private var eArpDeepCopy(get, never):Expr;
+	private function get_eArpDeepCopy():Expr return macro @:mergeBlock { $v{this.arpDeepCopy} };
 
 	private var nativePos(get, never):Position;
 	private function get_nativePos():Position return this.nativeField.pos;

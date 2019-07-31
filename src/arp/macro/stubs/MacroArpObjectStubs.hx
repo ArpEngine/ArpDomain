@@ -156,21 +156,26 @@ class MacroArpObjectStubs {
 
 	@:access(arp.domain.ArpDomain)
 	macro public static function arpClone():Expr {
+		@:macroLocal var cloneMapper:arp.domain.IArpCloneMapper;
 		@:macroReturn arp.domain.IArpObject;
 		var selfComplexType:ComplexType = genSelfComplexType();
 		var selfTypePath:TypePath = genSelfTypePath();
 		return macro @:mergeBlock {
+			cloneMapper = arp.domain.ArpCloneMappers.valueOrDefault(cloneMapper);
 			var clone:$selfComplexType = this._arpDomain.addObject(new $selfTypePath());
-			clone.arpCopyFrom(this);
+			cloneMapper.addMappingObj(this, clone);
+			clone.arpCopyFrom(this, cloneMapper);
 			return clone;
 		}
 	}
 
 	macro public static function arpCopyFrom(copyFromBlock:Expr):Expr {
 		@:macroLocal var source:arp.domain.IArpObject;
+		@:macroLocal var cloneMapper:arp.domain.IArpCloneMapper;
 		@:macroReturn arp.domain.IArpObject;
 		var selfComplexType:ComplexType = genSelfComplexType();
 		return macro @:mergeBlock {
+			cloneMapper = arp.domain.ArpCloneMappers.valueOrDefault(cloneMapper);
 			var src:$selfComplexType = cast source;
 			$e{ copyFromBlock }
 			return this;
