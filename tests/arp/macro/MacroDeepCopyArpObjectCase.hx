@@ -75,21 +75,21 @@ class MacroDeepCopyArpObjectCase {
 		checkIsIdentity(recRef.refField2, recClone.refField2);
 	}
 
-	public function testArpCloneOwner():Void {
+	public function testArpCloneSelective():Void {
 		var nullRef:MockMacroDeepCopyArpObject = domain.query("nullRef", MOCK_TYPE).value();
-		var nullClone:MockMacroDeepCopyArpObject = cast nullRef.arpClone(ArpCloneMappers.owner());
+		var nullClone:MockMacroDeepCopyArpObject = cast nullRef.arpClone(ArpCloneMappers.selective());
 		checkIsClone(nullRef, nullClone);
 		assertNull(nullClone.refField);
 		assertNull(nullClone.refField2);
 
 		var simpleRef:MockMacroDeepCopyArpObject = domain.query("simpleRef", MOCK_TYPE).value();
-		var simpleClone:MockMacroDeepCopyArpObject = cast simpleRef.arpClone(ArpCloneMappers.owner());
+		var simpleClone:MockMacroDeepCopyArpObject = cast simpleRef.arpClone(ArpCloneMappers.selective());
 		checkIsClone(simpleRef, simpleClone);
 		checkIsClone(simpleRef.refField, simpleClone.refField);
 		checkIsIdentity(simpleRef.refField2, simpleClone.refField2);
 
 		var recRef:MockMacroDeepCopyArpObject = domain.query("recRef", MOCK_TYPE).value();
-		var recClone:MockMacroDeepCopyArpObject = cast recRef.arpClone(ArpCloneMappers.owner());
+		var recClone:MockMacroDeepCopyArpObject = cast recRef.arpClone(ArpCloneMappers.selective());
 		checkIsClone(recRef, recClone);
 		checkIsClone(recRef.refField, recClone.refField);
 		checkIsIdentity(recRef.refField2, recClone.refField2);

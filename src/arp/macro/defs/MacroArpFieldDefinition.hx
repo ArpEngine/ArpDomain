@@ -25,7 +25,7 @@ class MacroArpFieldDefinition {
 	public var metaArpReadOnly(default, null):Bool = false;
 	public var metaArpBarrier(default, null):MacroArpMetaArpBarrier = MacroArpMetaArpBarrier.None;
 	public var metaArpReverseBarrier(default, null):Bool = false;
-	public var metaArpOwner(default, null):Bool = false;
+	public var metaArpDeepCopy(default, null):Bool = false;
 	public var metaArpDefault(default, null):MacroArpMetaArpDefault = MacroArpMetaArpDefault.Zero;
 
 	// Impl family
@@ -65,9 +65,9 @@ class MacroArpFieldDefinition {
 						case ":arpBarrier":
 							this.family = MacroArpFieldDefinitionFamily.ArpField;
 							this.parseMetaArpBarrier(meta.params);
-						case ":arpOwner":
+						case ":arpDeepCopy":
 							this.family = MacroArpFieldDefinitionFamily.ArpField;
-							this.parseMetaArpOwner(meta.params);
+							this.parseMetaArpDeepCopy(meta.params);
 						case ":arpDefault":
 							this.family = MacroArpFieldDefinitionFamily.ArpField;
 							switch (meta.params[0]) {
@@ -201,14 +201,14 @@ class MacroArpFieldDefinition {
 		}
 	}
 
-	private function parseMetaArpOwner(params:Array<Expr>):Void {
-		this.metaArpOwner = true;
+	private function parseMetaArpDeepCopy(params:Array<Expr>):Void {
+		this.metaArpDeepCopy = true;
 		if (params.length == 0) return;
-		this.metaArpOwner = switch (params[0].expr) {
+		this.metaArpDeepCopy = switch (params[0].expr) {
 			case ExprDef.EConst(Constant.CIdent("true")): true;
 			case ExprDef.EConst(Constant.CIdent("false")): false;
 			case _:
-				var errorMessage = "Invalid @:arpOwner argument.\nAccepts: true | false";
+				var errorMessage = "Invalid @:arpDeepCopy argument.\nAccepts: true | false";
 				Context.error(errorMessage, this.nativePos);
 		}
 	}

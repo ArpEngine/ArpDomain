@@ -7,7 +7,7 @@ class MockMacroDeepCopyArpObject implements IArpObject {
 
 	@:arpField public var stringField:String = null;
 
-	@:arpBarrier @:arpOwner @:arpField public var refField:MockMacroDeepCopyArpObject;
+	@:arpBarrier @:arpDeepCopy @:arpField public var refField:MockMacroDeepCopyArpObject;
 	@:arpBarrier @:arpField public var refField2:MockMacroDeepCopyArpObject;
 
 	public function new() return;

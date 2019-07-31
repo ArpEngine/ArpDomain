@@ -90,7 +90,7 @@ class MacroArpObjectOmapField extends MacroArpObjectCollectionFieldBase implemen
 	public function buildCopyFromBlock(copyFromBlock:Array<Expr>):Void {
 		copyFromBlock.push(macro @:pos(this.nativePos) {
 			this.$i_nativeName.clear();
-			for (k in src.$i_nativeName.keys()) this.$i_nativeName.addPair(k, cloneMapper.resolveObj(src.$i_nativeName.get(k), ${this.eArpIsOwner}));
+			for (k in src.$i_nativeName.keys()) this.$i_nativeName.addPair(k, cloneMapper.resolveObj(src.$i_nativeName.get(k), ${this.eArpDeepCopy}));
 		});
 	}
 }

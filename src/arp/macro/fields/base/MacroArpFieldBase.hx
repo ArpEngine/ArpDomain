@@ -42,10 +42,10 @@ class MacroArpFieldBase {
 	private var arpHasReverseBarrier(get, never):Bool;
 	private function get_arpHasReverseBarrier():Bool return fieldDef.metaArpReverseBarrier;
 
-	private var arpIsOwner(get, never):Bool;
-	private function get_arpIsOwner():Bool return fieldDef.metaArpOwner;
-	private var eArpIsOwner(get, never):Expr;
-	private function get_eArpIsOwner():Expr return macro @:mergeBlock { $v{this.arpIsOwner} };
+	private var arpDeepCopy(get, never):Bool;
+	private function get_arpDeepCopy():Bool return fieldDef.metaArpDeepCopy;
+	private var eArpDeepCopy(get, never):Expr;
+	private function get_eArpDeepCopy():Expr return macro @:mergeBlock { $v{this.arpDeepCopy} };
 
 	private var nativePos(get, never):Position;
 	private function get_nativePos():Position return this.nativeField.pos;

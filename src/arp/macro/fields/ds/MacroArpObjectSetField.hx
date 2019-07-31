@@ -90,7 +90,7 @@ class MacroArpObjectSetField extends MacroArpObjectCollectionFieldBase implement
 	public function buildCopyFromBlock(copyFromBlock:Array<Expr>):Void {
 		copyFromBlock.push(macro @:pos(this.nativePos) {
 			this.$i_nativeName.clear();
-			for (v in src.$i_nativeName) this.$i_nativeName.add(cloneMapper.resolveObj(v, ${this.eArpIsOwner}));
+			for (v in src.$i_nativeName) this.$i_nativeName.add(cloneMapper.resolveObj(v, ${this.eArpDeepCopy}));
 		});
 	}
 }
