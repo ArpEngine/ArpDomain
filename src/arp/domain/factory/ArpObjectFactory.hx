@@ -24,7 +24,7 @@ class ArpObjectFactory<T:IArpObject> {
 	public function matchSeed(seed:ArpSeed, type:ArpType, className:String):Float {
 		if (type != this.arpType) return -1;
 		if (className == this.className) return 100;
-		if (isDefault) return 1;
+		if (className == null && isDefault) return 1;
 		return -1;
 	}
 
