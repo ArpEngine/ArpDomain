@@ -45,4 +45,22 @@ class ArpDirectoryQueryCase {
 		assertEquals(dir, actual);
 	}
 
+	public function testEmptyQuery():Void {
+		var query:ArpDirectoryQuery = new ArpDirectoryQuery(child, "");
+		var actual:ArpDirectory = query.directory();
+		assertEquals(child, actual);
+	}
+
+	public function testTerseQuery():Void {
+		var query:ArpDirectoryQuery = new ArpDirectoryQuery(child, "///path///to///dir//");
+		var actual:ArpDirectory = query.directory();
+		assertEquals(dir, actual);
+	}
+
+	public function testParentQuery():Void {
+		var query:ArpDirectoryQuery = new ArpDirectoryQuery(dir, "../..");
+		var actual:ArpDirectory = query.directory();
+		assertEquals(child, actual);
+	}
+
 }

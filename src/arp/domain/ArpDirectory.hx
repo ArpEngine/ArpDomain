@@ -14,7 +14,7 @@ class ArpDirectory {
 
 	public var domain(default, null):ArpDomain;
 	public var did(default, null):ArpDid;
-	private var parent:ArpDirectory;
+	public var parent(default, null):ArpDirectory;
 	private var children:StdMap<String, ArpDirectory>;
 	private var slots:Map<String, ArpUntypedSlot>;
 	private var refCount:Int = 0;

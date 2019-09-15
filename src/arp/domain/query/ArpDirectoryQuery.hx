@@ -27,10 +27,24 @@ class ArpDirectoryQuery {
 	}
 
 	public function directory():ArpDirectory {
-		if (this.path == null) return this.root;
-		if (this.pathArray == null) return this.root.child(this.path);
-		var slot:ArpDirectory = this.root;
-		for (element in this.pathArray) slot = slot.child(element);
-		return slot;
+		if (this.pathArray == null) {
+			return switch (this.path) {
+				case null | "":
+					this.root;
+				case _:
+					this.root.child(this.path);
+			}
+		}
+		var dir:ArpDirectory = this.root;
+		for (element in this.pathArray) {
+			switch (element) {
+				case "" | ".":
+				case "..":
+					dir = dir.parent;
+				case _:
+					dir = dir.child(element);
+			}
+		}
+		return dir;
 	}
 }
