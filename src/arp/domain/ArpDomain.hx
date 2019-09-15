@@ -31,8 +31,11 @@ import arp.macro.MacroArpObjectRegistry;
 class ArpDomain {
 
 	public var root(default, null):ArpDirectory;
+
 	@:noDoc
-	public var currentDir(default, null):ArpDirectory;
+	public var currentDir(get, never):ArpDirectory;
+	private var currentDirStack:Array<ArpDirectory>;
+	private function get_currentDir():ArpDirectory return currentDirStack[currentDirStack.length - 1];
 
 	private var slots:Map<String, ArpUntypedSlot>;
 	public var nullSlot(default, null):ArpUntypedSlot;
@@ -67,7 +70,7 @@ class ArpDomain {
 		this._onLog = new ArpSignal<ArpLogEvent>();
 
 		this.root = new ArpDirectory(this, ArpDid.rootDir());
-		this.currentDir = this.root;
+		this.currentDirStack = [this.root];
 		this.slots = new Map();
 		this.nullSlot = this.allocSlot(ArpSid.nullSlot()).eternalReference();
 		this.registry = new ArpObjectFactoryRegistry();
@@ -154,16 +157,16 @@ class ArpDomain {
 			case ArpSeedValueKind.Reference, ArpSeedValueKind.Ambigious if (seed.value != null):
 				slot = this.root.query(seed.value, arpType).slot();
 			case _:
-				var oldDir:ArpDirectory = this.currentDir;
+				var dir:ArpDirectory = null;
 				if (name == null) {
 					slot = this.createAnonymousSlot(arpType);
 				} else {
-					var dir:ArpDirectory = this.currentDir.dir(name);
+					dir = this.currentDir.dir(name);
 					slot = dir.getOrCreateSlot(arpType);
-					this.currentDir = dir;
 				}
+				if (dir != null) this.currentDirStack.push(dir);
 				var arpObj:T = this.registry.resolveWithSeed(seed, arpType).arpInit(slot, seed);
-				this.currentDir = oldDir;
+				if (dir != null) this.currentDirStack.pop();
 				if (arpObj != null) {
 					slot.value = arpObj;
 					switch (ArpHeat.fromName(seed.heat)) {

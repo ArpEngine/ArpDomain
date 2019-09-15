@@ -89,15 +89,13 @@ class SeedObject implements IArpObject {
 		throw new ArpError("not supported");
 	}
 
-	@:access(arp.domain.ArpDomain.currentDir)
 	public function loadSeed<T:IArpObject>(path:String = null):Null<ArpSlot<T>> {
-		var oldDir:ArpDirectory = this.arpDomain.currentDir;
-		var dir:ArpDirectory = if (path == null) oldDir else this.arpDomain.dir(path);
+		var dir:ArpDirectory = if (path == null) null else this.arpDomain.dir(path);
 		var result = null;
 
-		this.arpDomain.currentDir = dir;
+		if (dir != null) @:privateAccess this.arpDomain.currentDirStack.push(dir);
 		for (seed in this.seeds) result = this.arpDomain.loadSeed(seed);
-		this.arpDomain.currentDir = oldDir;
+		if (dir != null) @:privateAccess this.arpDomain.currentDirStack.pop();
 
 		return result;
 	}

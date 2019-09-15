@@ -6,7 +6,6 @@ class ArpDirectoryQuery {
 	private var path:String;
 	private var pathArray:Array<String>;
 
-	@:access(arp.domain.ArpDomain.currentDir)
 	public function new(root:ArpDirectory, path:String = null) {
 		if (path == null) path = "";
 		switch (path.charAt(0)) {
