@@ -1,5 +1,6 @@
 package arp.domain;
 
+import arp.errors.loadErrors.ArpOccupiedReferenceError;
 import arp.domain.prepare.ArpDomainGcScanner;
 import arp.domain.prepare.ArpHeatUpkeepScanner;
 import arp.data.DataGroup;
@@ -163,6 +164,9 @@ class ArpDomain {
 				} else {
 					dir = this.currentDir.dir(name);
 					slot = dir.getOrCreateSlot(arpType);
+				}
+				if (slot.value != null) {
+					throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
 				}
 				if (dir != null) this.currentDirStack.push(dir);
 				var arpObj:T = this.registry.resolveWithSeed(seed, arpType).arpInit(slot, seed);
