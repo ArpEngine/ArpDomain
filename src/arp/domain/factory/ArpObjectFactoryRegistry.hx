@@ -3,7 +3,7 @@ package arp.domain.factory;
 import arp.domain.core.ArpType;
 import arp.ds.impl.ArraySet;
 import arp.ds.lambda.SetOp;
-import arp.errors.ArpLoadError;
+import arp.errors.loadErrors.ArpVoidFactoryError;
 import arp.seed.ArpSeed;
 
 class ArpObjectFactoryRegistry {
@@ -35,7 +35,7 @@ class ArpObjectFactoryRegistry {
 			}
 		}
 		if (result == null) {
-			throw new ArpLoadError('factory not found for <$type class=${seed.className}>');
+			throw new ArpVoidFactoryError('factory not found for <$type class=${seed.className}>');
 		}
 		return cast result;
 	}
@@ -43,7 +43,7 @@ class ArpObjectFactoryRegistry {
 	public function resolveWithFqn<T:IArpObject>(fqn:String):ArpObjectFactory<T> {
 		var result:ArpObjectFactory<Dynamic> = factoriesByFqn.get(fqn);
 		if (result == null) {
-			throw new ArpLoadError('factory [$fqn] not found');
+			throw new ArpVoidFactoryError('factory [$fqn] not found');
 		}
 		return cast result;
 	}

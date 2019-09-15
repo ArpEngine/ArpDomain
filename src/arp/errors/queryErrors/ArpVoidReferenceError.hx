@@ -1,6 +1,6 @@
-package arp.errors;
+package arp.errors.queryErrors;
 
-class ArpVoidReferenceError extends ArpError {
+class ArpVoidReferenceError extends ArpQueryError {
 	override private function get_recoverInfo():String {
 		return "ArpVoidReferenceError: Arp object not found.";
 	}

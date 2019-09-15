@@ -1,7 +1,7 @@
 package arp.domain.query;
 
 import arp.domain.core.ArpType;
-import arp.errors.ArpVoidReferenceError;
+import arp.errors.queryErrors.ArpVoidReferenceError;
 
 class ArpObjectQuery<T:IArpObject> extends ArpDirectoryQuery {
 

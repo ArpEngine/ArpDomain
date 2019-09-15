@@ -1,7 +1,7 @@
 package arp.macro.stubs;
 
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
 import arp.macro.MacroArpObjectRegistry;
+import arp.macro.stubs.ds.MacroArpSwitchBlock;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
@@ -35,7 +35,7 @@ class MacroArpObjectBlockStubs {
 		if (getTemplate().classDef.isDerived) {
 			cases.eDefault = macro { super.arpConsumeSeedElement(element); }
 		} else {
-			cases.eDefault = macro if (element.seedName != "value") throw new arp.errors.ArpLoadError(arpTypeInfo + " could not accept <" + element.seedName + ">");
+			cases.eDefault = macro if (element.seedName != "value") throw new arp.errors.loadErrors.ArpSeedFieldError(arpTypeInfo + " could not accept <" + element.seedName + ">");
 		}
 
 		for (arpField in getTemplate().arpFields) {
