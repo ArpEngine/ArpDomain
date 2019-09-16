@@ -45,6 +45,11 @@ class ArpObjectStdMap<V:IArpObject> implements IMap<String, V> implements IPersi
 		return this.slots.remove(k);
 	}
 
+	public function clear():Void {
+		for (slot in this.slots) slot.delReference();
+		this.slots.clear();
+	}
+
 	public function keys():Iterator<String> {
 		return this.slots.keys();
 	}
