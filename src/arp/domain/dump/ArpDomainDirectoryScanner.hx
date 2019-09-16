@@ -32,7 +32,8 @@ class ArpDomainDirectoryScanner<T> {
 		}
 		namesOrphan.sort(ArpDomainDump.compareString);
 		for (name in namesOrphan) {
-			visitor.visitAnonymousSlot(name, domain.slots.get(name));
+			var slot = domain.slots.get(name);
+			if (slot != null) visitor.visitAnonymousSlot(name, slot);
 		}
 	}
 
