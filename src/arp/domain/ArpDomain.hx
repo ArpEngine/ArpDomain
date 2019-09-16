@@ -64,6 +64,8 @@ class ArpDomain {
 	public var prepareStatus(get, never):IPrepareStatus;
 	inline private function get_prepareStatus():IPrepareStatus return this.prepareQueue;
 
+	public var allowOverwrite:Bool = false;
+
 	public function new() {
 		this._rawTick = new ArpSignal<Float>();
 		this._prepareTick = new ArpSignal<Float>();
@@ -165,7 +167,7 @@ class ArpDomain {
 					dir = this.currentDir.dir(name);
 					slot = dir.getOrCreateSlot(arpType);
 				}
-				if (slot.value != null) {
+				if (slot.value != null && !this.allowOverwrite) {
 					throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
 				}
 				if (dir != null) this.currentDirStack.push(dir);
