@@ -1,9 +1,12 @@
 package arp.domain;
 
-@:enum abstract ArpHeat(Int) {
+enum abstract ArpHeat(Int) {
 	var Cold = 1;
 	var Warming = 2;
 	var Warm = 3;
+
+	private var self(get, never):ArpHeat;
+	inline private function get_self():ArpHeat return (cast this);
 
 	public static var Min = Cold;
 	public static var Max = Warm;
@@ -25,7 +28,7 @@ package arp.domain;
 	}
 
 	public function toName():String {
-		return switch (this) {
+		return switch (self) {
 			case ArpHeat.Cold: "cold";
 			case ArpHeat.Warming: "warming";
 			case ArpHeat.Warm: "warm";
@@ -34,7 +37,7 @@ package arp.domain;
 	}
 
 	public function toChar():String {
-		return switch (this) {
+		return switch (self) {
 			case ArpHeat.Cold: "-";
 			case ArpHeat.Warming: "*";
 			case ArpHeat.Warm: "+";
