@@ -29,8 +29,10 @@ class ArpDirectoryQuery {
 	public function directory():ArpDirectory {
 		if (this.pathArray == null) {
 			return switch (this.path) {
-				case null | "":
+				case null | "" | ".":
 					this.root;
+				case "..":
+					this.root.parent;
 				case _:
 					this.root.child(this.path);
 			}

@@ -62,7 +62,14 @@ class PrepareQueue implements IPrepareStatus {
 	}
 
 	private function onTaskRunnerDeadlock(i:Int):Void {
-		this.onTaskRunnerError("Arp prepare error: Task runner deadlock.");
+		var message:String = "Arp prepare error: Task runner deadlock.\nSlots:";
+		for (kv in tasksBySlots.keyValueIterator()) {
+			var slot:ArpUntypedSlot = kv.key;
+			var task:PrepareTask = kv.value;
+			message += '\n${task.waiting ? "*" : " "}[${Type.getClass(slot.value)}]${slot.sid}';
+			if (slot.primaryDir != null) message += ' @ ${slot.primaryDir.did}';
+		}
+		this.onTaskRunnerError(message);
 	}
 
 	private function onTaskRunnerProgress(progress:ArpProgressEvent):Void {
