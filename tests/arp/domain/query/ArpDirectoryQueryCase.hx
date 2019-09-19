@@ -36,7 +36,7 @@ class ArpDirectoryQueryCase {
 	public function testParentQuery():Void {
 		var query:ArpDirectoryQuery = new ArpDirectoryQuery(child, "..");
 		var actual:ArpDirectory = query.directory();
-		assertEquals(parent, actual);
+		assertEquals(domain.root, actual);
 	}
 
 	public function testSelfQuery():Void {
