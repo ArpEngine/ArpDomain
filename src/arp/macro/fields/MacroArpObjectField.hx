@@ -51,7 +51,7 @@ class MacroArpObjectField extends MacroArpFieldBase implements IMacroArpField {
 				initBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = slot.domain.nullSlot; });
 			case MacroArpMetaArpDefault.Simple(s):
 				// FIXME must allow relative path from this ArpObject
-				initBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = slot.domain.query($v{s}, ${this.eArpType}).slot().addReference(); });
+				initBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = slot.primaryDir.query($v{s}, ${this.eArpType}).slot().addReference(); });
 		}
 	}
 
