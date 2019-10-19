@@ -61,6 +61,7 @@ class ArpUntypedSlot {
 		this.domain = domain;
 		this.sid = sid;
 		this._primaryDir = dir;
+		if (dir != null) dir.addReference();
 	}
 
 	public function toString():String return '<$sid>';
