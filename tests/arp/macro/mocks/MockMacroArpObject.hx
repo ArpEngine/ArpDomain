@@ -21,7 +21,7 @@ class MockMacroArpObject implements IArpObject {
 
 	@:arpBarrier @:arpField public var refField:MockMacroArpObject;
 
-	@:arpField @:arpDefault("name1") public var refField3:MockMacroArpObject;
+	@:arpField @:arpDefault("/name1") public var refField3:MockMacroArpObject;
 
 	public function new() {
 	}
