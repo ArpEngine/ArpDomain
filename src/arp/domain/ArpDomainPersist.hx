@@ -29,8 +29,8 @@ abstract ArpDomainPersist(ArpDomain) {
 				var arpType:String = input.nextUtf();
 				var arpSlot:ArpUntypedSlot = this.getOrCreateSlot(new ArpSid(input.nextUtf()));
 				@:privateAccess this.dir(dir).slots.set(arpType, arpSlot);
-				input.readExit();
 			}
+			input.readExit();
 			input.readExit();
 		}
 		input.readExit();
