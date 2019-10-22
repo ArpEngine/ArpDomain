@@ -32,6 +32,7 @@ import arp.macro.MacroArpObjectRegistry;
 class ArpDomain {
 
 	public var root(default, null):ArpDirectory;
+	private var anonRoot(default, null):ArpDirectory;
 
 	@:noDoc
 	public var currentDir(get, never):ArpDirectory;
@@ -73,6 +74,7 @@ class ArpDomain {
 		this._onLog = new ArpSignal<ArpLogEvent>();
 
 		this.root = new ArpDirectory(this, ArpDid.rootDir());
+		this.anonRoot = this.dir(ArpIdGenerator.AUTO_HEADER + "anon");
 		this.currentDirStack = [this.root];
 		this.slots = new Map();
 		this.nullSlot = this.allocSlot(ArpSid.nullSlot()).eternalReference();

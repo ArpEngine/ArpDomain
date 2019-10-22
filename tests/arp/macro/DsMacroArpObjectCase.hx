@@ -78,7 +78,7 @@ class DsMacroArpObjectCase {
 		assertMatch({ro1: arpObj, ro2: arpObj}, OmapOp.toAnon(arpObj.refOmap));
 		assertEquals(8, arpObj.arpSlot.refCount);
 		assertEquals(1, arpObj.arpSlot.primaryDir.refCount);
-		assertEquals(1, domain.root.refCount);
+		assertEquals(2, domain.root.refCount);
 	}
 
 	private function checkIsClone(original:MockDsMacroArpObject, clone:MockDsMacroArpObject):Void {

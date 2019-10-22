@@ -41,6 +41,7 @@ class ArpDomainCase {
   }
 ';
 		var DUMP_BY_NAME:String = '% <<dir>>:  {
+%   $$anon: /$$anon
 %   name1: /name1 {
 -     <mock>: /name1:mock [2]
     }
@@ -99,6 +100,7 @@ class ArpDomainCase {
   }
 ';
 		var DUMP_BY_NAME:String = '% <<dir>>:  {
+%   $$anon: /$$anon
 %   name2: /name2 {
 -     <mock>: /name2:mock [2]
     }
@@ -123,6 +125,7 @@ class ArpDomainCase {
   }
 ';
 		var DUMP_BY_NAME:String = '% <<dir>>:  {
+%   $$anon: /$$anon
 %   name2: /name2 {
 -     <mock>: /name2:mock [2]
     }
