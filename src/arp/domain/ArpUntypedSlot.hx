@@ -38,7 +38,7 @@ class ArpUntypedSlot {
 				this._value = null;
 			}
 			this._domain.freeSlot(this);
-			if (this._primaryDir != null) this._primaryDir.delReference();
+			this._primaryDir.delReference();
 		}
 		return this;
 	}
@@ -57,11 +57,11 @@ class ArpUntypedSlot {
 	inline public function heatLater(nonblocking:Bool = false):Bool return this._domain.heatLater(this, nonblocking);
 
 	@:allow(arp.domain.ArpDomain.allocSlot)
-	private function new(domain:ArpDomain, sid:ArpSid, dir:ArpDirectory = null) {
+	private function new(domain:ArpDomain, sid:ArpSid, dir:ArpDirectory) {
 		this.domain = domain;
 		this.sid = sid;
 		this._primaryDir = dir;
-		if (dir != null) dir.addReference();
+		dir.addReference();
 	}
 
 	public function toString():String return '<$sid>';
