@@ -10,7 +10,7 @@ class MockDefaultMacroArpObject implements IArpObject {
 	@:arpField @:arpDefault("true") public var boolField:Bool = false;
 	@:arpField @:arpDefault("stringDefault3") public var stringField:String = null;
 
-	@:arpField @:arpDefault("name1") public var refField:MockDefaultMacroArpObject;
+	@:arpField @:arpDefault("/name1") public var refField:MockDefaultMacroArpObject;
 
 	public function new() {
 	}
