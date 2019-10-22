@@ -45,7 +45,7 @@ class MacroHierarchicalArpObjectCase {
 		assertEquals(null, arpObj.bogusRefField);
 
 		domain.loadSeed(seed);
-		var refFieldDefault = domain.query("default", MOCK_TYPE).value();
+		var refFieldDefault = domain.query("default", MOCK_TYPE).obj();
 		assertEquals(refFieldDefault, arpObj.defaultRefField);
 	}
 

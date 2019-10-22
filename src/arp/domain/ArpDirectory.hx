@@ -40,6 +40,8 @@ class ArpDirectory {
 		return this;
 	}
 
+	inline public function eternalReference():ArpDirectory return this.addReference();
+
 	private function free():Void {
 		if (this.parent != null) {
 			this.parent.children.remove(this);
