@@ -32,6 +32,7 @@ import arp.macro.MacroArpObjectRegistry;
 class ArpDomain {
 
 	public var root(default, null):ArpDirectory;
+	private var anonRoot(default, null):ArpDirectory;
 
 	@:noDoc
 	public var currentDir(get, never):ArpDirectory;
@@ -73,9 +74,10 @@ class ArpDomain {
 		this._onLog = new ArpSignal<ArpLogEvent>();
 
 		this.root = new ArpDirectory(this, ArpDid.rootDir());
+		this.anonRoot = this.dir(ArpIdGenerator.AUTO_HEADER + "anon").eternalReference();
 		this.currentDirStack = [this.root];
 		this.slots = new Map();
-		this.nullSlot = this.allocSlot(ArpSid.nullSlot()).eternalReference();
+		this.nullSlot = this.allocSlot(ArpSid.nullSlot(), this.root).eternalReference();
 		this.registry = new ArpObjectFactoryRegistry();
 		this.prepareQueue = new PrepareQueue(this, this._rawTick);
 
@@ -93,7 +95,7 @@ class ArpDomain {
 		}
 	}
 
-	inline private function allocSlot(sid:ArpSid, dir:ArpDirectory = null):ArpUntypedSlot {
+	inline private function allocSlot(sid:ArpSid, dir:ArpDirectory):ArpUntypedSlot {
 		var slot:ArpUntypedSlot = new ArpUntypedSlot(this, sid, dir);
 		this.slots.set(sid.toString(), slot);
 		return slot;
@@ -107,7 +109,7 @@ class ArpDomain {
 
 	inline private function createAnonymousSlot(arpType:ArpType):ArpUntypedSlot {
 		var sid = ArpSid.build(new ArpDid(_did.next()), arpType);
-		return this.allocSlot(sid, null);
+		return this.allocSlot(sid, this.anonRoot);
 	}
 
 	@:allow(arp.domain.ArpUntypedSlot.delReference)
@@ -122,7 +124,7 @@ class ArpDomain {
 	public function getOrCreateSlot<T:IArpObject>(sid:ArpSid):ArpSlot<T> {
 		var slot:ArpSlot<T> = this.slots.get(sid.toString());
 		if (slot != null) return slot;
-		return allocSlot(sid);
+		return allocSlot(sid, this.anonRoot);
 	}
 
 	inline public function dir(path:String = null):ArpDirectory {

@@ -67,7 +67,7 @@ class PrepareQueue implements IPrepareStatus {
 			var slot:ArpUntypedSlot = kv.key;
 			var task:PrepareTask = kv.value;
 			message += '\n${task.waiting ? "*" : " "}[${Type.getClass(slot.value)}]${slot.sid}';
-			if (slot.primaryDir != null) message += ' @ ${slot.primaryDir.did}';
+			message += ' @ ${slot.primaryDir.did}';
 		}
 		this.onTaskRunnerError(message);
 	}
