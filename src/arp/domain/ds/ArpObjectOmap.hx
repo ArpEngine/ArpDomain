@@ -58,6 +58,7 @@ class ArpObjectOmap<K, V:IArpObject> implements IArpObjectOmap<K, V> {
 
 	//resolve
 	public function resolveKeyIndex(k:K):Int return this._slotOmap.resolveKeyIndex(k);
+	public function resolveKeyAt(index:Int):Null<K> return this._slotOmap.resolveKeyAt(index);
 	public function resolveName(v:V):Null<K> return this._slotOmap.resolveName(slotOf(v));
 	public function indexOf(v:V, ?fromIndex:Int):Int return this._slotOmap.indexOf(slotOf(v), fromIndex);
 	public function lastIndexOf(v:V, ?fromIndex:Int):Int return this._slotOmap.lastIndexOf(slotOf(v), fromIndex);
