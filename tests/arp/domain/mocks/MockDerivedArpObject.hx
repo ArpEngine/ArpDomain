@@ -25,9 +25,9 @@ class MockDerivedArpObject extends MockArpObject {
 	override private function get_arpTypeInfo():ArpTypeInfo return _arpTypeInfo;
 	override private function get_arpType():ArpType return _arpTypeInfo.arpType;
 
-	override public function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
+	override public function __arp_init(slot:ArpUntypedSlot):IArpObject {
 		this.refField2Slot = slot.domain.nullSlot;
-		return super.__arp_init(slot, seed);
+		return super.__arp_init(slot);
 	}
 
 	override public function __arp_heatLaterDeps():Void {

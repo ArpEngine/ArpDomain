@@ -9,6 +9,7 @@ class MockImplMacroArpObject implements IArpObject {
 	@:arpField public var map:Map<String, Int>;
 	@:arpImpl public var impl:MockImpl;
 	public var native:String;
+	@:arpField public var field:String = "fieldValue";
 
 	public function new() {
 		this.native = "nativeValue";
@@ -20,6 +21,7 @@ class MockImpl {
 	public var map:Map<String, Int>;
 	public var mapCount:Int;
 	public var native:String;
+	public var objField:String;
 	public var initialHeat:ArpHeat = cast -1;
 	public var currentHeat:ArpHeat = cast -1;
 
@@ -28,6 +30,7 @@ class MockImpl {
 		this.map = obj.map;
 		this.mapCount = if (this.map == null) -1 else [for (x in this.map.iterator()) x].length;
 		this.native = obj.native;
+		this.objField = obj.field;
 		this.initialHeat = this.currentHeat;
 	}
 

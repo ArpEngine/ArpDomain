@@ -18,21 +18,23 @@ class MacroConcreteImplArpObjectCase {
 	public function setup():Void {
 		domain = new ArpDomain();
 		domain.addTemplate(MockConcreteImplMacroArpObject, true);
-		xml = Xml.parse('<mock name="name1"><map value="1" /><map value="2" /></mock>').firstElement();
+		xml = Xml.parse('<mock field="seedValue" name="name1"><map value="1" /><map value="2" /></mock>').firstElement();
 		seed = ArpSeed.fromXml(xml);
 		slot = domain.loadSeed(seed, new ArpType("mock"));
 		arpObj = slot.value;
 	}
 
 	@:access(arp.macro.mocks.MockConcreteImplMacroArpObject.arpImpl)
-	public function testImplCanAccessObjFieldsInConstructor():Void {
+	public function testImplCanAccessObjDefaultsInConstructor():Void {
 		assertNotNull(arpObj.arpImpl);
 		assertNotNull(arpObj.map);
-		assertNotNull(arpObj.native);
+		assertEquals("nativeValue", arpObj.native);
+		assertEquals("seedValue", arpObj.field);
 		assertNotNull(arpObj.arpImpl.map);
-		assertEquals(2, arpObj.arpImpl.mapCount);
+		assertEquals(0, arpObj.arpImpl.mapCount);
 		assertNotNull(arpObj.arpImpl.obj);
-		assertNotNull(arpObj.arpImpl.native);
+		assertEquals("nativeValue", arpObj.arpImpl.native);
+		assertEquals("fieldValue", arpObj.arpImpl.objField);
 		assertMatch(-1, arpObj.arpImpl.initialHeat);
 	}
 }
