@@ -33,6 +33,7 @@ class MacroArpFieldDefinition {
 
 	// Unmanaged family
 	public var metaArpInit:String = null;
+	public var metaArpLoadSeed:String = null;
 	public var metaArpHeatUp:String = null;
 	public var metaArpHeatDown:String = null;
 	public var metaArpDispose:String = null;
@@ -106,6 +107,8 @@ class MacroArpFieldDefinition {
 					switch (meta.name) {
 						case ":arpInit":
 							this.metaArpInit = nativeField.name;
+						case ":arpLoadSeed":
+							this.metaArpLoadSeed = nativeField.name;
 						case ":arpHeatUp":
 							this.metaArpHeatUp = nativeField.name;
 						case ":arpHeatDown":

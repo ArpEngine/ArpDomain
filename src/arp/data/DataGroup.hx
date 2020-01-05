@@ -45,18 +45,19 @@ class DataGroup implements IArpObject {
 	public var arpHeat(get, never):ArpHeat;
 	inline private function get_arpHeat():ArpHeat return this._arpSlot.heat;
 
-	public function __arp_init(slot:ArpUntypedSlot, seed:ArpSeed = null):IArpObject {
+	public function __arp_init(slot:ArpUntypedSlot):IArpObject {
 		this._arpDomain = slot.domain;
 		this._arpSlot = slot;
-		if (seed != null) {
-			this.name = seed.name;
-			if (this.name != null && this.children == null) {
-				this.children = [];
-				slot.eternalReference();
-			}
-			for (element in seed) this.arpConsumeSeedElement(element);
-		}
 		return this;
+	}
+
+	public function __arp_loadSeed(seed:ArpSeed):Void {
+		this.name = seed.name;
+		if (this.name != null && this.children == null) {
+			this.children = [];
+			this.arpSlot.eternalReference();
+		}
+		for (element in seed) this.arpConsumeSeedElement(element);
 	}
 
 	public function __arp_heatLaterDeps():Void {

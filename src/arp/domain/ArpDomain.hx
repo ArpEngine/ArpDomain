@@ -173,7 +173,8 @@ class ArpDomain {
 					throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
 				}
 				if (dir != null) this.currentDirStack.push(dir);
-				var arpObj:T = this.registry.resolveWithSeed(seed, arpType).arpInit(slot, seed);
+				var arpObj:T = this.registry.resolveWithSeed(seed, arpType).arpInit(slot);
+				arpObj.__arp_loadSeed(seed);
 				if (dir != null) this.currentDirStack.pop();
 				if (arpObj != null) {
 					slot.value = arpObj;

@@ -48,6 +48,9 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 					if (fieldDef.metaArpInit != null) {
 						outFields = outFields.concat(this.genVoidCallbackField("arpSelfInit", fieldDef.metaArpInit));
 					}
+					if (fieldDef.metaArpLoadSeed != null) {
+						outFields = outFields.concat(this.genSeedCallbackField("arpSelfLoadSeed", fieldDef.metaArpLoadSeed));
+					}
 					if (fieldDef.metaArpHeatUp != null) {
 						outFields = outFields.concat(this.genBoolCallbackField("arpSelfHeatUp", fieldDef.metaArpHeatUp));
 					}

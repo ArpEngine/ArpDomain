@@ -49,7 +49,7 @@ abstract ArpDomainPersist(ArpDomain) {
 		var heat:ArpHeat = ArpHeat.fromName(input.readUtf("heat"));
 		var arpSlot:ArpSlot<T> = this.getOrCreateSlot(new ArpSid(input.readUtf("name")));
 		if (className != "$null") {
-			var arpObj:T = @:privateAccess this.registry.resolveWithFqn(className).arpInit(arpSlot, null);
+			var arpObj:T = @:privateAccess this.registry.resolveWithFqn(className).arpInit(arpSlot);
 			arpSlot.value = arpObj;
 			arpObj.readSelf(input);
 			switch (heat) {

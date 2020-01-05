@@ -64,11 +64,17 @@ class MacroArpObjectSkeleton {
 			@:noDoc @:noCompletion private function get_arpHeat():arp.domain.ArpHeat return this._arpSlot.heat;
 
 			@:noDoc @:noCompletion
-			public function __arp_init(slot:arp.domain.ArpUntypedSlot, seed:arp.seed.ArpSeed = null):arp.domain.IArpObject {
+			public function __arp_init(slot:arp.domain.ArpUntypedSlot):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpObjectStubs.arpInit(
 					$e{ this.buildInitBlock() },
 					$v{ this.classDef.hasImpl }
 				);
+			}
+
+			@:noDoc @:noCompletion
+			public function __arp_loadSeed(seed:arp.seed.ArpSeed):Void {
+				for (element in seed) this.arpConsumeSeedElement(element);
+				this.arpSelfLoadSeed(seed);
 			}
 
 			@:noDoc @:noCompletion
@@ -143,7 +149,7 @@ class MacroArpObjectSkeleton {
 			@:noDoc @:noCompletion override private function get_arpType():arp.domain.core.ArpType return _arpTypeInfo.arpType;
 
 			@:noDoc @:noCompletion
-			override public function __arp_init(slot:arp.domain.ArpUntypedSlot, seed:arp.seed.ArpSeed = null):arp.domain.IArpObject {
+			override public function __arp_init(slot:arp.domain.ArpUntypedSlot):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpInit(
 					$e{ this.buildInitBlock() }
 				);
@@ -210,6 +216,7 @@ class MacroArpObjectSkeleton {
 	private function genDefaultTypeFields():Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion private function arpSelfInit():Void return;
+			@:noDoc @:noCompletion private function arpSelfLoadSeed(seed:arp.seed.ArpSeed = null):Void return;
 			@:noDoc @:noCompletion private function arpSelfHeatUp():Bool return true;
 			@:noDoc @:noCompletion private function arpSelfHeatDown():Bool return true;
 			@:noDoc @:noCompletion private function arpSelfDispose():Void return;
@@ -230,6 +237,15 @@ class MacroArpObjectSkeleton {
 			@:noDoc @:noCompletion
 			private function $fun():Bool {
 				return this.$callback();
+			}
+		}).fields;
+	}
+
+	private function genSeedCallbackField(fun:String, callback:String):Array<Field> {
+		return (macro class Generated {
+			@:noDoc @:noCompletion
+			private function $fun(seed:arp.seed.ArpSeed = null):Void {
+				this.$callback(seed);
 			}
 		}).fields;
 	}
