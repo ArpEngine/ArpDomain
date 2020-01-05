@@ -26,7 +26,6 @@ class MacroArpObjectStubs {
 
 	macro public static function arpInit(initBlock:Expr, hasImpl:Bool):Expr {
 		@:macroLocal var slot:arp.domain.ArpUntypedSlot;
-		@:macroLocal var seed:arp.seed.ArpSeed = null;
 		@:macroReturn arp.domain.IArpObject;
 
 		// call populateReflectFields() via expression macro to take local imports
@@ -46,7 +45,6 @@ class MacroArpObjectStubs {
 					macro @:mergeBlock { };
 				}
 			}
-			if (seed != null) for (element in seed) this.arpConsumeSeedElement(element);
 			this.arpSelfInit();
 			return this;
 		}
