@@ -39,7 +39,6 @@ class MacroArpObjectStubs {
 			this._arpDomain = slot.domain;
 			this._arpSlot = slot;
 			$e{ initBlock }
-			if (seed != null) for (element in seed) this.arpConsumeSeedElement(element);
 			$e{
 				if (hasImpl) {
 					macro this.arpImpl = this.createImpl();
@@ -47,6 +46,7 @@ class MacroArpObjectStubs {
 					macro @:mergeBlock { };
 				}
 			}
+			if (seed != null) for (element in seed) this.arpConsumeSeedElement(element);
 			this.arpSelfInit();
 			return this;
 		}
