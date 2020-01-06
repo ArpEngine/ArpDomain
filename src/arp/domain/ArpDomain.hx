@@ -1,20 +1,22 @@
 package arp.domain;
 
-import arp.errors.loadErrors.ArpOccupiedReferenceError;
-import arp.domain.prepare.ArpDomainGcScanner;
-import arp.domain.prepare.ArpHeatUpkeepScanner;
 import arp.data.DataGroup;
 import arp.domain.ArpSlot;
 import arp.domain.core.ArpDid;
+import arp.domain.core.ArpOverwriteStrategy;
 import arp.domain.core.ArpSid;
 import arp.domain.core.ArpType;
 import arp.domain.dump.ArpDomainDump;
 import arp.domain.events.ArpLogEvent;
+import arp.domain.factory.ArpObjectFactory;
 import arp.domain.factory.ArpObjectFactoryRegistry;
+import arp.domain.prepare.ArpDomainGcScanner;
+import arp.domain.prepare.ArpHeatUpkeepScanner;
 import arp.domain.prepare.IPrepareStatus;
 import arp.domain.prepare.PrepareQueue;
 import arp.domain.query.ArpObjectQuery;
 import arp.errors.ArpError;
+import arp.errors.loadErrors.ArpOccupiedReferenceError;
 import arp.events.ArpProgressEvent;
 import arp.events.ArpSignal;
 import arp.events.IArpSignalIn;
@@ -169,11 +171,17 @@ class ArpDomain {
 					dir = this.currentDir.dir(name);
 					slot = dir.getOrCreateSlot(arpType);
 				}
-				if (slot.value != null && !this.allowOverwrite) {
-					throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
-				}
+				var factory:ArpObjectFactory<T> = this.registry.resolveWithSeed(seed, arpType);
 				if (dir != null) this.currentDirStack.push(dir);
-				var arpObj:T = this.registry.resolveWithSeed(seed, arpType).arpInit(slot);
+				var arpObj:T = switch [slot.value != null, factory.overwriteStrategy, this.allowOverwrite] {
+					case [true, ArpOverwriteStrategy.Error, false]:
+						if (dir != null) this.currentDirStack.pop();
+						throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
+					case [true, ArpOverwriteStrategy.Merge, _]:
+						slot.value;
+					case [true, ArpOverwriteStrategy.Replace, _] | [false, _, _] | [_, _, true]:
+						factory.arpInit(slot);
+				}
 				arpObj.__arp_loadSeed(seed);
 				if (dir != null) this.currentDirStack.pop();
 				if (arpObj != null) {

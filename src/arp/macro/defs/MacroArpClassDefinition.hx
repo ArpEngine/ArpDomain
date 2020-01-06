@@ -2,11 +2,13 @@ package arp.macro.defs;
 
 #if macro
 
+import arp.domain.core.ArpOverwriteStrategy;
 import haxe.macro.Context;
 import haxe.macro.Expr.MetadataEntry;
 import haxe.macro.Expr;
 import haxe.macro.ExprTools;
 import haxe.macro.Type;
+import Type as StdType;
 
 class MacroArpClassDefinition {
 
@@ -16,6 +18,7 @@ class MacroArpClassDefinition {
 	public var metaHasImpl(default, null):Bool = false;
 	public var arpTypeName(default, null):String;
 	public var arpTemplateName(default, null):String;
+	public var metaArpOverwrite(default, null):ArpOverwriteStrategy = ArpOverwriteStrategy.Error;
 	public var nativeDoc(default, null):String;
 
 	public var isDerived(default, null):Bool = false;
@@ -59,6 +62,21 @@ class MacroArpClassDefinition {
 			if (this.arpTemplateName == null) {
 				this.arpTemplateName = this.arpTypeName;
 			}
+		}
+		var metaArpOverwrite:MetadataEntry = classType.meta.extract(":arpOverwrite")[0];
+		if (metaArpOverwrite != null) {
+			this.parseMetaArpOverwrite(metaArpOverwrite.params);
+		}
+	}
+
+	private function parseMetaArpOverwrite(params:Array<Expr>):Void {
+		if (params.length == 0) return;
+		var en:Enum<ArpOverwriteStrategy> = cast StdType.getEnum(ArpOverwriteStrategy.Error);
+		switch (params[0].expr) {
+			case EConst(CIdent(value)) | EField(_, value) if (StdType.getEnumConstructs(en).indexOf(value) >= 0):
+				this.metaArpOverwrite = StdType.createEnum(en, value);
+			case _:
+				Context.error('Invalid @:arpOverwrite argument. Accepts: Error | Merge | Replace', this.nativePos);
 		}
 	}
 

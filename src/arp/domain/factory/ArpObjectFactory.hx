@@ -1,5 +1,6 @@
 package arp.domain.factory;
 
+import arp.domain.core.ArpOverwriteStrategy;
 import arp.domain.core.ArpType;
 import arp.seed.ArpSeed;
 
@@ -10,6 +11,8 @@ class ArpObjectFactory<T:IArpObject> {
 	private var nativeClass:Class<T>;
 	private var isDefault:Bool;
 
+	public var overwriteStrategy(default, null):ArpOverwriteStrategy = ArpOverwriteStrategy.Error;
+
 	public var arpType(get, never):ArpType;
 	private function get_arpType():ArpType return this.arpTypeInfo.arpType;
 	private var className(get, never):String;
@@ -19,6 +22,7 @@ class ArpObjectFactory<T:IArpObject> {
 		this.nativeClass = nativeClass;
 		this.arpTypeInfo = Type.createEmptyInstance(nativeClass).arpTypeInfo;
 		this.isDefault = (forceDefault != null) ? forceDefault : this.className == this.arpType.toString();
+		this.overwriteStrategy = this.arpTypeInfo.overwriteStrategy;
 	}
 
 	public function matchSeed(seed:ArpSeed, type:ArpType, className:String):Float {

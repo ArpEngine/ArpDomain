@@ -6,6 +6,7 @@ import arp.domain.ArpHeat;
 import arp.domain.ArpSlot;
 import arp.domain.ArpTypeInfo;
 import arp.domain.ArpUntypedSlot;
+import arp.domain.core.ArpOverwriteStrategy;
 import arp.domain.core.ArpType;
 import arp.domain.IArpObject;
 import arp.errors.ArpError;
@@ -13,6 +14,7 @@ import arp.persistable.IPersistInput;
 import arp.persistable.IPersistOutput;
 import arp.seed.ArpSeed;
 
+@:arpOverwrite(Merge)
 @:arpType("data", "data")
 @:arpNoGen
 class DataGroup implements IArpObject {
@@ -31,7 +33,7 @@ class DataGroup implements IArpObject {
 	public var arpDomain(get, never):ArpDomain;
 	inline private function get_arpDomain():ArpDomain return this._arpDomain;
 
-	public static var _arpTypeInfo(default, never):ArpTypeInfo = new ArpTypeInfo("data", new ArpType("data"));
+	public static var _arpTypeInfo(default, never):ArpTypeInfo = new ArpTypeInfo("data", new ArpType("data"), ArpOverwriteStrategy.Merge);
 	public var arpTypeInfo(get, never):ArpTypeInfo;
 	private function get_arpTypeInfo():ArpTypeInfo return _arpTypeInfo;
 

@@ -18,6 +18,7 @@ class ArpObjectFactoryRegistry {
 
 	public function addTemplate<T:IArpObject>(klass:Class<T>, forceDefault:Null<Bool> = null) {
 		var factory:ArpObjectFactory<T> = new ArpObjectFactory<T>(klass, forceDefault);
+		if (this.factoriesByFqn.exists(factory.arpTypeInfo.fqn)) return;
 		this.factoriesByArpType.listFor(factory.arpType).push(factory);
 		this.factoriesByFqn.set(factory.arpTypeInfo.fqn, factory);
 	}
