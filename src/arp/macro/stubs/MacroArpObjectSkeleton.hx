@@ -42,15 +42,20 @@ class MacroArpObjectSkeleton {
 		return macro arp.macro.stubs.MacroArpObjectBlockStubs.arpConsumeSeedElementBlock();
 	}
 
+	private function newArpTypeInfo():Expr {
+		return macro new arp.domain.ArpTypeInfo(
+			$v{this.classDef.arpTemplateName},
+			new arp.domain.core.ArpType($v{this.classDef.arpTypeName})
+		);
+	}
+
 	private function genTypeFields():Array<Field> {
-		var arpTypeName = this.classDef.arpTypeName;
-		var arpTemplateName = this.classDef.arpTemplateName;
 		return (macro class Generated {
 			@:noDoc @:noCompletion private var _arpDomain:arp.domain.ArpDomain;
 			public var arpDomain(get, never):arp.domain.ArpDomain;
 			@:noDoc @:noCompletion private function get_arpDomain():arp.domain.ArpDomain return this._arpDomain;
 
-			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = new arp.domain.ArpTypeInfo($v{arpTemplateName}, new arp.domain.core.ArpType($v{arpTypeName}));
+			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = $e{ newArpTypeInfo() };
 			public var arpTypeInfo(get, never):arp.domain.ArpTypeInfo;
 			@:noDoc @:noCompletion private function get_arpTypeInfo():arp.domain.ArpTypeInfo return _arpTypeInfo;
 			public var arpType(get, never):arp.domain.core.ArpType;
@@ -141,10 +146,8 @@ class MacroArpObjectSkeleton {
 	}
 
 	private function genDerivedTypeFields():Array<Field> {
-		var arpTypeName = this.classDef.arpTypeName;
-		var arpTemplateName = this.classDef.arpTemplateName;
 		return (macro class Generated {
-			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = new arp.domain.ArpTypeInfo($v{arpTemplateName}, new arp.domain.core.ArpType($v{arpTypeName}));
+			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = $e{ newArpTypeInfo() };
 			override private function get_arpTypeInfo():arp.domain.ArpTypeInfo return _arpTypeInfo;
 			@:noDoc @:noCompletion override private function get_arpType():arp.domain.core.ArpType return _arpTypeInfo.arpType;
 
