@@ -1,9 +1,9 @@
 package arp.domain;
 
-import arp.domain.factory.OverwriteStrategy;
 import arp.data.DataGroup;
 import arp.domain.ArpSlot;
 import arp.domain.core.ArpDid;
+import arp.domain.core.ArpOverwriteStrategy;
 import arp.domain.core.ArpSid;
 import arp.domain.core.ArpType;
 import arp.domain.dump.ArpDomainDump;
@@ -85,7 +85,7 @@ class ArpDomain {
 
 		this._rawTick.push(this.onRawTick);
 
-		this.addTemplate(DataGroup, true, OverwriteStrategy.Merge);
+		this.addTemplate(DataGroup);
 		this.addTemplate(SeedObject);
 	}
 
@@ -144,8 +144,8 @@ class ArpDomain {
 	public var allArpTypes(get, never):Array<ArpType>;
 	public function get_allArpTypes():Array<ArpType> return this.registry.allArpTypes();
 
-	public function addTemplate<T:IArpObject>(klass:Class<T>, forceDefault:Null<Bool> = null, overwriteStrategy:OverwriteStrategy = OverwriteStrategy.Error):Void {
-		this.registry.addTemplate(klass, forceDefault, overwriteStrategy);
+	public function addTemplate<T:IArpObject>(klass:Class<T>, forceDefault:Null<Bool> = null):Void {
+		this.registry.addTemplate(klass, forceDefault);
 	}
 
 	public function autoAddTemplates():Void {
@@ -174,12 +174,12 @@ class ArpDomain {
 				var factory:ArpObjectFactory<T> = this.registry.resolveWithSeed(seed, arpType);
 				if (dir != null) this.currentDirStack.push(dir);
 				var arpObj:T = switch [slot.value != null, factory.overwriteStrategy, this.allowOverwrite] {
-					case [true, OverwriteStrategy.Error, false]:
+					case [true, ArpOverwriteStrategy.Error, false]:
 						if (dir != null) this.currentDirStack.pop();
 						throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
-					case [true, OverwriteStrategy.Merge, _]:
+					case [true, ArpOverwriteStrategy.Merge, _]:
 						slot.value;
-					case [true, OverwriteStrategy.Replace, _] | [false, _, _] | [_, _, true]:
+					case [true, ArpOverwriteStrategy.Replace, _] | [false, _, _] | [_, _, true]:
 						factory.arpInit(slot);
 				}
 				arpObj.__arp_loadSeed(seed);

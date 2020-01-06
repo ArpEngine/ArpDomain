@@ -45,7 +45,8 @@ class MacroArpObjectSkeleton {
 	private function newArpTypeInfo():Expr {
 		return macro new arp.domain.ArpTypeInfo(
 			$v{this.classDef.arpTemplateName},
-			new arp.domain.core.ArpType($v{this.classDef.arpTypeName})
+			new arp.domain.core.ArpType($v{this.classDef.arpTypeName}),
+			$v{this.classDef.metaArpOverwrite}
 		);
 	}
 
