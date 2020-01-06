@@ -50,7 +50,7 @@ class ArpObjectMap<K, V:IArpObject> implements IArpObjectMap<K, V> {
 	inline public function keyValueIterator():KeyValueIterator<K, V> return new ArpObjectKeyValueIterator(this._slotMap.keyValueIterator());
 
 	//resolve
-	public function resolveName(v:V):Null<K> return this._slotMap.resolveName(slotOf(v));
+	public function keyOf(v:V):Null<K> return this._slotMap.keyOf(slotOf(v));
 
 	//write
 	public function set(k:K, v:V):Void {
