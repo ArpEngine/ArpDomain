@@ -60,11 +60,11 @@ pipeline {
         stage('cpp') {
             steps {
                 catchError {
-                    sh "ARPCI_PROJECT=ArpDomain ARPCI_TARGET=neko haxelib run arp_ci test"
+                    sh "ARPCI_PROJECT=ArpDomain ARPCI_TARGET=cpp haxelib run arp_ci test"
                 }
             }
             post {
-                always { junit(testResults: "bin/junit/neko.xml", keepLongStdio: true); }
+                always { junit(testResults: "bin/junit/cpp.xml", keepLongStdio: true); }
                 success { githubNotify(context: "${STAGE_NAME}", description: '', status: 'SUCCESS'); }
                 unsuccessful { githubNotify(context: "${STAGE_NAME}", description: '', status: 'FAILURE'); }
             }
