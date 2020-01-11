@@ -19,19 +19,6 @@ class MacroArpObjectCollectionFieldBase extends MacroArpCollectionFieldBase {
 		super(fieldDef, concreteDs);
 		this.contentNativeType = contentNativeType;
 	}
-
-	public function buildField(outFields:Array<Field>):Void {
-		var generated:Array<Field> = (macro class Generated {
-			@:pos(this.nativePos)
-			private var $i_nativeName:$nativeType = ${this.fieldDef.nativeDefault};
-			@:pos(this.nativePos) @:noDoc @:noCompletion
-			private function $iGet_nativeName():$nativeType return this.$i_nativeName;
-		}).fields;
-		this.nativeField.kind = FieldType.FProp("get", "never", nativeType, null);
-
-		outFields.push(this.nativeField);
-		for (g in generated) outFields.push(g);
-	}
 }
 
 #end
