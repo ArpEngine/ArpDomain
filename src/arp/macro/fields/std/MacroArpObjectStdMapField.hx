@@ -17,16 +17,7 @@ class MacroArpObjectStdMapField extends MacroArpObjectCollectionFieldBase implem
 
 	// acts as if Map will resolve to ArpObjectStdMap with @:multiType()
 	private function coerce(nativeType:ComplexType):ComplexType {
-		switch (nativeType) {
-			case ComplexType.TPath(t):
-				return ComplexType.TPath({
-					pack: "arp.domain.ds.std".split("."),
-					name: "ArpObjectStdMap",
-					params: [t.params[1]]
-				});
-			case _:
-		}
-		return nativeType;
+		return if (concreteDs) nativeType else guessConcreteNativeType();
 	}
 
 	override private function guessConcreteNativeType():ComplexType {
