@@ -14,14 +14,6 @@ class MacroArpValueMapField extends MacroArpValueCollectionFieldBase implements 
 
 	override private function get_arpFieldDs():ArpFieldDs return ArpFieldDs.DsIMap;
 
-	private var _nativeType:ComplexType;
-	override private function get_nativeType():ComplexType return _nativeType;
-
-	// use impl to speed up
-	private function coerce(nativeType:ComplexType):ComplexType {
-		return if (concreteDs) nativeType else guessConcreteNativeType();
-	}
-
 	override private function guessConcreteNativeType():ComplexType {
 		var contentNativeType:ComplexType = this.type.nativeType();
 		return macro:arp.ds.impl.StdMap<String, $contentNativeType>;
@@ -29,7 +21,6 @@ class MacroArpValueMapField extends MacroArpValueCollectionFieldBase implements 
 
 	public function new(fieldDef:MacroArpFieldDefinition, type:IMacroArpValueType, concreteDs:Bool) {
 		super(fieldDef, type, concreteDs);
-		_nativeType = coerce(super.nativeType);
 	}
 
 	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {

@@ -12,14 +12,6 @@ class MacroArpObjectStdMapField extends MacroArpObjectCollectionFieldBase implem
 
 	override private function get_arpFieldDs():ArpFieldDs return ArpFieldDs.StdMap;
 
-	private var _nativeType:ComplexType;
-	override private function get_nativeType():ComplexType return _nativeType;
-
-	// acts as if Map will resolve to ArpObjectStdMap with @:multiType()
-	private function coerce(nativeType:ComplexType):ComplexType {
-		return if (concreteDs) nativeType else guessConcreteNativeType();
-	}
-
 	override private function guessConcreteNativeType():ComplexType {
 		var contentNativeType:ComplexType = this.contentNativeType;
 		return macro:arp.domain.ds.std.ArpObjectStdMap<$contentNativeType>;
@@ -30,7 +22,6 @@ class MacroArpObjectStdMapField extends MacroArpObjectCollectionFieldBase implem
 		if (fieldDef.nativeDefault != null) {
 			MacroArpUtil.error("can't inline initialize arp reference field", fieldDef.nativePos);
 		}
-		_nativeType = coerce(super.nativeType);
 	}
 
 	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {

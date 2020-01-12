@@ -2,7 +2,6 @@ package arp.macro.fields.base;
 
 #if macro
 
-import haxe.macro.Context;
 import arp.domain.core.ArpType;
 import arp.domain.reflect.ArpFieldDs;
 import arp.domain.reflect.ArpFieldInfo;

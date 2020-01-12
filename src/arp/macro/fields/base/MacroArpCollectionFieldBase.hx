@@ -10,6 +10,11 @@ class MacroArpCollectionFieldBase extends MacroArpFieldBase {
 
 	private var concreteDs:Bool;
 
+	private var _nativeType:ComplexType;
+	override private function get_nativeType():ComplexType {
+		return if (_nativeType != null) _nativeType else _nativeType = if (concreteDs) super.nativeType else guessConcreteNativeType();
+	}
+
 	private function new(fieldDef:MacroArpFieldDefinition, concreteDs:Bool) {
 		super(fieldDef);
 		this.concreteDs = concreteDs;
@@ -39,7 +44,7 @@ class MacroArpCollectionFieldBase extends MacroArpFieldBase {
 	}
 
 	private function concreteNativeTypePath():TypePath {
-		var concreteNativeType:ComplexType = if (this.concreteDs) this.nativeType else guessConcreteNativeType();
+		var concreteNativeType:ComplexType = this.nativeType;
 		return switch (concreteNativeType) {
 			case ComplexType.TPath(p):
 				p;
@@ -49,7 +54,7 @@ class MacroArpCollectionFieldBase extends MacroArpFieldBase {
 	}
 
 	private function guessConcreteNativeType():ComplexType {
-		return MacroArpUtil.fatal(new Printer().printComplexType(this.nativeType) + "is not constructable", this.nativePos);
+		return MacroArpUtil.fatal(new Printer().printComplexType(super.nativeType) + "is not constructable", this.nativePos);
 	}
 }
 
