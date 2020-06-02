@@ -23,7 +23,7 @@ class ArpObjectFactoryRegistry {
 		this.factoriesByFqn.set(factory.arpTypeInfo.fqn, factory);
 	}
 
-	public function resolveWithSeed<T:IArpObject>(seed:ArpSeed, type:ArpType):ArpObjectFactory<T> {
+	public function resolveWithSeed<T:IArpObject>(seed:ArpSeed, type:ArpType, ignoreUnknownSeedType:Bool):ArpObjectFactory<T> {
 		var className = seed.className;
 		if (className == null) className = seed.env.getDefaultClass(type.toString());
 		var result:ArpObjectFactory<Dynamic> = null;
@@ -35,7 +35,7 @@ class ArpObjectFactoryRegistry {
 				resultMatch = match;
 			}
 		}
-		if (result == null) {
+		if (result == null && !ignoreUnknownSeedType) {
 			throw new ArpVoidFactoryError('factory not found for <$type class=${seed.className}>');
 		}
 		return cast result;
