@@ -68,6 +68,7 @@ class ArpDomain {
 	inline private function get_prepareStatus():IPrepareStatus return this.prepareQueue;
 
 	public var allowOverwrite:Bool = false;
+	public var ignoreUnknownSeedType:Bool = false;
 
 	public function new() {
 		this._rawTick = new ArpSignal<Float>();
@@ -171,7 +172,8 @@ class ArpDomain {
 					dir = this.currentDir.dir(name);
 					slot = dir.getOrCreateSlot(arpType);
 				}
-				var factory:ArpObjectFactory<T> = this.registry.resolveWithSeed(seed, arpType);
+				var factory:ArpObjectFactory<T> = this.registry.resolveWithSeed(seed, arpType, this.ignoreUnknownSeedType);
+				if (factory == null) return slot;
 				if (dir != null) this.currentDirStack.push(dir);
 				var arpObj:T = switch [slot.value != null, factory.overwriteStrategy, this.allowOverwrite] {
 					case [true, ArpOverwriteStrategy.Error, false]:
