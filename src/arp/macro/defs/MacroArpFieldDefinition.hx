@@ -4,6 +4,7 @@ package arp.macro.defs;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.ExprTools;
 
 using haxe.macro.ComplexTypeTools;
 
@@ -26,7 +27,7 @@ class MacroArpFieldDefinition {
 	public var metaArpBarrier(default, null):MacroArpMetaArpBarrier = MacroArpMetaArpBarrier.None;
 	public var metaArpReverseBarrier(default, null):Bool = false;
 	public var metaArpDeepCopy(default, null):Bool = false;
-	public var metaArpDefault(default, null):MacroArpMetaArpDefault = MacroArpMetaArpDefault.Zero;
+	public var metaArpDefault(default, null):Array<String> = [];
 
 	// Impl family
 	public var metaArpImpl:Bool = false;
@@ -71,10 +72,13 @@ class MacroArpFieldDefinition {
 							this.parseMetaArpDeepCopy(meta.params);
 						case ":arpDefault":
 							this.family = MacroArpFieldDefinitionFamily.ArpField;
-							switch (meta.params[0]) {
-								case { expr: ExprDef.EConst(CString(s))}:
-									this.metaArpDefault = MacroArpMetaArpDefault.Simple(s);
-								case _: Context.error("@:arpDefault is too complex", nativeField.pos);
+							for (param in meta.params) {
+								switch (param) {
+									case { expr: ExprDef.EConst(CString(s))}:
+										this.metaArpDefault.push(s);
+									case _:
+										Context.error('@:arpDefault ${ExprTools.toString(param)} is too complex', nativeField.pos);
+								}
 							}
 						case ":arpImpl":
 							switch (nativeType) {
