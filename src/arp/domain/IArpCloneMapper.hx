@@ -5,5 +5,5 @@ interface IArpCloneMapper {
 	function resolve(src:ArpUntypedSlot, preferDeepCopy:Bool):ArpUntypedSlot;
 
 	function addMappingObj<T:IArpObject>(src:T, dest:T):Void;
-	function resolveObj<T:IArpObject>(src:T, preferDeepCopy:Bool):T;
+	function resolveObj<T:IArpObject>(src:Null<T>, preferDeepCopy:Bool):T;
 }

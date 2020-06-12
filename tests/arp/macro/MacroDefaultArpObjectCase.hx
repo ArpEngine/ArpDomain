@@ -41,7 +41,7 @@ class MacroDefaultArpObjectCase {
 		assertTrue(arpObj.intList.hasValue(234));
 		assertTrue(arpObj.intList.hasValue(567));
 
-		assertEquals(1, [for (x in arpObj.refSet) x].length);
+		assertEquals(2, [for (x in arpObj.refSet) x].length);
 		assertEquals(2, arpObj.refList.length);
 
 		var refFieldDefault = domain.loadSeed(seed, new ArpType("mock")).value;
@@ -68,7 +68,7 @@ class MacroDefaultArpObjectCase {
 		assertTrue(arpObj.intList.hasValue(567));
 		assertTrue(arpObj.intList.hasValue(888));
 
-		assertEquals(1, [for (x in arpObj.refSet) x].length);
+		assertEquals(3, [for (x in arpObj.refSet) x].length);
 		assertEquals(3, arpObj.refList.length);
 		assertTrue(arpObj.refSet.hasValue(arpObj));
 		assertTrue(arpObj.refList.hasValue(arpObj));

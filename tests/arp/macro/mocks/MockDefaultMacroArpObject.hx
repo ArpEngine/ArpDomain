@@ -17,8 +17,8 @@ class MockDefaultMacroArpObject implements IArpObject {
 	@:arpField @:arpDefault("123", "456") public var intSet:ISet<Int>;
 	@:arpField @:arpDefault("234", "567") public var intList:IList<Int>;
 
-	@:arpField @:arpDefault("/name1", "/name1") public var refSet:ISet<MockDefaultMacroArpObject>;
-	@:arpField @:arpDefault("/name1", "/name1") public var refList:IList<MockDefaultMacroArpObject>;
+	@:arpField @:arpDefault("/foo", "/bar") public var refSet:ISet<MockDefaultMacroArpObject>;
+	@:arpField @:arpDefault("/foo", "/bar") public var refList:IList<MockDefaultMacroArpObject>;
 
 	public function new() {
 	}
