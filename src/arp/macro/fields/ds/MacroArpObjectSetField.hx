@@ -21,6 +21,14 @@ class MacroArpObjectSetField extends MacroArpObjectCollectionFieldBase implement
 		super(fieldDef, contentNativeType, concreteDs);
 	}
 
+	override public function buildInitBlock(initBlock:Array<Expr>):Void {
+		super.buildInitBlock(initBlock);
+		// FIXME oooo
+		for (s in this.fieldDef.metaArpDefault) {
+			initBlock.push(macro @:pos(this.nativePos) { this.$i_nativeName.slotSet.add((if (slot.primaryDir != null) slot.primaryDir else slot.domain.root).query($v{s}, ${this.eArpType}).slot().addReference()); });
+		}
+	}
+
 	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {
 		if (!this.arpHasBarrier) return;
 		heatLaterDepsBlock.push(macro @:pos(this.nativePos) { for (slot in this.$i_nativeName.slotSet) this._arpDomain.heatLater(slot, $v{arpBarrierRequired}); });

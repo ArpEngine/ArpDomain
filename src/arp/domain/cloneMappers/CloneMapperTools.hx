@@ -7,7 +7,8 @@ class CloneMapperTools {
 		cloneMapper.addMapping(src.arpSlot, dest.arpSlot);
 	}
 
-	inline public static function resolveObj<T:IArpObject>(cloneMapper:IArpCloneMapper, src:T, preferDeepCopy:Bool):T {
+	inline public static function resolveObj<T:IArpObject>(cloneMapper:IArpCloneMapper, src:Null<T>, preferDeepCopy:Bool):T {
+		if (src == null) return null;
 		return cast cloneMapper.resolve(src.arpSlot, preferDeepCopy).value;
 	}
 }

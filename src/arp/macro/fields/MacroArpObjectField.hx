@@ -46,12 +46,14 @@ class MacroArpObjectField extends MacroArpFieldBase implements IMacroArpField {
 	}
 
 	public function buildInitBlock(initBlock:Array<Expr>):Void {
-		switch (this.fieldDef.metaArpDefault) {
-			case MacroArpMetaArpDefault.Zero:
-				initBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = slot.domain.nullSlot; });
-			case MacroArpMetaArpDefault.Simple(s):
-				// FIXME oooo
+		var defaults:Array<String> = this.fieldDef.metaArpDefault;
+		if (defaults.length == 0) {
+			initBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = slot.domain.nullSlot; });
+		} else {
+			// FIXME oooo
+			for (s in defaults) {
 				initBlock.push(macro @:pos(this.nativePos) { this.$iNativeSlot = (if (slot.primaryDir != null) slot.primaryDir else slot.domain.root).query($v{s}, ${this.eArpType}).slot().addReference(); });
+			}
 		}
 	}
 

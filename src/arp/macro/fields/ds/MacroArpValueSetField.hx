@@ -23,6 +23,13 @@ class MacroArpValueSetField extends MacroArpValueCollectionFieldBase implements 
 		super(fieldDef, type, concreteDs);
 	}
 
+	override public function buildInitBlock(initBlock:Array<Expr>):Void {
+		super.buildInitBlock(initBlock);
+		for (s in this.fieldDef.metaArpDefault) {
+			initBlock.push(macro @:pos(this.nativePos) { this.$i_nativeName.add(${this.type.createWithString(this.nativePos, s)}); });
+		}
+	}
+
 	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {
 	}
 

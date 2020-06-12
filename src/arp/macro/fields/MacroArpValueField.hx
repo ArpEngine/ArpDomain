@@ -4,7 +4,6 @@ package arp.macro.fields;
 
 import arp.domain.reflect.ArpFieldKind;
 import arp.macro.defs.MacroArpFieldDefinition;
-import arp.macro.defs.MacroArpMetaArpDefault;
 import arp.macro.fields.base.MacroArpFieldBase;
 import arp.macro.stubs.ds.MacroArpSwitchBlock;
 import haxe.macro.Expr;
@@ -37,13 +36,15 @@ class MacroArpValueField extends MacroArpFieldBase implements IMacroArpField {
 	}
 
 	public function buildInitBlock(initBlock:Array<Expr>):Void {
-		switch (this.fieldDef.metaArpDefault) {
-			case MacroArpMetaArpDefault.Zero:
-				if (this.fieldDef.nativeDefault == null) {
-					initBlock.push(macro @:pos(this.nativePos) { this.$i_nativeName = ${this.type.createEmptyVo(this.nativePos)}; });
-				}
-			case MacroArpMetaArpDefault.Simple(s):
+		var defaults:Array<String> = this.fieldDef.metaArpDefault;
+		if (defaults.length == 0) {
+			if (this.fieldDef.nativeDefault == null) {
+				initBlock.push(macro @:pos(this.nativePos) { this.$i_nativeName = ${this.type.createEmptyVo(this.nativePos)}; });
+			}
+		} else {
+			for (s in defaults) {
 				initBlock.push(macro @:pos(this.nativePos) { this.$i_nativeName = ${this.type.createWithString(this.nativePos, s)}; });
+			}
 		}
 	}
 

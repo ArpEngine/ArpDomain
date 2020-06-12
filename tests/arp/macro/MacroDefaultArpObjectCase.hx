@@ -19,7 +19,7 @@ class MacroDefaultArpObjectCase {
 	public function setup():Void {
 		domain = new ArpDomain();
 		domain.addTemplate(MockDefaultMacroArpObject, true);
-		xml = Xml.parse('<mock name="name1" intField="78" floatField="1.41" boolField="false" stringField="stringValue3" refField="/name1" />').firstElement();
+		xml = Xml.parse('<mock name="name1" intField="78" floatField="1.41" boolField="false" stringField="stringValue3" refField="/name1" intSet="777" intList="888" refSet="/name1" refList="/name1" />').firstElement();
 		seed = ArpSeed.fromXml(xml);
 	}
 
@@ -35,6 +35,14 @@ class MacroDefaultArpObjectCase {
 		assertEquals("stringDefault3", arpObj.stringField);
 
 		assertEquals(null, arpObj.refField);
+
+		assertTrue(arpObj.intSet.hasValue(123));
+		assertTrue(arpObj.intSet.hasValue(456));
+		assertTrue(arpObj.intList.hasValue(234));
+		assertTrue(arpObj.intList.hasValue(567));
+
+		assertEquals(2, [for (x in arpObj.refSet) x].length);
+		assertEquals(2, arpObj.refList.length);
 
 		var refFieldDefault = domain.loadSeed(seed, new ArpType("mock")).value;
 		assertEquals(refFieldDefault, arpObj.refField);
@@ -52,6 +60,18 @@ class MacroDefaultArpObjectCase {
 		assertEquals(1.41, arpObj.floatField);
 		assertEquals(false, arpObj.boolField);
 		assertEquals("stringValue3", arpObj.stringField);
+
+		assertTrue(arpObj.intSet.hasValue(123));
+		assertTrue(arpObj.intSet.hasValue(456));
+		assertTrue(arpObj.intSet.hasValue(777));
+		assertTrue(arpObj.intList.hasValue(234));
+		assertTrue(arpObj.intList.hasValue(567));
+		assertTrue(arpObj.intList.hasValue(888));
+
+		assertEquals(3, [for (x in arpObj.refSet) x].length);
+		assertEquals(3, arpObj.refList.length);
+		assertTrue(arpObj.refSet.hasValue(arpObj));
+		assertTrue(arpObj.refList.hasValue(arpObj));
 
 		assertEquals(arpObj, arpObj.refField);
 	}

@@ -21,6 +21,13 @@ class MacroArpValueStdListField extends MacroArpValueCollectionFieldBase impleme
 		super(fieldDef, type, true);
 	}
 
+	override public function buildInitBlock(initBlock:Array<Expr>):Void {
+		super.buildInitBlock(initBlock);
+		for (s in this.fieldDef.metaArpDefault) {
+			initBlock.push(macro @:pos(this.nativePos) { this.$i_nativeName.push(${this.type.createWithString(this.nativePos, s)}); });
+		}
+	}
+
 	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void {
 	}
 
