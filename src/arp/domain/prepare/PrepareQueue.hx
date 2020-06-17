@@ -1,5 +1,6 @@
 package arp.domain.prepare;
 
+import arp.domain.dump.ArpSlotStatus;
 import arp.domain.ArpDomain;
 import arp.domain.ArpUntypedSlot;
 import arp.domain.IArpObject;
@@ -66,7 +67,8 @@ class PrepareQueue implements IPrepareStatus {
 		for (kv in tasksBySlots.keyValueIterator()) {
 			var slot:ArpUntypedSlot = kv.key;
 			var task:PrepareTask = kv.value;
-			message += '\n${task.waiting ? "*" : " "}[${Type.getClass(slot.value)}]${slot.sid}';
+			var status:String = if (slot.value == null) ArpSlotStatus.NullSlot else if (task.waiting) ArpSlotStatus.WarmingSlot else ArpSlotStatus.None;
+			message += '\n${status}[${Type.getClass(slot.value)}]${slot.sid}';
 			message += ' @ ${slot.primaryDir.did}';
 		}
 		this.onTaskRunnerError(message);

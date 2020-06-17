@@ -35,13 +35,4 @@ enum abstract ArpHeat(Int) {
 			default: "?invalid?";
 		}
 	}
-
-	public function toChar():String {
-		return switch (self) {
-			case ArpHeat.Cold: "-";
-			case ArpHeat.Warming: "*";
-			case ArpHeat.Warm: "+";
-			default: "?";
-		}
-	}
 }

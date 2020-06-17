@@ -27,6 +27,7 @@ class PrepareTask implements ITask {
 				this.domain.log("arp_debug_prepare", 'PrepareTask.run(): ultimate unused and prepare canceled: ${this.slot}');
 				return TaskStatus.Complete;
 			} else {
+				return TaskStatus.Stalled;
 				var message = 'PrepareTask.run(): slot is required but was null: ${this.slot}';
 				this.domain.log("arp_debug_prepare", message);
 				return TaskStatus.Error(message);

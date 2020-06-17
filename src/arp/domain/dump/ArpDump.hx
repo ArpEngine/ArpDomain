@@ -10,10 +10,10 @@ class ArpDump {
 	public var id:String;
 	public var hashKey:String;
 	public var refCount:Int = 0;
-	public var status:String;
+	public var status:ArpSlotStatus;
 
 	public var isDir(get, never):Bool;
-	private function get_isDir():Bool return switch (status) { case "%", "#": true; case _: false; }
+	private function get_isDir():Bool return switch (status) { case ArpSlotStatus.Directory | ArpSlotStatus.Aux: true; case _: false; }
 
 	@:access(arp.domain.ArpUntypedSlot._refCount)
 	private function new(dir:ArpDirectory = null, slot:ArpUntypedSlot = null, hashKey:String = null) {
@@ -23,13 +23,13 @@ class ArpDump {
 			this.slot = slot;
 			this.refCount = slot._refCount;
 			this.id = slot.sid.toString();
-			this.status = (slot.value == null) ? "!" : slot.heat.toChar();
+			this.status = if (slot.value == null) ArpSlotStatus.NullSlot else ArpSlotStatus.fromHeat(slot.heat);
 		} else if (dir != null) {
 			this.dir = dir;
 			this.id = dir.did.toString();
-			this.status = "%";
+			this.status = ArpSlotStatus.Directory;
 		} else {
-			this.status = "#";
+			this.status = ArpSlotStatus.Aux;
 		}
 	}
 
