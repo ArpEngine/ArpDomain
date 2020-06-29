@@ -3,6 +3,7 @@ package arp.macro.defs;
 #if macro
 
 import arp.domain.core.ArpOverwriteStrategy;
+import arp.seed.ArpSeed;
 import haxe.macro.Context;
 import haxe.macro.Expr.MetadataEntry;
 import haxe.macro.Expr;
@@ -66,6 +67,14 @@ class MacroArpClassDefinition {
 		var metaArpOverwrite:MetadataEntry = classType.meta.extract(":arpOverwrite")[0];
 		if (metaArpOverwrite != null) {
 			this.parseMetaArpOverwrite(metaArpOverwrite.params);
+		}
+		arpTypeIsValidName();
+	}
+
+
+	private function arpTypeIsValidName():Void {
+		if (ArpSeed.isSpecialAttrName(this.arpTypeName)) {
+			Context.error('${this.arpTypeName} is not valid @:arpStruct type name', this.nativePos);
 		}
 	}
 

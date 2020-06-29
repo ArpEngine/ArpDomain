@@ -2,6 +2,8 @@ package arp.macro.defs;
 
 #if macro
 
+import arp.macro.defs.MacroArpMetaArpField;
+import arp.seed.ArpSeed;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.ExprTools;
@@ -64,6 +66,7 @@ class MacroArpFieldDefinition {
 						case ":arpField":
 							this.family = MacroArpFieldDefinitionFamily.ArpField;
 							this.parseMetaArpField(meta.params);
+							this.arpFieldIsValidName();
 						case ":arpBarrier":
 							this.family = MacroArpFieldDefinitionFamily.ArpField;
 							this.parseMetaArpBarrier(meta.params);
@@ -140,6 +143,24 @@ class MacroArpFieldDefinition {
 			Context.error('Unsupported arp metadata: @${metaName}', this.nativePos);
 		} else if (metaName.indexOf("arp") == 0) {
 			Context.error('Arp metadata is compile time only: @${metaName}', this.nativePos);
+		}
+	}
+
+	private function arpFieldIsValidName():Void {
+		var groupName:String = switch (this.metaArpField.groupName) {
+			case MacroArpMetaArpFieldName.Explicit(v): v;
+			case _: this.nativeName;
+		}
+		if (ArpSeed.isSpecialAttrName(groupName)) {
+			Context.error('${groupName} is not valid @:arpField group name', this.nativePos);
+		}
+
+		var elementName:String = switch (this.metaArpField.elementName) {
+			case MacroArpMetaArpFieldName.Explicit(v): v;
+			case _: null;
+		}
+		if (ArpSeed.isSpecialAttrName(elementName)) {
+			Context.error('${elementName} is not valid @:arpField element name', this.nativePos);
 		}
 	}
 
