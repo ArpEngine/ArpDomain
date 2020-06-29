@@ -2,6 +2,8 @@ package arp.macro.defs;
 
 #if macro
 
+import arp.seed.ArpSeed;
+import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.ExprTools;
 import haxe.macro.Type;
@@ -27,12 +29,19 @@ class MacroArpStructDefinition {
 		var metaArpStruct:MetadataEntry = classType.meta.extract(":arpStruct")[0];
 		if (metaArpStruct != null && metaArpStruct.params.length >= 1) {
 			this.arpTypeName = ExprTools.getValue(metaArpStruct.params[0]);
+			arpTypeIsValidName();
 		}
 
 		var metaArpStructPlaceholder:MetadataEntry = classType.meta.extract(":arpStructPlaceholder")[0];
 		if (metaArpStructPlaceholder != null && metaArpStructPlaceholder.params.length >= 2) {
 			this.metaArpStructStringPlaceholder = ExprTools.getValue(metaArpStructPlaceholder.params[0]);
 			this.metaArpStructSeedPlaceholder = ExprTools.getValue(metaArpStructPlaceholder.params[1]);
+		}
+	}
+
+	private function arpTypeIsValidName():Void {
+		if (ArpSeed.isSpecialAttrName(this.arpTypeName)) {
+			Context.error('${this.arpTypeName} is not valid @:arpStruct type name', this.nativePos);
 		}
 	}
 }
