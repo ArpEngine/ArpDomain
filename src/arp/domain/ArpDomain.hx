@@ -184,7 +184,7 @@ class ArpDomain {
 					case [true, ArpOverwriteStrategy.Replace, _] | [false, _, _] | [_, _, true]:
 						factory.arpInit(slot);
 				}
-				arpObj.__arp_loadSeed(seed);
+				factory.arpLoadSeed(arpObj, seed);
 				if (dir != null) this.currentDirStack.pop();
 				if (arpObj != null) {
 					slot.value = arpObj;

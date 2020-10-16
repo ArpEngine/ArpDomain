@@ -32,13 +32,18 @@ class ArpObjectFactory<T:IArpObject> {
 		return -1;
 	}
 
-	inline private function alloc():T {
+	private function alloc():T {
 		return Type.createInstance(nativeClass, []);
 	}
 
 	public function arpInit(slot:ArpSlot<T>):T {
 		var arpObject:T = alloc();
 		if (arpObject.__arp_init(slot) == null) return null;
+		return arpObject;
+	}
+
+	public function arpLoadSeed(arpObject:T, seed:ArpSeed):T {
+		arpObject.__arp_loadSeed(seed);
 		return arpObject;
 	}
 }
