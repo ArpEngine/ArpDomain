@@ -8,7 +8,7 @@ class ArpObjectFactory<T:IArpObject> {
 
 	public var arpTypeInfo(default, null):ArpTypeInfo;
 
-	private var arpTemplate:ArpTemplate<T>;
+	private var arpTemplate:IArpTemplate<T>;
 	private var isDefault:Bool;
 
 	public var overwriteStrategy(default, null):ArpOverwriteStrategy = ArpOverwriteStrategy.Error;
@@ -18,9 +18,9 @@ class ArpObjectFactory<T:IArpObject> {
 	private var className(get, never):String;
 	private function get_className():String return this.arpTypeInfo.name;
 
-	public function new(arpTemplate:ArpTemplate<T>, forceDefault:Null<Bool> = null) {
+	public function new(arpTemplate:IArpTemplate<T>, forceDefault:Null<Bool> = null) {
 		this.arpTemplate = arpTemplate;
-		this.arpTypeInfo = arpTemplate.arpTypeInfo;
+		this.arpTypeInfo = arpTemplate.arpTypeInfo();
 		this.isDefault = (forceDefault != null) ? forceDefault : this.className == this.arpType.toString();
 		this.overwriteStrategy = this.arpTypeInfo.overwriteStrategy;
 	}
