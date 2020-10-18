@@ -16,8 +16,8 @@ class ArpObjectFactoryRegistry {
 		this.factoriesByFqn = new Map<String, ArpObjectFactory<Dynamic>>();
 	}
 
-	public function addTemplate<T:IArpObject>(klass:Class<T>, forceDefault:Null<Bool> = null) {
-		var factory:ArpObjectFactory<T> = new ArpObjectFactory<T>(klass, forceDefault);
+	public function addTemplate<T:IArpObject>(template:IArpTemplate<T>, forceDefault:Null<Bool> = null) {
+		var factory:ArpObjectFactory<T> = new ArpObjectFactory<T>(template, forceDefault);
 		if (this.factoriesByFqn.exists(factory.arpTypeInfo.fqn)) return;
 		this.factoriesByArpType.listFor(factory.arpType).push(factory);
 		this.factoriesByFqn.set(factory.arpTypeInfo.fqn, factory);

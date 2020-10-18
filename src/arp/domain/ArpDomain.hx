@@ -145,8 +145,8 @@ class ArpDomain {
 	public var allArpTypes(get, never):Array<ArpType>;
 	public function get_allArpTypes():Array<ArpType> return this.registry.allArpTypes();
 
-	public function addTemplate<T:IArpObject>(klass:Class<T>, forceDefault:Null<Bool> = null):Void {
-		this.registry.addTemplate(klass, forceDefault);
+	public function addTemplate<T:IArpObject>(template:ArpTemplateLike<T>, forceDefault:Null<Bool> = null):Void {
+		this.registry.addTemplate(template, forceDefault);
 	}
 
 	public function autoAddTemplates():Void {
@@ -184,7 +184,7 @@ class ArpDomain {
 					case [true, ArpOverwriteStrategy.Replace, _] | [false, _, _] | [_, _, true]:
 						factory.arpInit(slot);
 				}
-				arpObj.__arp_loadSeed(seed);
+				factory.arpLoadSeed(arpObj, seed);
 				if (dir != null) this.currentDirStack.pop();
 				if (arpObj != null) {
 					slot.value = arpObj;

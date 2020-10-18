@@ -4,6 +4,7 @@ import arp.domain.ArpDirectoryCase;
 import arp.domain.ArpDomainCase;
 import arp.domain.ArpDomainPersistCase;
 import arp.domain.MockArpObjectCase;
+import arp.domain.MockArpTemplateCase;
 import arp.domain.MockDerivedArpObjectCase;
 import arp.domain.query.ArpDirectoryQueryCase;
 import arp.domain.query.ArpObjectQueryCase;
@@ -35,6 +36,7 @@ class ArpDomainTestSuite {
 
 		r.load(MockArpObjectCase);
 		r.load(MockDerivedArpObjectCase);
+		r.load(MockArpTemplateCase);
 
 		r.load(MacroArpObjectCase);
 		r.load(MacroDefaultArpObjectCase);
