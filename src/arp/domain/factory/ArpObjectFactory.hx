@@ -20,7 +20,7 @@ class ArpObjectFactory<T:IArpObject> {
 
 	public function new(arpTemplate:IArpTemplate<T>, forceDefault:Null<Bool> = null) {
 		this.arpTemplate = arpTemplate;
-		this.arpTypeInfo = arpTemplate.arpTypeInfo();
+		this.arpTypeInfo = arpTemplate.arpTypeInfo;
 		this.isDefault = (forceDefault != null) ? forceDefault : this.className == this.arpType.toString();
 		this.overwriteStrategy = this.arpTypeInfo.overwriteStrategy;
 	}

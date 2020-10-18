@@ -4,7 +4,8 @@ import arp.seed.ArpSeed;
 
 interface IArpTemplate<T:IArpObject> {
 
-	function arpTypeInfo():ArpTypeInfo;
+	var arpTypeInfo(get, never):ArpTypeInfo;
+
 	function alloc():T;
 	function transformSeed(seed:ArpSeed):ArpSeed;
 }
