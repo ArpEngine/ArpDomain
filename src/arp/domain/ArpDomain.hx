@@ -22,7 +22,6 @@ import arp.events.ArpSignal;
 import arp.events.IArpSignalIn;
 import arp.events.IArpSignalOut;
 import arp.seed.ArpSeed;
-import arp.seed.ArpSeedValueKind;
 import arp.seed.SeedObject;
 import arp.utils.ArpIdGenerator;
 
@@ -161,10 +160,10 @@ class ArpDomain {
 		var arpType:ArpType = (lexicalType != null) ? lexicalType : new ArpType(seed.seedName);
 		var slot:ArpSlot<T>;
 		var name:String = seed.name;
-		switch (seed.valueKind) {
-			case ArpSeedValueKind.Reference, ArpSeedValueKind.Ambigious if (seed.value != null):
+		switch (seed.maybeRef) {
+			case true:
 				slot = this.root.query(seed.value, arpType).slot();
-			case _:
+			case false:
 				var dir:ArpDirectory = null;
 				if (name == null) {
 					slot = this.createAnonymousSlot(arpType);
