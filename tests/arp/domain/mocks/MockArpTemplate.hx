@@ -1,5 +1,7 @@
 package arp.domain.mocks;
 
+import arp.seed.ArpSeedEnv;
+import arp.seed.ArpSeedBuilder;
 import arp.domain.core.ArpOverwriteStrategy;
 import arp.domain.core.ArpType;
 import arp.domain.ArpTypeInfo;
@@ -12,7 +14,14 @@ class MockArpTemplate implements IArpTemplate<MockArpObject> {
 	public function get_arpTypeInfo():ArpTypeInfo return new ArpTypeInfo("override", new ArpType("mock"), ArpOverwriteStrategy.Error);
 
 	public function alloc():MockArpObject return new MockArpObject();
-	public function transformSeed(seed:ArpSeed):ArpSeed return seed;
+	public function transformSeed(seed:ArpSeed):ArpSeed {
+		var builder:ArpSeedBuilder = ArpSeedBuilder.fromSeedCopy(seed.copy());
+		var overrideValue:String = "overrideValue";
+		if (builder.children != null) {
+			builder.children.push(ArpSeed.createSimple("stringField", builder.nextKey(), "overrideValue", ArpSeedEnv.empty()).withSource(seed.source));
+		}
+		return builder.toSeed();
+	}
 
 	public function new() return;
 }

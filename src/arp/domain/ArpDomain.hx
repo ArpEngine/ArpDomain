@@ -22,7 +22,6 @@ import arp.events.ArpSignal;
 import arp.events.IArpSignalIn;
 import arp.events.IArpSignalOut;
 import arp.seed.ArpSeed;
-import arp.seed.ArpSeedValueKind;
 import arp.seed.SeedObject;
 import arp.utils.ArpIdGenerator;
 
@@ -161,38 +160,37 @@ class ArpDomain {
 		var arpType:ArpType = (lexicalType != null) ? lexicalType : new ArpType(seed.seedName);
 		var slot:ArpSlot<T>;
 		var name:String = seed.name;
-		switch (seed.valueKind) {
-			case ArpSeedValueKind.Reference, ArpSeedValueKind.Ambigious if (seed.value != null):
-				slot = this.root.query(seed.value, arpType).slot();
-			case _:
-				var dir:ArpDirectory = null;
-				if (name == null) {
-					slot = this.createAnonymousSlot(arpType);
-				} else {
-					dir = this.currentDir.dir(name);
-					slot = dir.getOrCreateSlot(arpType);
+		if (seed.maybeRef) {
+			slot = this.root.query(seed.value, arpType).slot();
+		} else {
+			var dir:ArpDirectory = null;
+			if (name == null) {
+				slot = this.createAnonymousSlot(arpType);
+			} else {
+				dir = this.currentDir.dir(name);
+				slot = dir.getOrCreateSlot(arpType);
+			}
+			var factory:ArpObjectFactory<T> = this.registry.resolveWithSeed(seed, arpType, this.ignoreUnknownSeedType);
+			if (factory == null) return slot;
+			if (dir != null) this.currentDirStack.push(dir);
+			var arpObj:T = switch [slot.value != null, factory.overwriteStrategy, this.allowOverwrite] {
+				case [true, ArpOverwriteStrategy.Error, false]:
+					if (dir != null) this.currentDirStack.pop();
+					throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
+				case [true, ArpOverwriteStrategy.Merge, _]:
+					slot.value;
+				case [true, ArpOverwriteStrategy.Replace, _] | [false, _, _] | [_, _, true]:
+					factory.arpInit(slot);
+			}
+			factory.arpLoadSeed(arpObj, seed);
+			if (dir != null) this.currentDirStack.pop();
+			if (arpObj != null) {
+				slot.value = arpObj;
+				switch (ArpHeat.fromName(seed.heat)) {
+					case ArpHeat.Cold:
+					case ArpHeat.Warming, ArpHeat.Warm: this.heatLater(slot);
 				}
-				var factory:ArpObjectFactory<T> = this.registry.resolveWithSeed(seed, arpType, this.ignoreUnknownSeedType);
-				if (factory == null) return slot;
-				if (dir != null) this.currentDirStack.push(dir);
-				var arpObj:T = switch [slot.value != null, factory.overwriteStrategy, this.allowOverwrite] {
-					case [true, ArpOverwriteStrategy.Error, false]:
-						if (dir != null) this.currentDirStack.pop();
-						throw new ArpOccupiedReferenceError('Slot ${slot.sid} at dir ${dir.did} is already occupied');
-					case [true, ArpOverwriteStrategy.Merge, _]:
-						slot.value;
-					case [true, ArpOverwriteStrategy.Replace, _] | [false, _, _] | [_, _, true]:
-						factory.arpInit(slot);
-				}
-				factory.arpLoadSeed(arpObj, seed);
-				if (dir != null) this.currentDirStack.pop();
-				if (arpObj != null) {
-					slot.value = arpObj;
-					switch (ArpHeat.fromName(seed.heat)) {
-						case ArpHeat.Cold:
-						case ArpHeat.Warming, ArpHeat.Warm: this.heatLater(slot);
-					}
-				}
+			}
 		}
 		return slot;
 	}

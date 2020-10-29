@@ -30,7 +30,7 @@ class MockArpTemplateCase {
 		assertEquals(42, arpObj.intField);
 		assertEquals(3.14, arpObj.floatField);
 		assertEquals(true, arpObj.boolField);
-		assertEquals("stringValue", arpObj.stringField);
+		assertEquals("overrideValue", arpObj.stringField);
 		assertEquals(arpObj, arpObj.refField);
 		assertEquals("mock", arpObj.arpTypeInfo.name);
 	}
