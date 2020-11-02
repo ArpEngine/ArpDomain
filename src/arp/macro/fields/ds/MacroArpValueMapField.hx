@@ -40,14 +40,14 @@ class MacroArpValueMapField extends MacroArpValueCollectionFieldBase implements 
 			var caseBlock:Array<Expr> = [];
 			cases.pushCase(this.eGroupName, this.nativePos, caseBlock);
 			caseBlock.push(macro @:pos(this.nativePos) {
-				for (e in element) this.$i_nativeName.set(element.key, ${this.type.createSeedElement(this.nativePos, macro e)});
+				for (e in element) this.$i_nativeName.set(element.keyOrAuto(autoKey), ${this.type.createSeedElement(this.nativePos, macro e)});
 			});
 		}
 		if (this.isSeedableAsElement) {
 			var caseBlock:Array<Expr> = [];
 			cases.pushCase(this.eElementName, this.nativePos, caseBlock, -1);
 			caseBlock.push(macro @:pos(this.nativePos) {
-				this.$i_nativeName.set(element.key, ${this.type.createSeedElement(this.nativePos, macro element)});
+				this.$i_nativeName.set(element.keyOrAuto(autoKey), ${this.type.createSeedElement(this.nativePos, macro element)});
 			});
 		}
 	}

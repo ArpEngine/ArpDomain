@@ -45,14 +45,14 @@ class MacroArpObjectOmapField extends MacroArpObjectCollectionFieldBase implemen
 			var caseBlock:Array<Expr> = [];
 			cases.pushCase(this.eGroupName, this.nativePos, caseBlock);
 			caseBlock.push(macro @:pos(this.nativePos) {
-				for (e in element) this.$i_nativeName.slotOmap.addPair(element.key, this._arpDomain.loadSeed(e, ${this.eArpType}).addReference());
+				for (e in element) this.$i_nativeName.slotOmap.addPair(element.keyOrAuto(autoKey), this._arpDomain.loadSeed(e, ${this.eArpType}).addReference());
 			});
 		}
 		if (this.isSeedableAsElement) {
 			var caseBlock:Array<Expr> = [];
 			cases.pushCase(this.eElementName, this.nativePos, caseBlock, -1);
 			caseBlock.push(macro @:pos(this.nativePos) {
-				this.$i_nativeName.slotOmap.addPair(element.key, this._arpDomain.loadSeed(element, ${this.eArpType}).addReference());
+				this.$i_nativeName.slotOmap.addPair(element.keyOrAuto(autoKey), this._arpDomain.loadSeed(element, ${this.eArpType}).addReference());
 			});
 		}
 	}

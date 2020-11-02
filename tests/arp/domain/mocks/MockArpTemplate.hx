@@ -18,7 +18,7 @@ class MockArpTemplate implements IArpTemplate<MockArpObject> {
 		var builder:ArpSeedBuilder = ArpSeedBuilder.fromSeedCopy(seed.copy());
 		var overrideValue:String = "overrideValue";
 		if (builder.children != null) {
-			builder.children.push(ArpSeed.createSimple("stringField", builder.nextKey(), "overrideValue", ArpSeedEnv.empty()).withSource(seed.source));
+			builder.children.push(ArpSeed.createSimple("stringField", null, "overrideValue", ArpSeedEnv.empty()).withSource(seed.source));
 		}
 		return builder.toSeed();
 	}
