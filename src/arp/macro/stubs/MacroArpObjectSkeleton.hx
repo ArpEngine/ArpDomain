@@ -79,7 +79,8 @@ class MacroArpObjectSkeleton {
 
 			@:noDoc @:noCompletion
 			public function __arp_loadSeed(seed:arp.seed.ArpSeed):Void {
-				for (element in seed) this.arpConsumeSeedElement(element);
+				var autoKeyGen:arp.utils.ArpIdGenerator = new arp.utils.ArpIdGenerator();
+				for (element in seed) this.arpConsumeSeedElement(element, autoKeyGen.next());
 				this.arpSelfLoadSeed(seed);
 			}
 
@@ -115,7 +116,7 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:noDoc @:noCompletion
-			private function arpConsumeSeedElement(element:arp.seed.ArpSeed):Void {
+			private function arpConsumeSeedElement(element:arp.seed.ArpSeed, autoKey:String):Void {
 				arp.macro.stubs.MacroArpObjectStubs.arpConsumeSeedElement(
 					$e{ this.buildArpConsumeSeedElementBlock() }
 				);
@@ -186,7 +187,7 @@ class MacroArpObjectSkeleton {
 			}
 
 			@:noDoc @:noCompletion
-			override private function arpConsumeSeedElement(element:arp.seed.ArpSeed):Void {
+			override private function arpConsumeSeedElement(element:arp.seed.ArpSeed, autoKey:String):Void {
 				arp.macro.stubs.MacroArpDerivedObjectStubs.arpConsumeSeedElement(
 					$e{ this.buildArpConsumeSeedElementBlock() }
 				);
