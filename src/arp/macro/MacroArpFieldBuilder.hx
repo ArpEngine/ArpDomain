@@ -100,9 +100,9 @@ class MacroArpFieldBuilder {
 			case "arp.ds.IOmap":
 				return MacroArpNativeFieldType.NativeDsIOmap(typeToNativeFieldType(typeParam(type, 1)), isImpl);
 			case _:
-				var templateInfo:ArpClassInfo = MacroArpObjectRegistry.getTemplateInfo(fqn);
-				if (templateInfo == null) return null;
-				switch (templateInfo.fieldKind) {
+				var classInfo:ArpClassInfo = MacroArpObjectRegistry.getClassInfo(fqn);
+				if (classInfo == null) return null;
+				switch (classInfo.fieldKind) {
 					case ArpFieldKind.PrimInt:
 						return MacroArpNativeFieldType.NativeValueType(new MacroArpPrimIntType());
 					case ArpFieldKind.PrimFloat:
@@ -195,9 +195,9 @@ class MacroArpFieldBuilder {
 					case "arp.ds.IOmap", "IOmap":
 						return MacroArpNativeFieldType.NativeDsIOmap(complexTypeToNativeFieldType(typePathParam(typePath, 1)), false);
 					case _:
-						var templateInfo:ArpClassInfo = MacroArpObjectRegistry.getTemplateInfo(fqnStr);
-						if (templateInfo != null) {
-							switch (templateInfo.fieldKind) {
+						var classInfo:ArpClassInfo = MacroArpObjectRegistry.getClassInfo(fqnStr);
+						if (classInfo != null) {
+							switch (classInfo.fieldKind) {
 								case ArpFieldKind.PrimInt:
 									return MacroArpNativeFieldType.NativeValueType(new MacroArpPrimIntType());
 								case ArpFieldKind.PrimFloat:

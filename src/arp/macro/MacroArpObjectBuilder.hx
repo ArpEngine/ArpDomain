@@ -32,12 +32,12 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 
 		var fqn:String = MacroArpUtil.getFqnOfType(Context.getLocalType());
 
-		var templateInfo:ArpClassInfo = ArpClassInfo.reference(new ArpType(classDef.arpTypeName), classDef.arpTemplateName, fqn, [], classDef.nativeDoc);
-		MacroArpObjectRegistry.registerTemplateInfo(fqn, new MacroArpObject(classDef, templateInfo));
+		var classInfo:ArpClassInfo = ArpClassInfo.reference(new ArpType(classDef.arpTypeName), classDef.arpTemplateName, fqn, [], classDef.nativeDoc);
+		MacroArpObjectRegistry.registerObjectInfo(fqn, new MacroArpObject(classDef, classInfo));
 
 		if (classDef.metaNoGen) return null;
 
-		Compiler.addMetadata("@:arpGen", templateInfo.fqn);
+		Compiler.addMetadata("@:arpGen", classInfo.fqn);
 
 		var outFields:Array<Field> = [];
 
