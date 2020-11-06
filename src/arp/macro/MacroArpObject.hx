@@ -2,6 +2,7 @@ package arp.macro;
 
 #if macro
 
+import arp.domain.core.ArpType;
 import arp.domain.reflect.ArpClassInfo;
 import arp.macro.defs.MacroArpClassDefinition;
 
@@ -17,6 +18,11 @@ class MacroArpObject {
 	public function new(classDef:MacroArpClassDefinition, classInfo:ArpClassInfo) {
 		this.classDef = classDef;
 		this.classInfo = classInfo;
+	}
+
+	public static function fromClassDef(classDef:MacroArpClassDefinition):MacroArpObject {
+		var classInfo:ArpClassInfo = ArpClassInfo.reference(new ArpType(classDef.arpTypeName), classDef.arpTemplateName, classDef.nativeFqn, [], classDef.nativeDoc);
+		return new MacroArpObject(classDef, classInfo);
 	}
 
 	// must be called in expression macro

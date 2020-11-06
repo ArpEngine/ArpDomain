@@ -2,8 +2,6 @@ package arp.macro;
 
 #if macro
 
-import arp.domain.core.ArpType;
-import arp.domain.reflect.ArpClassInfo;
 import arp.macro.defs.MacroArpClassDefinition;
 import arp.macro.stubs.MacroArpObjectSkeleton;
 import arp.macro.MacroArpFieldBuilder;
@@ -30,14 +28,12 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 		if (classDef.metaGen) return null;
 		if (classDef.arpTemplateName == null) return null;
 
-		var fqn:String = MacroArpUtil.getFqnOfType(Context.getLocalType());
-
-		var classInfo:ArpClassInfo = ArpClassInfo.reference(new ArpType(classDef.arpTypeName), classDef.arpTemplateName, fqn, [], classDef.nativeDoc);
-		MacroArpObjectRegistry.registerObjectInfo(fqn, new MacroArpObject(classDef, classInfo));
+		var macroObj:MacroArpObject = MacroArpObject.fromClassDef(classDef);
+		MacroArpObjectRegistry.registerObjectInfo(classDef.nativeFqn, macroObj);
 
 		if (classDef.metaNoGen) return null;
 
-		Compiler.addMetadata("@:arpGen", classInfo.fqn);
+		Compiler.addMetadata("@:arpGen", classDef.nativeFqn);
 
 		var outFields:Array<Field> = [];
 

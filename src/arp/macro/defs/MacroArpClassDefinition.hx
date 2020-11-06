@@ -13,7 +13,9 @@ import Type as StdType;
 
 class MacroArpClassDefinition {
 
+	public var nativeFqn(default, null):String;
 	public var nativePos(default, null):Position;
+
 	public var metaGen(default, null):Bool = false;
 	public var metaNoGen(default, null):Bool = false;
 	public var metaHasImpl(default, null):Bool = false;
@@ -30,6 +32,7 @@ class MacroArpClassDefinition {
 	public var baseClasses:Array<ClassType>;
 
 	public function new(classType:ClassType) {
+		this.nativeFqn = MacroArpUtil.getFqnOfBaseType(classType);
 		this.nativePos = classType.pos;
 		this.fieldDefs = [];
 		this.baseClasses = [];
