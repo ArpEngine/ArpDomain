@@ -72,23 +72,8 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 			outFields.merge(this.genDefaultTypeFields());
 		}
 
-		var mergedOutFields:Array<Field> = [];
-		for (outField in outFields.toArray()) {
-			if (!classDef.mergedBaseFields.exists(outField.name)) {
-				// statics not included in mergedBaseFields
-				mergedOutFields.push(outField);
-				continue;
-			}
-			switch (outField.kind) {
-				case FieldType.FFun(_):
-					var access:Array<Access> = outField.access;
-					if (access.indexOf(Access.AOverride) < 0) access.push(Access.AOverride);
-					mergedOutFields.push(outField);
-				case _:
-			}
-		}
-
-		return mergedOutFields;
+		outFields.markOverrides(classDef);
+		return outFields.toArray();
 	}
 }
 

@@ -2,7 +2,10 @@ package arp.macro.expr.ds;
 
 #if macro
 
+import arp.macro.defs.MacroArpClassDefinition;
+import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
+import haxe.macro.Expr.FieldType;
 
 abstract MacroArpFieldList(Array<Field>) {
 
@@ -25,6 +28,21 @@ abstract MacroArpFieldList(Array<Field>) {
 
 	inline public function overwrite(source:Array<Field>):MacroArpFieldList {
 		this = new MacroArpFieldList(source.copy()).merge(this).toArray();
+		return new MacroArpFieldList(this);
+	}
+
+	inline public function markOverrides(classDef:MacroArpClassDefinition):MacroArpFieldList {
+		this = Lambda.filter(this, (field:Field) -> {
+			if (!classDef.mergedBaseFields.exists(field.name)) return true;
+			return switch (field.kind) {
+				case FieldType.FFun(_):
+					var access:Array<Access> = field.access;
+					if (access.indexOf(Access.AOverride) < 0) access.push(Access.AOverride);
+					true;
+				case _:
+					false;
+			}
+		});
 		return new MacroArpFieldList(this);
 	}
 }
