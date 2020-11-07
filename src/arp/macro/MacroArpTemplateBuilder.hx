@@ -2,7 +2,7 @@ package arp.macro;
 
 #if macro
 
-import arp.macro.expr.ds.MacroArpFieldArray;
+import arp.macro.expr.ds.MacroArpFieldList;
 import arp.macro.defs.MacroArpClassDefinition;
 import arp.macro.stubs.MacroArpObjectSkeleton;
 import haxe.macro.Expr;
@@ -17,12 +17,12 @@ class MacroArpTemplateBuilder extends MacroArpObjectSkeleton {
 		var macroObj:MacroArpObject = MacroArpObject.fromClassDef(classDef);
 		MacroArpObjectRegistry.registerTemplateInfo(classDef.nativeFqn, macroObj);
 
-		var outFields:MacroArpFieldArray = MacroArpFieldArray.empty();
+		var outFields:MacroArpFieldList = MacroArpFieldList.empty();
 		for (fieldDef in classDef.fieldDefs) {
-			outFields.push(fieldDef.nativeField);
+			outFields.add(fieldDef.nativeField);
 		}
 
-		return outFields;
+		return outFields.toArray();
 	}
 }
 

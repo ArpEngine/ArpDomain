@@ -3,7 +3,7 @@ package arp.macro;
 #if macro
 
 import arp.macro.defs.MacroArpClassDefinition;
-import arp.macro.expr.ds.MacroArpFieldArray;
+import arp.macro.expr.ds.MacroArpFieldList;
 import arp.macro.MacroArpFieldBuilder;
 import arp.macro.stubs.MacroArpObjectSkeleton;
 import haxe.macro.Compiler;
@@ -25,7 +25,7 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 
 		Compiler.addMetadata("@:arpGen", classDef.nativeFqn);
 
-		var outFields:MacroArpFieldArray = MacroArpFieldArray.empty();
+		var outFields:MacroArpFieldList = MacroArpFieldList.empty();
 
 		for (fieldDef in classDef.fieldDefs) {
 			switch (MacroArpFieldBuilder.fromDefinition(fieldDef)) {
@@ -73,7 +73,7 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 		}
 
 		var mergedOutFields:Array<Field> = [];
-		for (outField in outFields) {
+		for (outField in outFields.toArray()) {
 			if (!classDef.mergedBaseFields.exists(outField.name)) {
 				// statics not included in mergedBaseFields
 				mergedOutFields.push(outField);
