@@ -7,6 +7,7 @@ import arp.domain.core.ArpType;
 import arp.domain.ArpTypeInfo;
 import arp.seed.ArpSeed;
 
+@:arpType("mock", "override")
 class MockArpTemplate implements IArpTemplate<MockArpObject> {
 
 	public var arpTypeInfo(get, never):ArpTypeInfo;

@@ -2,8 +2,9 @@ package arp;
 
 #if macro
 
-import arp.macro.defs.MacroArpStructDefinition;
 import arp.macro.defs.MacroArpClassDefinition;
+import arp.macro.defs.MacroArpStructDefinition;
+import arp.macro.MacroArpObject;
 import arp.macro.MacroArpObjectBuilder;
 import arp.macro.MacroArpObjectRegistry;
 import arp.macro.MacroArpUtil;
@@ -45,6 +46,18 @@ class ArpDomainMacros {
 			structDef.metaArpStructStringPlaceholder,
 			structDef.metaArpStructSeedPlaceholder
 		);
+		return null;
+	}
+
+	public static function autoBuildTemplate():Array<Field> {
+		var localClass:ClassType = MacroArpUtil.getLocalClass();
+		if (localClass == null) return null;
+
+		var classDef:MacroArpClassDefinition = new MacroArpClassDefinition(localClass);
+		if (classDef.arpTemplateName == null) return null;
+
+		var macroObj:MacroArpObject = MacroArpObject.fromClassDef(classDef);
+		MacroArpObjectRegistry.registerTemplateInfo(classDef.nativeFqn, macroObj);
 		return null;
 	}
 }

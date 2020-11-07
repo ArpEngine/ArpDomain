@@ -16,6 +16,7 @@ class MacroArpObjectRegistry {
 	private var domainInfo:ArpDomainInfo;
 	private var classInfos:Map<String, ArpClassInfo>;
 	private var macroArpObjects:Map<String, MacroArpObject>;
+	private var macroArpTemplates:Map<String, MacroArpObject>;
 
 	private function new() {
 		this.onMacroContextReused();
@@ -36,6 +37,12 @@ class MacroArpObjectRegistry {
 		instance.macroArpObjects.set(fqn, macroArpObject);
 		instance.classInfos.set(fqn, macroArpObject.classInfo);
 		instance.domainInfo.classInfos.push(macroArpObject.classInfo);
+	}
+
+	public static function registerTemplateInfo(fqn:String, macroArpObject:MacroArpObject):Void {
+		instance.macroArpTemplates.set(fqn, macroArpObject);
+		instance.classInfos.set(fqn, macroArpObject.classInfo);
+		instance.domainInfo.templateInfos.push(macroArpObject.classInfo);
 	}
 
 	private static function toFqn(complexType:ComplexType):String {
@@ -66,9 +73,15 @@ class MacroArpObjectRegistry {
 		var block:Array<Expr> = [];
 		for (macroArpObject in instance.macroArpObjects) {
 			var klassName:String = macroArpObject.classInfo.fqn;
-			var klass:Expr = Context.parse(klassName, macroArpObject.classDef.nativePos);
+			var klass:Expr = Context.parse(klassName, Context.currentPos());
 			block.push(macro ${ arpDomain } .addTemplate(${ klass }));
-			// block.push(macro this.addTemplate(Type.resolveClass($v{klass})));
+			// block.push(macro ${ arpDomain } .addTemplate(cast Type.resolveClass($v{klassName})));
+		}
+		for (macroArpTemplate in instance.macroArpTemplates) {
+			var klassName:String = macroArpTemplate.classInfo.fqn;
+			var klass:Expr = Context.parse(klassName, Context.currentPos());
+			block.push(macro ${ arpDomain } .addTemplate(${ klass }));
+			// block.push(macro ${ arpDomain } .addTemplate(cast Type.resolveClass($v{klassName})));
 		}
 		return macro @mergeBlock $b{ block };
 	}
@@ -93,6 +106,7 @@ class MacroArpObjectRegistry {
 		// discard registered types
 		domainInfo = new ArpDomainInfo();
 		macroArpObjects = new Map();
+		macroArpTemplates = new Map();
 		classInfos = new Map();
 
 		registerPrimitive(ArpFieldKind.PrimInt, "Int", "StdTypes.Int", "Primitive integer.");
