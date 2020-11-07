@@ -5,7 +5,7 @@ package arp.macro.fields.std;
 import arp.domain.reflect.ArpFieldDs;
 import arp.macro.defs.MacroArpFieldDefinition;
 import arp.macro.fields.base.MacroArpValueCollectionFieldBase;
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
+import arp.macro.expr.ds.MacroArpSwitchBlock;
 import haxe.macro.Expr;
 
 class MacroArpValueStdMapField extends MacroArpValueCollectionFieldBase implements IMacroArpField {

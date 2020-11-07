@@ -4,7 +4,7 @@ package arp.macro;
 
 import haxe.macro.Expr;
 import arp.domain.reflect.ArpFieldInfo;
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
+import arp.macro.expr.ds.MacroArpSwitchBlock;
 
 interface IMacroArpField {
 	public var isSeedableAsGroup(get, never):Bool;

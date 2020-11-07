@@ -1,7 +1,7 @@
 package arp.macro.stubs;
 
 import arp.macro.MacroArpObjectRegistry;
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
+import arp.macro.expr.ds.MacroArpSwitchBlock;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
