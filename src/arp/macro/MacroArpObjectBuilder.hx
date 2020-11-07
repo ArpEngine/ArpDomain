@@ -3,8 +3,9 @@ package arp.macro;
 #if macro
 
 import arp.macro.defs.MacroArpClassDefinition;
-import arp.macro.stubs.MacroArpObjectSkeleton;
+import arp.macro.expr.ds.MacroArpFieldArray;
 import arp.macro.MacroArpFieldBuilder;
+import arp.macro.stubs.MacroArpObjectSkeleton;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
@@ -12,17 +13,6 @@ import haxe.macro.Expr;
 class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 
 	public function new() super();
-
-	private function merge(target:Array<Field>, source:Array<Field>):Array<Field> {
-		for (field in source) {
-			var hasField:Bool = false;
-			for (t in target) {
-				if (field.name == t.name) hasField = true;
-			}
-			if (!hasField) target.push(field);
-		}
-		return target;
-	}
 
 	public function run(classDef:MacroArpClassDefinition):Array<Field> {
 		if (classDef.metaGen) return null;
@@ -35,32 +25,32 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 
 		Compiler.addMetadata("@:arpGen", classDef.nativeFqn);
 
-		var outFields:Array<Field> = [];
+		var outFields:MacroArpFieldArray = MacroArpFieldArray.empty();
 
 		for (fieldDef in classDef.fieldDefs) {
 			switch (MacroArpFieldBuilder.fromDefinition(fieldDef)) {
 				case MacroArpFieldBuilderResult.Unmanaged:
-					outFields.push(fieldDef.nativeField);
+					outFields.add(fieldDef.nativeField);
 					if (fieldDef.metaArpInit != null) {
-						outFields = outFields.concat(this.genVoidCallbackField("arpSelfInit", fieldDef.metaArpInit));
+						outFields.merge(this.genVoidCallbackField("arpSelfInit", fieldDef.metaArpInit));
 					}
 					if (fieldDef.metaArpLoadSeed != null) {
-						outFields = outFields.concat(this.genSeedCallbackField("arpSelfLoadSeed", fieldDef.metaArpLoadSeed));
+						outFields.merge(this.genSeedCallbackField("arpSelfLoadSeed", fieldDef.metaArpLoadSeed));
 					}
 					if (fieldDef.metaArpHeatUp != null) {
-						outFields = outFields.concat(this.genBoolCallbackField("arpSelfHeatUp", fieldDef.metaArpHeatUp));
+						outFields.merge(this.genBoolCallbackField("arpSelfHeatUp", fieldDef.metaArpHeatUp));
 					}
 					if (fieldDef.metaArpHeatDown != null) {
-						outFields = outFields.concat(this.genBoolCallbackField("arpSelfHeatDown", fieldDef.metaArpHeatDown));
+						outFields.merge(this.genBoolCallbackField("arpSelfHeatDown", fieldDef.metaArpHeatDown));
 					}
 					if (fieldDef.metaArpDispose != null) {
-						outFields = outFields.concat(this.genVoidCallbackField("arpSelfDispose", fieldDef.metaArpDispose));
+						outFields.merge(this.genVoidCallbackField("arpSelfDispose", fieldDef.metaArpDispose));
 					}
 				case MacroArpFieldBuilderResult.Impl(implTypePath, concreteTypePath):
 					if (classDef.isDerived) {
-						outFields = outFields.concat(this.genDerivedImplFields(concreteTypePath));
+						outFields.merge(this.genDerivedImplFields(concreteTypePath));
 					} else {
-						outFields = outFields.concat(this.genImplFields(implTypePath, concreteTypePath));
+						outFields.merge(this.genImplFields(implTypePath, concreteTypePath));
 					}
 					// TODO we also want the class to implement impl interface
 					//throw "not implemented";
@@ -68,7 +58,7 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 					this.arpFields.push(arpField);
 					arpField.buildField(outFields);
 				case MacroArpFieldBuilderResult.Constructor(func):
-					outFields = outFields.concat(this.genConstructorField(fieldDef.nativeField, func));
+					outFields.merge(this.genConstructorField(fieldDef.nativeField, func));
 			}
 		}
 		if (classDef.metaHasImpl && !classDef.hasImpl) {
@@ -76,10 +66,10 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 		}
 
 		if (classDef.isDerived) {
-			outFields = merge(this.genDerivedTypeFields(), outFields);
+			outFields.overwrite(this.genDerivedTypeFields());
 		} else {
-			outFields = merge(this.genTypeFields(), outFields);
-			outFields = merge(outFields, this.genDefaultTypeFields());
+			outFields.overwrite(this.genTypeFields());
+			outFields.merge(this.genDefaultTypeFields());
 		}
 
 		var mergedOutFields:Array<Field> = [];
