@@ -4,6 +4,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 
+// this class is meant to be called from expression macro
 class MacroArpDerivedObjectStubs {
 
 #if macro
@@ -21,7 +22,9 @@ class MacroArpDerivedObjectStubs {
 	}
 #end
 
-	macro public static function arpInit(initBlock:Expr):Expr {
+	macro public static function arpInit():Expr {
+		var initBlock:Expr = MacroArpObjectBlockStubs.buildInitBlock();
+
 		@:macroLocal var slot:arp.domain.ArpUntypedSlot;
 		@:macroReturn arp.domain.IArpObject;
 
@@ -34,7 +37,9 @@ class MacroArpDerivedObjectStubs {
 		}
 	}
 
-	macro public static function arpHeatLaterDeps(heatLaterDepsBlock:Expr):Expr {
+	macro public static function arpHeatLaterDeps():Expr {
+		var heatLaterDepsBlock:Expr = MacroArpObjectBlockStubs.buildHeatLaterDepsBlock();
+
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 			super.__arp_heatLaterDeps();
@@ -42,14 +47,18 @@ class MacroArpDerivedObjectStubs {
 		}
 	}
 
-	macro public static function arpHeatUpNow(heatUpNowBlock:Expr):Expr {
+	macro public static function arpHeatUpNow():Expr {
+		var heatUpNowBlock:Expr = MacroArpObjectBlockStubs.buildHeatUpNowBlock();
+
 		return macro @:mergeBlock {
 			$e{ heatUpNowBlock }
 			return super.arpHeatUpNow();
 		}
 	}
 
-	macro public static function arpHeatDownNow(heatDownNowBlock:Expr):Expr {
+	macro public static function arpHeatDownNow():Expr {
+		var heatDownNowBlock:Expr = MacroArpObjectBlockStubs.buildHeatDownNowBlock();
+
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 			$e{ heatDownNowBlock }
@@ -57,21 +66,27 @@ class MacroArpDerivedObjectStubs {
 		}
 	}
 
-	macro public static function arpDispose(disposeBlock:Expr):Expr {
+	macro public static function arpDispose():Expr {
+		var disposeBlock:Expr = MacroArpObjectBlockStubs.buildDisposeBlock();
+
 		return macro @:mergeBlock {
 			$e{ disposeBlock }
 			super.__arp_dispose();
 		}
 	}
 
-	macro public static function arpConsumeSeedElement(arpConsumeSeedElementBlock:Expr):Expr {
+	macro public static function arpConsumeSeedElement():Expr {
+		var arpConsumeSeedElementBlock:Expr = MacroArpObjectBlockStubs.buildArpConsumeSeedElementBlock();
+
 		@:noDoc @:noCompletion
 		return macro @:mergeBlock {
 			$e{ arpConsumeSeedElementBlock }
 		}
 	}
 
-	macro public static function readSelf(readSelfBlock:Expr):Expr {
+	macro public static function readSelf():Expr {
+		var readSelfBlock:Expr = MacroArpObjectBlockStubs.buildReadSelfBlock();
+
 		@:macroLocal var input:arp.persistable.IPersistInput;
 		return macro @:mergeBlock {
 			super.readSelf(input);
@@ -80,7 +95,9 @@ class MacroArpDerivedObjectStubs {
 		}
 	}
 
-	macro public static function writeSelf(writeSelfBlock:Expr):Expr {
+	macro public static function writeSelf():Expr {
+		var writeSelfBlock:Expr = MacroArpObjectBlockStubs.buildWriteSelfBlock();
+
 		@:macroLocal var output:arp.persistable.IPersistOutput;
 		return macro @:mergeBlock {
 			super.writeSelf(output);
@@ -104,7 +121,9 @@ class MacroArpDerivedObjectStubs {
 		}
 	}
 
-	macro public static function arpCopyFrom(copyFromBlock:Expr):Expr {
+	macro public static function arpCopyFrom():Expr {
+		var copyFromBlock:Expr = MacroArpObjectBlockStubs.buildCopyFromBlock();
+
 		@:macroLocal var source:arp.domain.IArpObject;
 		@:macroLocal var cloneMapper:arp.domain.IArpCloneMapper;
 		@:macroReturn arp.domain.IArpObject;
