@@ -37,7 +37,7 @@ class MacroArpObjectStubs {
 #end
 			this._arpDomain = slot.domain;
 			this._arpSlot = slot;
-			$e{ MacroArpObjectBlockStubs.initBlock() }
+			$e{ MacroArpObjectBlockStubs.buildInitBlock() }
 			$e{
 				if (hasImpl) {
 					macro this.arpImpl = this.createImpl();

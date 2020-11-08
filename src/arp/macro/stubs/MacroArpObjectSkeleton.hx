@@ -244,36 +244,9 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function prependFunctionBody(nativeField:Field, expr:Expr):Field {
-		var nativeFunc:Function;
-		switch (nativeField.kind) {
-			case FieldType.FFun(func):
-				nativeFunc = func;
-			case _:
-				MacroArpUtil.error("Internal error: field is not a function", nativeField.pos);
-		}
-		return {
-			name: nativeField.name,
-			doc: nativeField.doc,
-			access: nativeField.access,
-			kind: FieldType.FFun({
-				args:nativeFunc.args,
-				ret:nativeFunc.ret,
-				expr: macro @:mergeBlock {
-					${expr}
-					${nativeFunc.expr}
-				},
-				params: nativeFunc.params
-			}),
-			pos: nativeField.pos,
-			meta:nativeField.meta
-		};
-	}
-
 	public function genConstructorField(nativeField:Field, nativeFunc:Function):Array<Field> {
 		return [nativeField];
 	}
-
 }
 
 #end

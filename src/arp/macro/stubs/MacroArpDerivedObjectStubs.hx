@@ -39,13 +39,13 @@ class MacroArpDerivedObjectStubs {
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 			super.__arp_heatLaterDeps();
-			$e{ MacroArpObjectBlockStubs.buildHeatLaterDepsBlock()MacroArpObjectBlockStubs.buildHeatLaterDepsBlock() }
+			$e{ MacroArpObjectBlockStubs.buildHeatLaterDepsBlock() }
 		}
 	}
 
 	macro public static function arpHeatUpNow():Expr {
 		return macro @:mergeBlock {
-			$e{ MacroArpObjectBlockStubs.buildHeatUpNowBlock()MacroArpObjectBlockStubs.buildHeatUpNowBlock() }
+			$e{ MacroArpObjectBlockStubs.buildHeatUpNowBlock() }
 			return super.arpHeatUpNow();
 		}
 	}
