@@ -10,9 +10,11 @@ import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
-class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
+class MacroArpObjectBuilder {
 
-	public function new() super();
+	private var skeleton:MacroArpObjectSkeleton;
+
+	public function new() skeleton = new MacroArpObjectSkeleton();
 
 	public function run(classDef:MacroArpClassDefinition):Array<Field> {
 		if (classDef.metaGen) return null;
@@ -32,33 +34,33 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 				case MacroArpFieldBuilderResult.Unmanaged:
 					outFields.add(fieldDef.nativeField);
 					if (fieldDef.metaArpInit != null) {
-						outFields.merge(this.genVoidCallbackField("arpSelfInit", fieldDef.metaArpInit));
+						outFields.merge(skeleton.genVoidCallbackField("arpSelfInit", fieldDef.metaArpInit));
 					}
 					if (fieldDef.metaArpLoadSeed != null) {
-						outFields.merge(this.genSeedCallbackField("arpSelfLoadSeed", fieldDef.metaArpLoadSeed));
+						outFields.merge(skeleton.genSeedCallbackField("arpSelfLoadSeed", fieldDef.metaArpLoadSeed));
 					}
 					if (fieldDef.metaArpHeatUp != null) {
-						outFields.merge(this.genBoolCallbackField("arpSelfHeatUp", fieldDef.metaArpHeatUp));
+						outFields.merge(skeleton.genBoolCallbackField("arpSelfHeatUp", fieldDef.metaArpHeatUp));
 					}
 					if (fieldDef.metaArpHeatDown != null) {
-						outFields.merge(this.genBoolCallbackField("arpSelfHeatDown", fieldDef.metaArpHeatDown));
+						outFields.merge(skeleton.genBoolCallbackField("arpSelfHeatDown", fieldDef.metaArpHeatDown));
 					}
 					if (fieldDef.metaArpDispose != null) {
-						outFields.merge(this.genVoidCallbackField("arpSelfDispose", fieldDef.metaArpDispose));
+						outFields.merge(skeleton.genVoidCallbackField("arpSelfDispose", fieldDef.metaArpDispose));
 					}
 				case MacroArpFieldBuilderResult.Impl(implTypePath, concreteTypePath):
 					if (classDef.isDerived) {
-						outFields.merge(this.genDerivedImplFields(concreteTypePath));
+						outFields.merge(skeleton.genDerivedImplFields(concreteTypePath));
 					} else {
-						outFields.merge(this.genImplFields(implTypePath, concreteTypePath));
+						outFields.merge(skeleton.genImplFields(implTypePath, concreteTypePath));
 					}
 					// TODO we also want the class to implement impl interface
 					//throw "not implemented";
 				case MacroArpFieldBuilderResult.ArpField(arpField):
-					this.arpFields.push(arpField);
+					macroObj.arpFields.push(arpField);
 					arpField.buildField(outFields);
 				case MacroArpFieldBuilderResult.Constructor(func):
-					outFields.merge(this.genConstructorField(fieldDef.nativeField, func));
+					outFields.merge(skeleton.genConstructorField(fieldDef.nativeField, func));
 			}
 		}
 		if (classDef.metaHasImpl && !classDef.hasImpl) {
@@ -66,10 +68,10 @@ class MacroArpObjectBuilder extends MacroArpObjectSkeleton {
 		}
 
 		if (classDef.isDerived) {
-			outFields.overwrite(this.genDerivedTypeFields());
+			outFields.overwrite(skeleton.genDerivedTypeFields());
 		} else {
-			outFields.overwrite(this.genTypeFields());
-			outFields.merge(this.genDefaultTypeFields());
+			outFields.overwrite(skeleton.genTypeFields());
+			outFields.merge(skeleton.genDefaultTypeFields());
 		}
 
 		outFields.markOverrides(classDef);

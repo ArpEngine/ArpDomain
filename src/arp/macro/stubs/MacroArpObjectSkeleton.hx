@@ -20,10 +20,8 @@ class MacroArpObjectSkeleton {
 
 	private var classDef(get, never):MacroArpClassDefinition;
 	private function get_classDef():MacroArpClassDefinition return template.classDef;
-	private var arpFields(get, never):Array<IMacroArpField>;
-	private function get_arpFields():Array<IMacroArpField> return template.arpFields;
 
-	private function new() return;
+	public function new() return;
 
 	private function buildBlock(iFieldName:String, forPersist:Bool = false):Expr {
 		return macro arp.macro.stubs.MacroArpObjectBlockStubs.block($v{iFieldName}, $v{forPersist});
@@ -50,7 +48,7 @@ class MacroArpObjectSkeleton {
 		);
 	}
 
-	private function genTypeFields():Array<Field> {
+	public function genTypeFields():Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion private var _arpDomain:arp.domain.ArpDomain;
 			public var arpDomain(get, never):arp.domain.ArpDomain;
@@ -147,7 +145,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genDerivedTypeFields():Array<Field> {
+	public function genDerivedTypeFields():Array<Field> {
 		return (macro class Generated {
 			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = $e{ newArpTypeInfo() };
 			override private function get_arpTypeInfo():arp.domain.ArpTypeInfo return _arpTypeInfo;
@@ -218,7 +216,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genDefaultTypeFields():Array<Field> {
+	public function genDefaultTypeFields():Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion private function arpSelfInit():Void return;
 			@:noDoc @:noCompletion private function arpSelfLoadSeed(seed:arp.seed.ArpSeed = null):Void return;
@@ -228,7 +226,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genVoidCallbackField(fun:String, callback:String):Array<Field> {
+	public function genVoidCallbackField(fun:String, callback:String):Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion
 			private function $fun():Void {
@@ -237,7 +235,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genBoolCallbackField(fun:String, callback:String):Array<Field> {
+	public function genBoolCallbackField(fun:String, callback:String):Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion
 			private function $fun():Bool {
@@ -246,7 +244,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genSeedCallbackField(fun:String, callback:String):Array<Field> {
+	public function genSeedCallbackField(fun:String, callback:String):Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion
 			private function $fun(seed:arp.seed.ArpSeed = null):Void {
@@ -255,7 +253,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genImplFields(implTypePath:TypePath, concreteTypePath:TypePath):Array<Field> {
+	public function genImplFields(implTypePath:TypePath, concreteTypePath:TypePath):Array<Field> {
 		var implType:ComplexType = ComplexType.TPath(implTypePath);
 		var implClassDef:MacroArpImplClassDefinition = new MacroArpImplClassDefinition(implType);
 		var concreteType:ComplexType = ComplexType.TPath(concreteTypePath);
@@ -283,7 +281,7 @@ class MacroArpObjectSkeleton {
 		return fields;
 	}
 
-	private function genDerivedImplFields(concreteTypePath:TypePath):Array<Field> {
+	public function genDerivedImplFields(concreteTypePath:TypePath):Array<Field> {
 		var implType = ComplexType.TPath(concreteTypePath);
 		var concreteType:ComplexType = ComplexType.TPath(concreteTypePath);
 		var concreteClassDef:MacroArpImplClassDefinition = new MacroArpImplClassDefinition(concreteType);
@@ -327,7 +325,7 @@ class MacroArpObjectSkeleton {
 		};
 	}
 
-	private function genConstructorField(nativeField:Field, nativeFunc:Function):Array<Field> {
+	public function genConstructorField(nativeField:Field, nativeFunc:Function):Array<Field> {
 		return [nativeField];
 	}
 
