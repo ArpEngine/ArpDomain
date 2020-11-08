@@ -8,14 +8,9 @@ import haxe.macro.Expr;
 
 class MacroArpObjectSkeleton {
 
-	private var _template:MacroArpObject;
-	private var template(get, null):MacroArpObject;
-	private function get_template():MacroArpObject return if (_template != null) _template else _template = MacroArpObjectRegistry.getLocalMacroArpObject();
+	private var classDef:MacroArpClassDefinition;
 
-	private var classDef(get, never):MacroArpClassDefinition;
-	private function get_classDef():MacroArpClassDefinition return template.classDef;
-
-	public function new() return;
+	public function new(macroObj:MacroArpObject) this.classDef = macroObj.classDef;
 
 	private function newArpTypeInfo():Expr {
 		return macro new arp.domain.ArpTypeInfo(
@@ -246,6 +241,13 @@ class MacroArpObjectSkeleton {
 
 	public function genConstructorField(nativeField:Field, nativeFunc:Function):Array<Field> {
 		return [nativeField];
+	}
+
+	public function genTemplateFields():Array<Field> {
+		return (macro class Generated {
+			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = $e{ newArpTypeInfo() };
+			@:noDoc @:noCompletion override private function get_arpTypeInfo():arp.domain.ArpTypeInfo return _arpTypeInfo;
+		}).fields;
 	}
 }
 

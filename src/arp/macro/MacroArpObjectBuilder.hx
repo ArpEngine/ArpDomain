@@ -14,7 +14,7 @@ class MacroArpObjectBuilder {
 
 	private var skeleton:MacroArpObjectSkeleton;
 
-	public function new() skeleton = new MacroArpObjectSkeleton();
+	public function new() return;
 
 	public function run(classDef:MacroArpClassDefinition):Array<Field> {
 		if (classDef.metaGen) return null;
@@ -27,6 +27,7 @@ class MacroArpObjectBuilder {
 
 		Compiler.addMetadata("@:arpGen", classDef.nativeFqn);
 
+		skeleton = new MacroArpObjectSkeleton(macroObj);
 		var outFields:MacroArpFieldList = MacroArpFieldList.empty();
 
 		for (fieldDef in classDef.fieldDefs) {
