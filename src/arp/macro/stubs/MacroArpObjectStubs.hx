@@ -26,9 +26,6 @@ class MacroArpObjectStubs {
 #end
 
 	macro public static function arpInit(hasImpl:Bool):Expr {
-		var initBlock:Expr = MacroArpObjectBlockStubs.buildInitBlock();
-
-		@:macroLocal var slot:arp.domain.ArpUntypedSlot;
 		@:macroReturn arp.domain.IArpObject;
 
 		// call populateReflectFields() via expression macro to take local imports
@@ -40,7 +37,7 @@ class MacroArpObjectStubs {
 #end
 			this._arpDomain = slot.domain;
 			this._arpSlot = slot;
-			$e{ initBlock }
+			$e{ MacroArpObjectBlockStubs.initBlock() }
 			$e{
 				if (hasImpl) {
 					macro this.arpImpl = this.createImpl();
@@ -54,26 +51,22 @@ class MacroArpObjectStubs {
 	}
 
 	macro public static function arpHeatLaterDeps():Expr {
-		var heatLaterDepsBlock:Expr = MacroArpObjectBlockStubs.buildHeatLaterDepsBlock();
-
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 #if arp_debug
 			if (this._arpSlot == null) throw new arp.errors.ArpError("ArpObject is not initialized");
 #end
-			$e{ heatLaterDepsBlock }
+			$e{ MacroArpObjectBlockStubs.buildHeatLaterDepsBlock() }
 		}
 	}
 
 	macro public static function arpHeatUpNow(hasImpl:Bool):Expr {
-		var heatUpNowBlock:Expr = MacroArpObjectBlockStubs.buildHeatUpNowBlock();
-
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 #if arp_debug
 			if (this._arpSlot == null) throw new arp.errors.ArpError("ArpObject is not initialized");
 #end
-			$e{ heatUpNowBlock }
+			$e{ MacroArpObjectBlockStubs.buildHeatUpNowBlock() }
 			var isSync:Bool = true;
 			if (!this.arpSelfHeatUp()) isSync = false;
 			$e{
@@ -97,8 +90,6 @@ class MacroArpObjectStubs {
 	}
 
 	macro public static function arpHeatDownNow(hasImpl:Bool):Expr {
-		var heatDownNowBlock:Expr = MacroArpObjectBlockStubs.buildHeatDownNowBlock();
-
 		@:macroReturn Bool;
 		return macro @:mergeBlock {
 #if arp_debug
@@ -113,15 +104,13 @@ class MacroArpObjectStubs {
 				}
 			}
 			if (!this.arpSelfHeatDown()) isSync = false;
-			$e{ heatDownNowBlock }
+			$e{ MacroArpObjectBlockStubs.buildHeatDownNowBlock() }
 			@:privateAccess this.arpSlot.heat = arp.domain.ArpHeat.Cold;
 			return isSync;
 		}
 	}
 
 	macro public static function arpDispose(hasImpl:Bool):Expr {
-		var disposeBlock:Expr = MacroArpObjectBlockStubs.buildDisposeBlock();
-
 		return macro @:mergeBlock {
 #if arp_debug
 			if (this._arpSlot == null) throw new arp.errors.ArpError("ArpObject is not initialized");
@@ -135,37 +124,31 @@ class MacroArpObjectStubs {
 				}
 			}
 			this.arpSelfDispose();
-			$e{ disposeBlock }
+			$e{ MacroArpObjectBlockStubs.buildDisposeBlock() }
 			this._arpSlot = null;
 			this._arpDomain = null;
 		}
 	}
 
 	macro public static function arpConsumeSeedElement():Expr {
-		var arpConsumeSeedElementBlock:Expr = MacroArpObjectBlockStubs.buildArpConsumeSeedElementBlock();
-
 		@:noDoc @:noCompletion
 		@:macroLocal var element:arp.seed.ArpSeed;
-		return arpConsumeSeedElementBlock;
+		return MacroArpObjectBlockStubs.buildArpConsumeSeedElementBlock();
 	}
 
 	macro public static function readSelf():Expr {
-		var readSelfBlock:Expr = MacroArpObjectBlockStubs.buildReadSelfBlock();
-
 		@:macroLocal var input:arp.persistable.IPersistInput;
 		return macro @:mergeBlock {
 			var c:Int;
-			$e{ readSelfBlock }
+			$e{ MacroArpObjectBlockStubs.buildReadSelfBlock() }
 		}
 	}
 
 	macro public static function writeSelf():Expr {
-		var writeSelfBlock:Expr = MacroArpObjectBlockStubs.buildWriteSelfBlock();
-
 		@:macroLocal var output:arp.persistable.IPersistOutput;
 		return macro @:mergeBlock {
 			var c:Int;
-			$e{ writeSelfBlock }
+			$e{ MacroArpObjectBlockStubs.buildWriteSelfBlock() }
 		}
 	}
 
@@ -185,8 +168,6 @@ class MacroArpObjectStubs {
 	}
 
 	macro public static function arpCopyFrom():Expr {
-		var copyFromBlock:Expr = MacroArpObjectBlockStubs.buildCopyFromBlock();
-
 		@:macroLocal var source:arp.domain.IArpObject;
 		@:macroLocal var cloneMapper:arp.domain.IArpCloneMapper;
 		@:macroReturn arp.domain.IArpObject;
@@ -194,7 +175,7 @@ class MacroArpObjectStubs {
 		return macro @:mergeBlock {
 			cloneMapper = arp.domain.ArpCloneMappers.valueOrDefault(cloneMapper);
 			var src:$selfComplexType = cast source;
-			$e{ copyFromBlock }
+			$e{ MacroArpObjectBlockStubs.buildCopyFromBlock() }
 			return this;
 		}
 	}
