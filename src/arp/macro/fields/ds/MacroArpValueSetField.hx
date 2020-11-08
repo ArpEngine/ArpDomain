@@ -7,7 +7,7 @@ import arp.persistable.IPersistInput;
 import arp.domain.reflect.ArpFieldDs;
 import arp.macro.defs.MacroArpFieldDefinition;
 import arp.macro.fields.base.MacroArpValueCollectionFieldBase;
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
+import arp.macro.expr.ds.MacroArpSwitchBlock;
 import haxe.macro.Expr;
 
 class MacroArpValueSetField extends MacroArpValueCollectionFieldBase implements IMacroArpField {

@@ -2,6 +2,7 @@ package arp.macro;
 
 #if macro
 
+import arp.domain.core.ArpType;
 import arp.domain.reflect.ArpClassInfo;
 import arp.macro.defs.MacroArpClassDefinition;
 
@@ -12,17 +13,22 @@ class MacroArpObject {
 	public var arpFields(default, null):Array<IMacroArpField> = [];
 	public var mergedArpFields(default, null):Array<IMacroArpField> = [];
 
-	public var templateInfo(default, null):ArpClassInfo;
+	public var classInfo(default, null):ArpClassInfo;
 
-	public function new(classDef:MacroArpClassDefinition, templateInfo:ArpClassInfo) {
+	public function new(classDef:MacroArpClassDefinition, classInfo:ArpClassInfo) {
 		this.classDef = classDef;
-		this.templateInfo = templateInfo;
+		this.classInfo = classInfo;
+	}
+
+	public static function fromClassDef(classDef:MacroArpClassDefinition):MacroArpObject {
+		var classInfo:ArpClassInfo = ArpClassInfo.reference(new ArpType(classDef.arpTypeName), classDef.arpTemplateName, classDef.nativeFqn, [], classDef.nativeDoc);
+		return new MacroArpObject(classDef, classInfo);
 	}
 
 	// must be called in expression macro
 	public function populateReflectFields():Void {
 		for (arpField in this.arpFields) {
-			this.templateInfo.fields.push(arpField.toFieldInfo());
+			this.classInfo.fields.push(arpField.toFieldInfo());
 		}
 	}
 
@@ -34,7 +40,7 @@ class MacroArpObject {
 			var baseObject:MacroArpObject = MacroArpObjectRegistry.getMacroArpObject(baseClassFqn);
 			if (baseObject != null) {
 				for (macroField in baseObject.arpFields) this.mergedArpFields.push(macroField);
-				for (reflectField in baseObject.templateInfo.fields) this.templateInfo.fields.push(reflectField);
+				for (reflectField in baseObject.classInfo.fields) this.classInfo.fields.push(reflectField);
 			}
 		}
 	}

@@ -1,10 +1,11 @@
 package arp.macro.stubs;
 
 import arp.macro.MacroArpObjectRegistry;
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
+import arp.macro.expr.ds.MacroArpSwitchBlock;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
+// this class is meant to be called from expression macro
 @:noDoc @:noCompletion
 class MacroArpObjectBlockStubs {
 
@@ -12,6 +13,24 @@ class MacroArpObjectBlockStubs {
 
 	private static function getTemplate():MacroArpObject {
 		return MacroArpObjectRegistry.getLocalMacroArpObject();
+	}
+
+	// TODO: refactor
+	public static function buildBlock(iFieldName:String, forPersist:Bool = false):Expr {
+		return macro arp.macro.stubs.MacroArpObjectBlockStubs.block($v{iFieldName}, $v{forPersist});
+	}
+
+	public static function buildInitBlock():Expr return buildBlock("buildInitBlock");
+	public static function buildHeatLaterDepsBlock():Expr return buildBlock("buildHeatLaterDepsBlock");
+	public static function buildHeatUpNowBlock():Expr return buildBlock("buildHeatUpNowBlock");
+	public static function buildHeatDownNowBlock():Expr return buildBlock("buildHeatDownNowBlock");
+	public static function buildDisposeBlock():Expr return buildBlock("buildDisposeBlock");
+	public static function buildReadSelfBlock():Expr return buildBlock("buildReadSelfBlock", true);
+	public static function buildWriteSelfBlock():Expr return buildBlock("buildWriteSelfBlock", true);
+	public static function buildCopyFromBlock():Expr return buildBlock("buildCopyFromBlock");
+
+	public static function buildArpConsumeSeedElementBlock():Expr {
+		return macro arp.macro.stubs.MacroArpObjectBlockStubs.arpConsumeSeedElementBlock();
 	}
 
 #end

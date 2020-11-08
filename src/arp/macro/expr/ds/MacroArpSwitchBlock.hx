@@ -1,4 +1,4 @@
-package arp.macro.stubs.ds;
+package arp.macro.expr.ds;
 
 #if macro
 
@@ -43,7 +43,7 @@ class MacroArpSwitchBlock {
 }
 
 @:structInit
-class MacroArpSwitchCase {
+private class MacroArpSwitchCase {
 
 	public var eValue(default, null):ExprOf<String>;
 	public var pos(default, null):Position;

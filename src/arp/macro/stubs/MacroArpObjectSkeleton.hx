@@ -8,39 +8,9 @@ import haxe.macro.Expr;
 
 class MacroArpObjectSkeleton {
 
-	private static function getTemplate():MacroArpObject {
-		return MacroArpObjectRegistry.getLocalMacroArpObject();
-	}
+	private var classDef:MacroArpClassDefinition;
 
-	private var _template:MacroArpObject;
-	private var template(get, null):MacroArpObject;
-	private function get_template():MacroArpObject {
-		return (_template != null) ? _template : (_template = getTemplate());
-	}
-
-	private var classDef(get, never):MacroArpClassDefinition;
-	private function get_classDef():MacroArpClassDefinition return template.classDef;
-	private var arpFields(get, never):Array<IMacroArpField>;
-	private function get_arpFields():Array<IMacroArpField> return template.arpFields;
-
-	private function new() return;
-
-	private function buildBlock(iFieldName:String, forPersist:Bool = false):Expr {
-		return macro arp.macro.stubs.MacroArpObjectBlockStubs.block($v{iFieldName}, $v{forPersist});
-	}
-
-	private function buildInitBlock():Expr return buildBlock("buildInitBlock");
-	private function buildHeatLaterDepsBlock():Expr return buildBlock("buildHeatLaterDepsBlock");
-	private function buildHeatUpNowBlock():Expr return buildBlock("buildHeatUpNowBlock");
-	private function buildHeatDownNowBlock():Expr return buildBlock("buildHeatDownNowBlock");
-	private function buildDisposeBlock():Expr return buildBlock("buildDisposeBlock");
-	private function buildReadSelfBlock():Expr return buildBlock("buildReadSelfBlock", true);
-	private function buildWriteSelfBlock():Expr return buildBlock("buildWriteSelfBlock", true);
-	private function buildCopyFromBlock():Expr return buildBlock("buildCopyFromBlock");
-
-	private function buildArpConsumeSeedElementBlock():Expr {
-		return macro arp.macro.stubs.MacroArpObjectBlockStubs.arpConsumeSeedElementBlock();
-	}
+	public function new(macroObj:MacroArpObject) this.classDef = macroObj.classDef;
 
 	private function newArpTypeInfo():Expr {
 		return macro new arp.domain.ArpTypeInfo(
@@ -50,7 +20,7 @@ class MacroArpObjectSkeleton {
 		);
 	}
 
-	private function genTypeFields():Array<Field> {
+	public function genTypeFields():Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion private var _arpDomain:arp.domain.ArpDomain;
 			public var arpDomain(get, never):arp.domain.ArpDomain;
@@ -72,7 +42,6 @@ class MacroArpObjectSkeleton {
 			@:noDoc @:noCompletion
 			public function __arp_init(slot:arp.domain.ArpUntypedSlot):arp.domain.IArpObject {
 				arp.macro.stubs.MacroArpObjectStubs.arpInit(
-					$e{ this.buildInitBlock() },
 					$v{ this.classDef.hasImpl }
 				);
 			}
@@ -86,21 +55,17 @@ class MacroArpObjectSkeleton {
 
 			@:noDoc @:noCompletion
 			public function __arp_heatLaterDeps():Void {
-				arp.macro.stubs.MacroArpObjectStubs.arpHeatLaterDeps(
-					$e{ this.buildHeatLaterDepsBlock() }
-				);
+				arp.macro.stubs.MacroArpObjectStubs.arpHeatLaterDeps();
 			}
 
 			public function arpHeatUpNow():Bool {
 				arp.macro.stubs.MacroArpObjectStubs.arpHeatUpNow(
-					$e{ this.buildHeatUpNowBlock() },
 					$v{ this.classDef.hasImpl }
 				);
 			}
 
 			public function arpHeatDownNow():Bool {
 				arp.macro.stubs.MacroArpObjectStubs.arpHeatDownNow(
-					$e{ this.buildHeatDownNowBlock() },
 					$v{ this.classDef.hasImpl }
 				);
 			}
@@ -110,28 +75,21 @@ class MacroArpObjectSkeleton {
 			@:noDoc @:noCompletion
 			public function __arp_dispose():Void {
 				arp.macro.stubs.MacroArpObjectStubs.arpDispose(
-					$e{ this.buildDisposeBlock() },
 					$v{ this.classDef.hasImpl }
 				);
 			}
 
 			@:noDoc @:noCompletion
 			private function arpConsumeSeedElement(element:arp.seed.ArpSeed, autoKey:String):Void {
-				arp.macro.stubs.MacroArpObjectStubs.arpConsumeSeedElement(
-					$e{ this.buildArpConsumeSeedElementBlock() }
-				);
+				arp.macro.stubs.MacroArpObjectStubs.arpConsumeSeedElement();
 			}
 
 			public function readSelf(input:arp.persistable.IPersistInput):Void {
-				arp.macro.stubs.MacroArpObjectStubs.readSelf(
-					$e{ this.buildReadSelfBlock() }
-				);
+				arp.macro.stubs.MacroArpObjectStubs.readSelf();
 			}
 
 			public function writeSelf(output:arp.persistable.IPersistOutput):Void {
-				arp.macro.stubs.MacroArpObjectStubs.writeSelf(
-					$e{ this.buildWriteSelfBlock() }
-				);
+				arp.macro.stubs.MacroArpObjectStubs.writeSelf();
 			}
 
 			@:access(arp.domain.ArpDomain)
@@ -140,14 +98,12 @@ class MacroArpObjectSkeleton {
 			}
 
 			public function arpCopyFrom(source:arp.domain.IArpObject, cloneMapper:arp.domain.IArpCloneMapper = null):arp.domain.IArpObject {
-				arp.macro.stubs.MacroArpObjectStubs.arpCopyFrom(
-					$e{ this.buildCopyFromBlock() }
-				);
+				arp.macro.stubs.MacroArpObjectStubs.arpCopyFrom();
 			}
 		}).fields;
 	}
 
-	private function genDerivedTypeFields():Array<Field> {
+	public function genDerivedTypeFields():Array<Field> {
 		return (macro class Generated {
 			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = $e{ newArpTypeInfo() };
 			override private function get_arpTypeInfo():arp.domain.ArpTypeInfo return _arpTypeInfo;
@@ -155,54 +111,38 @@ class MacroArpObjectSkeleton {
 
 			@:noDoc @:noCompletion
 			override public function __arp_init(slot:arp.domain.ArpUntypedSlot):arp.domain.IArpObject {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpInit(
-					$e{ this.buildInitBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpInit();
 			}
 
 			@:noDoc @:noCompletion
 			override public function __arp_heatLaterDeps():Void {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatLaterDeps(
-					$e{ this.buildHeatLaterDepsBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatLaterDeps();
 			}
 
 			override public function arpHeatUpNow():Bool {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatUpNow(
-					$e{ this.buildHeatUpNowBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatUpNow();
 			}
 
 			override public function arpHeatDownNow():Bool {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatDownNow(
-					$e{ this.buildHeatDownNowBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpHeatDownNow();
 			}
 
 			@:noDoc @:noCompletion
 			override public function __arp_dispose():Void {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpDispose(
-					$e{ this.buildDisposeBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpDispose();
 			}
 
 			@:noDoc @:noCompletion
 			override private function arpConsumeSeedElement(element:arp.seed.ArpSeed, autoKey:String):Void {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpConsumeSeedElement(
-					$e{ this.buildArpConsumeSeedElementBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpConsumeSeedElement();
 			}
 
 			override public function readSelf(input:arp.persistable.IPersistInput):Void {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.readSelf(
-					$e{ this.buildReadSelfBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.readSelf();
 			}
 
 			override public function writeSelf(output:arp.persistable.IPersistOutput):Void {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.writeSelf(
-					$e{ this.buildWriteSelfBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.writeSelf();
 			}
 
 			@:access(arp.domain.ArpDomain)
@@ -211,14 +151,12 @@ class MacroArpObjectSkeleton {
 			}
 
 			override public function arpCopyFrom(source:arp.domain.IArpObject, cloneMapper:arp.domain.IArpCloneMapper = null):arp.domain.IArpObject {
-				arp.macro.stubs.MacroArpDerivedObjectStubs.arpCopyFrom(
-					$e{ this.buildCopyFromBlock() }
-				);
+				arp.macro.stubs.MacroArpDerivedObjectStubs.arpCopyFrom();
 			}
 		}).fields;
 	}
 
-	private function genDefaultTypeFields():Array<Field> {
+	public function genDefaultTypeFields():Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion private function arpSelfInit():Void return;
 			@:noDoc @:noCompletion private function arpSelfLoadSeed(seed:arp.seed.ArpSeed = null):Void return;
@@ -228,7 +166,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genVoidCallbackField(fun:String, callback:String):Array<Field> {
+	public function genVoidCallbackField(fun:String, callback:String):Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion
 			private function $fun():Void {
@@ -237,7 +175,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genBoolCallbackField(fun:String, callback:String):Array<Field> {
+	public function genBoolCallbackField(fun:String, callback:String):Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion
 			private function $fun():Bool {
@@ -246,7 +184,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genSeedCallbackField(fun:String, callback:String):Array<Field> {
+	public function genSeedCallbackField(fun:String, callback:String):Array<Field> {
 		return (macro class Generated {
 			@:noDoc @:noCompletion
 			private function $fun(seed:arp.seed.ArpSeed = null):Void {
@@ -255,7 +193,7 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function genImplFields(implTypePath:TypePath, concreteTypePath:TypePath):Array<Field> {
+	public function genImplFields(implTypePath:TypePath, concreteTypePath:TypePath):Array<Field> {
 		var implType:ComplexType = ComplexType.TPath(implTypePath);
 		var implClassDef:MacroArpImplClassDefinition = new MacroArpImplClassDefinition(implType);
 		var concreteType:ComplexType = ComplexType.TPath(concreteTypePath);
@@ -283,7 +221,7 @@ class MacroArpObjectSkeleton {
 		return fields;
 	}
 
-	private function genDerivedImplFields(concreteTypePath:TypePath):Array<Field> {
+	public function genDerivedImplFields(concreteTypePath:TypePath):Array<Field> {
 		var implType = ComplexType.TPath(concreteTypePath);
 		var concreteType:ComplexType = ComplexType.TPath(concreteTypePath);
 		var concreteClassDef:MacroArpImplClassDefinition = new MacroArpImplClassDefinition(concreteType);
@@ -301,36 +239,16 @@ class MacroArpObjectSkeleton {
 		}).fields;
 	}
 
-	private function prependFunctionBody(nativeField:Field, expr:Expr):Field {
-		var nativeFunc:Function;
-		switch (nativeField.kind) {
-			case FieldType.FFun(func):
-				nativeFunc = func;
-			case _:
-				MacroArpUtil.error("Internal error: field is not a function", nativeField.pos);
-		}
-		return {
-			name: nativeField.name,
-			doc: nativeField.doc,
-			access: nativeField.access,
-			kind: FieldType.FFun({
-				args:nativeFunc.args,
-				ret:nativeFunc.ret,
-				expr: macro @:mergeBlock {
-					${expr}
-					${nativeFunc.expr}
-				},
-				params: nativeFunc.params
-			}),
-			pos: nativeField.pos,
-			meta:nativeField.meta
-		};
-	}
-
-	private function genConstructorField(nativeField:Field, nativeFunc:Function):Array<Field> {
+	public function genConstructorField(nativeField:Field, nativeFunc:Function):Array<Field> {
 		return [nativeField];
 	}
 
+	public function genTemplateFields():Array<Field> {
+		return (macro class Generated {
+			public static var _arpTypeInfo(default, never):arp.domain.ArpTypeInfo = $e{ newArpTypeInfo() };
+			@:noDoc @:noCompletion override private function get_arpTypeInfo():arp.domain.ArpTypeInfo return _arpTypeInfo;
+		}).fields;
+	}
 }
 
 #end

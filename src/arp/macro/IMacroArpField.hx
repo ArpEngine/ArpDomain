@@ -2,16 +2,17 @@ package arp.macro;
 
 #if macro
 
-import haxe.macro.Expr;
 import arp.domain.reflect.ArpFieldInfo;
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
+import arp.macro.expr.ds.MacroArpFieldList;
+import arp.macro.expr.ds.MacroArpSwitchBlock;
+import haxe.macro.Expr;
 
 interface IMacroArpField {
 	public var isSeedableAsGroup(get, never):Bool;
 	public var isSeedableAsElement(get, never):Bool;
 	public var isPersistable(get, never):Bool;
 
-	public function buildField(outFields:Array<Field>):Void;
+	public function buildField(outFields:MacroArpFieldList):Void;
 	public function buildInitBlock(initBlock:Array<Expr>):Void;
 	public function buildHeatLaterDepsBlock(heatLaterDepsBlock:Array<Expr>):Void;
 	public function buildHeatUpNowBlock(heatUpNowBlock:Array<Expr>):Void;

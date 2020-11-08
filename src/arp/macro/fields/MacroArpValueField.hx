@@ -4,8 +4,9 @@ package arp.macro.fields;
 
 import arp.domain.reflect.ArpFieldKind;
 import arp.macro.defs.MacroArpFieldDefinition;
+import arp.macro.expr.ds.MacroArpFieldList;
+import arp.macro.expr.ds.MacroArpSwitchBlock;
 import arp.macro.fields.base.MacroArpFieldBase;
-import arp.macro.stubs.ds.MacroArpSwitchBlock;
 import haxe.macro.Expr;
 
 class MacroArpValueField extends MacroArpFieldBase implements IMacroArpField {
@@ -18,7 +19,7 @@ class MacroArpValueField extends MacroArpFieldBase implements IMacroArpField {
 		this.type = type;
 	}
 
-	public function buildField(outFields:Array<Field>):Void {
+	public function buildField(outFields:MacroArpFieldList):Void {
 		var generated:Array<Field> = (macro class Generated {
 			@:pos(this.nativePos)
 			private var $i_nativeName:$nativeType = ${this.fieldDef.nativeDefault};
@@ -28,10 +29,10 @@ class MacroArpValueField extends MacroArpFieldBase implements IMacroArpField {
 			private function $iSet_nativeName(value:$nativeType):$nativeType return this.$i_nativeName = value;
 		}).fields;
 		this.nativeField.kind = FieldType.FProp("get", this.fieldDef.metaArpReadOnly ? "never" : "set", nativeType, null);
-		outFields.push(this.nativeField);
+		outFields.add(this.nativeField);
 		for (g in generated) {
 			if (g.name == iSet_nativeName && this.fieldDef.metaArpReadOnly) continue;
-			outFields.push(g);
+			outFields.add(g);
 		}
 	}
 

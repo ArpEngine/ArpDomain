@@ -14,8 +14,9 @@ import arp.writers.help.ArpHelpWriter;
 class MacroArpObjectRegistry {
 
 	private var domainInfo:ArpDomainInfo;
-	private var templateInfos:Map<String, ArpClassInfo>;
+	private var classInfos:Map<String, ArpClassInfo>;
 	private var macroArpObjects:Map<String, MacroArpObject>;
+	private var macroArpTemplates:Map<String, MacroArpObject>;
 
 	private function new() {
 		this.onMacroContextReused();
@@ -23,35 +24,41 @@ class MacroArpObjectRegistry {
 
 	private function registerPrimitive(fieldKind:ArpFieldKind, name:String, fqn:String = null, doc:String = null):Void {
 		if (fqn == null) fqn = name;
-		templateInfos.set(fqn, ArpClassInfo.primitive(fieldKind, new ArpType(name), fqn, doc));
+		classInfos.set(fqn, ArpClassInfo.primitive(fieldKind, new ArpType(name), fqn, doc));
 	}
 
 	public static function registerStructInfo(name:String, fqn:String, doc:String, stringPlaceholder:String, seedPlaceholder:String):Void {
 		var structInfo:ArpClassInfo = ArpClassInfo.struct(new ArpType(name), fqn, doc, stringPlaceholder, seedPlaceholder);
-		instance.templateInfos.set(fqn, structInfo);
+		instance.classInfos.set(fqn, structInfo);
 		instance.domainInfo.structInfos.push(structInfo);
 	}
 
-	public static function registerTemplateInfo(fqn:String, macroArpObject:MacroArpObject):Void {
+	public static function registerObjectInfo(fqn:String, macroArpObject:MacroArpObject):Void {
 		instance.macroArpObjects.set(fqn, macroArpObject);
-		instance.templateInfos.set(fqn, macroArpObject.templateInfo);
-		instance.domainInfo.classInfos.push(macroArpObject.templateInfo);
+		instance.classInfos.set(fqn, macroArpObject.classInfo);
+		instance.domainInfo.classInfos.push(macroArpObject.classInfo);
+	}
+
+	public static function registerTemplateInfo(fqn:String, macroArpObject:MacroArpObject):Void {
+		instance.macroArpTemplates.set(fqn, macroArpObject);
+		instance.classInfos.set(fqn, macroArpObject.classInfo);
+		instance.domainInfo.templateInfos.push(macroArpObject.classInfo);
 	}
 
 	private static function toFqn(complexType:ComplexType):String {
 		return MacroArpUtil.getFqnOfType(ComplexTypeTools.toType(complexType));
 	}
 
-	public static function getTemplateInfo(fqn:String):ArpClassInfo {
-		return instance.templateInfos.get(fqn);
+	public static function getClassInfo(fqn:String):ArpClassInfo {
+		return instance.classInfos.get(fqn);
 	}
 
-	public static function templateInfoOfNativeType(nativeType:ComplexType):ArpClassInfo {
-		return instance.templateInfos.get(toFqn(nativeType));
+	public static function classInfoOfNativeType(nativeType:ComplexType):ArpClassInfo {
+		return instance.classInfos.get(toFqn(nativeType));
 	}
 
 	public static function arpTypeOf(nativeType:ComplexType):ArpType {
-		return templateInfoOfNativeType(nativeType).arpType;
+		return classInfoOfNativeType(nativeType).arpType;
 	}
 
 	public static function getMacroArpObject(fqn:String):MacroArpObject {
@@ -65,10 +72,16 @@ class MacroArpObjectRegistry {
 	public static function toAutoAddTemplates(arpDomain:Expr):Expr {
 		var block:Array<Expr> = [];
 		for (macroArpObject in instance.macroArpObjects) {
-			var klassName:String = macroArpObject.templateInfo.fqn;
-			var klass:Expr = Context.parse(klassName, macroArpObject.classDef.nativePos);
+			var klassName:String = macroArpObject.classInfo.fqn;
+			var klass:Expr = Context.parse(klassName, Context.currentPos());
 			block.push(macro ${ arpDomain } .addTemplate(${ klass }));
-			// block.push(macro this.addTemplate(Type.resolveClass($v{klass})));
+			// block.push(macro ${ arpDomain } .addTemplate(cast Type.resolveClass($v{klassName})));
+		}
+		for (macroArpTemplate in instance.macroArpTemplates) {
+			var klassName:String = macroArpTemplate.classInfo.fqn;
+			var klass:Expr = Context.parse(klassName, Context.currentPos());
+			block.push(macro ${ arpDomain } .addTemplate(${ klass }));
+			// block.push(macro ${ arpDomain } .addTemplate(cast Type.resolveClass($v{klassName})));
 		}
 		return macro @mergeBlock $b{ block };
 	}
@@ -93,7 +106,8 @@ class MacroArpObjectRegistry {
 		// discard registered types
 		domainInfo = new ArpDomainInfo();
 		macroArpObjects = new Map();
-		templateInfos = new Map();
+		macroArpTemplates = new Map();
+		classInfos = new Map();
 
 		registerPrimitive(ArpFieldKind.PrimInt, "Int", "StdTypes.Int", "Primitive integer.");
 		registerPrimitive(ArpFieldKind.PrimFloat, "Float", "StdTypes.Float", "Primitive float.");

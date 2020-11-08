@@ -3,6 +3,7 @@ package arp.macro.fields.base;
 #if macro
 
 import arp.macro.defs.MacroArpFieldDefinition;
+import arp.macro.expr.ds.MacroArpFieldList;
 import haxe.macro.Expr;
 import haxe.macro.Printer;
 
@@ -20,7 +21,7 @@ class MacroArpCollectionFieldBase extends MacroArpFieldBase {
 		this.concreteDs = concreteDs;
 	}
 
-	public function buildField(outFields:Array<Field>):Void {
+	public function buildField(outFields:MacroArpFieldList):Void {
 		var generated:Array<Field> = (macro class Generated {
 			@:pos(this.nativePos)
 			private var $i_nativeName:$nativeType = ${this.fieldDef.nativeDefault};
@@ -29,8 +30,8 @@ class MacroArpCollectionFieldBase extends MacroArpFieldBase {
 		}).fields;
 		this.nativeField.kind = FieldType.FProp("get", "never", nativeType, null);
 
-		outFields.push(this.nativeField);
-		for (g in generated) outFields.push(g);
+		outFields.add(this.nativeField);
+		outFields.merge(generated);
 	}
 
 	public function buildInitBlock(initBlock:Array<Expr>):Void {

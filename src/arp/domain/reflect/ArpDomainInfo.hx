@@ -6,10 +6,12 @@ class ArpDomainInfo {
 
 	public var classInfos(default, null):Array<ArpClassInfo>;
 	public var structInfos(default, null):Array<ArpClassInfo>;
+	public var templateInfos(default, null):Array<ArpClassInfo>;
 
 	public function new() {
 		this.classInfos = [];
 		this.structInfos = [];
+		this.templateInfos = [];
 	}
 
 	public function findStructInfo(arpType:ArpType):Null<ArpClassInfo> {
